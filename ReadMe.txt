@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Two working directory folders:
 	Latex: 	LatexWD
 	MATLAB:	MatlabWD
@@ -14,4 +15,3 @@ How to install Source Tree:https://confluence.atlassian.com/get-started-with-sou
 Nice Video for how to use SourceTree: https://www.youtube.com/watch?v=1lBdlh3AGSc
 
 
-hallo
