@@ -63,7 +63,7 @@ function mainexec %give options for what to execute how
     cprintf('_comment','%g',elapse);
     cprintf('_comment','\f seconds.\n');%say what we did here&timer
 
-    Disp('Test')
+    
 
 end
 
