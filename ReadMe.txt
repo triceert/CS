@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Two working directory folders:
 	Latex: 	LatexWD
 	MATLAB:	MatlabWD
@@ -15,3 +16,6 @@ Nice Video for how to use SourceTree: https://www.youtube.com/watch?v=1lBdlh3AGS
 
 
 tobis changes
+=======
+leans fun
+>>>>>>> fc66b1de3e04508a2504892a8805a39dab3b66e0
