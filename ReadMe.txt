@@ -15,7 +15,3 @@ How to install Source Tree:https://confluence.atlassian.com/get-started-with-sou
 Nice Video for how to use SourceTree: https://www.youtube.com/watch?v=1lBdlh3AGSc
 
 
-tobis changes
-=======
-leans fun
->>>>>>> fc66b1de3e04508a2504892a8805a39dab3b66e0
