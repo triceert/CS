@@ -2,10 +2,9 @@
 %% DATA OPENER
 %Function Description: A function that opens up to date data into a struct
 %Arguments:
-%      comp_table_string        file name of the excel table containing
-%                               compound data
-%      unit_table_string        file name of the excel table containing
-%                               unit operation modules data      
+%      table_string        file name of the excel table containing
+%                               compound and unit operations data base
+%           
 %Outputs:
 %      compstruct        the  according compound data struct
 %      unitstruct        the  according compound data struct
@@ -16,12 +15,16 @@ function [compstruct,unitstruct]=dataopener(table_string)
     disp('Dataopener terminated successfully')
 end
 
+
+%% %%%%%%%%%%%%%%%
+%NESTED FUNCTIONS
+
 %% STRUCTMAKER
 %Function Description: A  helper function for data opener that makes...
 %                      excel tables to a nice struct
 %
-%Arguments: string      string of excel table name
-%
+%Arguments: string      string of excel table name            i
+%             i         sheet number
 %Output:    struct      The according data struct
 
 function struct=structmaker(string,i)
