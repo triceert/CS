@@ -64,7 +64,7 @@ function mainexec %give options for what to execute how
     cprintf('_comment','\f seconds.\n');%say what we did here&timer
 
     
-
+disp('Hello World')
 end
 
 
