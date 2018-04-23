@@ -78,10 +78,11 @@ end
 %      cmp unt   structs containing importet compound and unit operations
 %      data
 function [cmp,unt]=loader(string)
-   [cmp,unt]=dataopener(string); %load data from file
+   [cmp,unt,str]=dataopener(string); %load data from file
    
    assignin('base','cmp',cmp)    %assign for everyone
    assignin('base','unt',unt) 
+   assignin('base','str',str) 
 end
 
 %% Calculator
@@ -91,7 +92,7 @@ end
 %Outputs:
 %      cmpout,untout    compunds and unit operations data to anywhere after
 %      calculation
-function [cmpout, untout]=calculator(cmpin,untin)
+function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
@@ -101,10 +102,12 @@ function [cmpout, untout]=calculator(cmpin,untin)
         %Calc Function 3
         cmpout=cmpin; %dummy
         untout=untin; %dummy
+        strout=strin; %dummy
         
      %assign for everyone
         assignin('base','cmpcalc',cmpout)   
         assignin('base','untcalc',untout) 
+        assignin('base','untcalc',strout) 
 
     %say what we did here
     elapse=toc(time2);
@@ -121,7 +124,7 @@ end
 %Outputs:
 %      plots, table    plots and tables for export or whatever
 
-function [tables, plots]=evaluator(cmpin, untin)
+function [tables, plots]=evaluator(cmpin, untin,strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
         %plots=Call Plotter Function
