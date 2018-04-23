@@ -38,23 +38,19 @@ function main(varargin) %give options for what to execute how
             comp4=strcmp(varargin{1},'calceval');
             if comp1==1 %argument load, just load
                 [~,~]=loader(excelstring);
-                disp('load')
             elseif  comp2==1 %argument calc, check if data available and calc
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 [~,~]=calculator(cmp,unt);
-                disp('calc')
             elseif  comp3==1    %argument eval, check if calc data here and eval
                 cmpcalc = evalin('base', 'cmpcalc');
                 untcalc = evalin('base', 'untcalc');
                 [~,~]=evaluator(cmpcalc,untcalc);
-                disp('eval')
             elseif comp4==1        %argument calceval, check if data here and calc and eval
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 [cmpcalc,untcalc]=calculator(cmp,unt);
                 [~,~]=evaluator(cmpcalc,untcalc);
-                disp('calceval')
             else
                 error(...
                     'No valid function argument in mainexec. For default call without argument.')
@@ -82,10 +78,11 @@ end
 %      cmp unt   structs containing importet compound and unit operations
 %      data
 function [cmp,unt]=loader(string)
-   [cmp,unt]=dataopener(string); %load data from file
+   [cmp,unt,str]=dataopener(string); %load data from file
    
    assignin('base','cmp',cmp)    %assign for everyone
    assignin('base','unt',unt) 
+   assignin('base','str',str) 
 end
 
 %% Calculator
@@ -95,7 +92,7 @@ end
 %Outputs:
 %      cmpout,untout    compunds and unit operations data to anywhere after
 %      calculation
-function [cmpout, untout]=calculator(cmpin,untin)
+function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
@@ -105,10 +102,12 @@ function [cmpout, untout]=calculator(cmpin,untin)
         %Calc Function 3
         cmpout=cmpin; %dummy
         untout=untin; %dummy
+        strout=strin; %dummy
         
      %assign for everyone
         assignin('base','cmpcalc',cmpout)   
         assignin('base','untcalc',untout) 
+        assignin('base','untcalc',strout) 
 
     %say what we did here
     elapse=toc(time2);
@@ -125,7 +124,7 @@ end
 %Outputs:
 %      plots, table    plots and tables for export or whatever
 
-function [tables, plots]=evaluator(cmpin, untin)
+function [tables, plots]=evaluator(cmpin, untin,strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
         %plots=Call Plotter Function

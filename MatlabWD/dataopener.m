@@ -8,10 +8,12 @@
 %Outputs:
 %      compstruct        the  according compound data struct
 %      unitstruct        the  according compound data struct
+%      streamstruct      the according streams struct
 
-function [compstruct,unitstruct]=dataopener(table_string)
+function [compstruct,unitstruct,streamstruct]=dataopener(table_string)
     compstruct=structmaker(table_string,1);
     unitstruct=structmaker(table_string,2);
+    streamstruct=structmaker(table_string,3);
     disp('Dataopener terminated successfully')
 end
 
