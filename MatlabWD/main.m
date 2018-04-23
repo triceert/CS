@@ -38,23 +38,19 @@ function main(varargin) %give options for what to execute how
             comp4=strcmp(varargin{1},'calceval');
             if comp1==1 %argument load, just load
                 [~,~]=loader(excelstring);
-                disp('load')
             elseif  comp2==1 %argument calc, check if data available and calc
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 [~,~]=calculator(cmp,unt);
-                disp('calc')
             elseif  comp3==1    %argument eval, check if calc data here and eval
                 cmpcalc = evalin('base', 'cmpcalc');
                 untcalc = evalin('base', 'untcalc');
                 [~,~]=evaluator(cmpcalc,untcalc);
-                disp('eval')
             elseif comp4==1        %argument calceval, check if data here and calc and eval
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 [cmpcalc,untcalc]=calculator(cmp,unt);
                 [~,~]=evaluator(cmpcalc,untcalc);
-                disp('calceval')
             else
                 error(...
                     'No valid function argument in mainexec. For default call without argument.')
