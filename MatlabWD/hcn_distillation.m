@@ -13,14 +13,16 @@ feed_V = strin(9).G; % molar flowrate in feed [mol/hr]
 
 q = 1; % feed quality (fraction of feed that is liquid, q=1 since @ bubble point)
 z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
-z.CH4 = (strin(9).xCH4*feed_L + strin(9).yCH4 *feed_V)/(feed_L+feed_V); 
-z.NH3 = (strin(9).xNH3*feed_L + strin(9).yNH3 *feed_V)/(feed_L+feed_V);  
-z.Egas = (strin(9).xEgas*feed_L + strin(9).yEgas *feed_V)/(feed_L+feed_V);  
-z.H2SO4 = (strin(9).xH2SO4*feed_L + strin(9).yH2SO4 *feed_V)/(feed_L+feed_V);  
+%z.CH4 = (strin(9).xCH4*feed_L + strin(9).yCH4 *feed_V)/(feed_L+feed_V); 
+%z.NH3 = (strin(9).xNH3*feed_L + strin(9).yNH3 *feed_V)/(feed_L+feed_V);  
+%z.Egas = (strin(9).xEgas*feed_L + strin(9).yEgas *feed_V)/(feed_L+feed_V);  
+%z.H2SO4 = (strin(9).xH2SO4*feed_L + strin(9).yH2SO4 *feed_V)/(feed_L+feed_V);  
 z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V); 
-z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
-z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
-F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
+%z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
+%z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
+%F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
+F = 100; % mol/hr, just some value to try calculations
+MW_H2O = 0.018; 
 
 
 A_CH4 = 6.7021; 	% Antoine parameters from http://ddbonline.ddbst.com/AntoineCalculation/AntoineCalculationCGI.exe?component=Methane 
@@ -49,9 +51,11 @@ T_boiling_mixture_assumption = 373.15*0.8+299*0.2; % just a shitty weighted aver
 %z.CH4 = 0.4; z.NH3 = 0.1; z.Egas = 0.1; z.H2SO4 = 0.1; z.HCN = 0.1; z.AS = 0.1; z.H2 = 0.1; 
 z.H2O = 0.8; z.HCN = 0.2; 
 % want to operate the column at atmospheric pressure 
-% pressure = @(temperature) z.CH4*P_sat_CH4(temperature) + z.NH3*P_sat_NH3(temperature) + z.Egas*P_sat_Egas(temperature) + z.H2SO4*P_sat_H2SO4(temperature) + z.HCN*P_sat_HCN(temperature) + z.AS*P_sat_AS(temperature) + z.H2*P_sat_H2(temperature);
+% pressure = @(temperature) z.CH4*P_sat_CH4(temperature) + z.NH3*P_sat_NH3(temperature) + z.Egas*P_sat_Egas(temperature) + 
+% z.H2SO4*P_sat_H2SO4(temperature) + z.HCN*P_sat_HCN(temperature) + z.AS*P_sat_AS(temperature) + z.H2*P_sat_H2(temperature);
 % formula from solution Separation Technologies, Series 6
-pressure = @(temperature) z.HCN*P_sat_HCN(temperature) + z.H2O*P_sat_H2O(temperature);
+%pressure = @(temperature) z.HCN*P_sat_HCN(temperature) + z.H2O*P_sat_H2O(temperature);
+pressure = 10^5; % Pa
 alpha = @(temperature) P_sat_HCN(temperature)/P_sat_H2O(temperature); % relative volatility
 % --> one sees that alpha doesn't change dramatically
 % calculation of geometric mean of alpha: 
@@ -65,9 +69,10 @@ x_HK_B = 1-x_LK_B;
 
 N_S_min = log(x_LK_D/x_HK_D*x_HK_B/x_LK_B)/log(alpha_mean)-1; 
 
-%%% Underwood formula %%% 
+%%% Underwood formula %%%
+options = optimset('Display','off');
 theta0 = 1.1;
-theta_sol = fsolve (@(theta) (alpha_mean*z.HCN)/(alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0);
+theta_sol = fsolve (@(theta) (alpha_mean*z.HCN)/(alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0, options);
 % theta_sol = 1.6183, so between 1 and alpha_mean --> :) 
 RR_min = (alpha_mean*x_LK_D)/(alpha_mean-theta_sol)+(1*x_HK_D)/(1-theta_sol)-1; 
 RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
@@ -77,6 +82,31 @@ RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
 X = (RR_real-RR_min)/(RR_real+1); 
 Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X))); 
 N_S_real = (Y+N_S_min)/(1-Y); 
+
+
+%%% Sizing the column %%% 
+height = 1.2*N_S_real*0.6;
+D = z.HCN*F/0.995; % neglecting the 10 ppm HCN in bottom stream
+V_R = (RR_real+1)*D; 
+V_flowrate = V_R*8.3144*T_boiling_H2O/pressure; 
+rho_V = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
+v_max = 1/sqrt(rho_V); 
+A_o_bottom = V_flowrate/v_max; 
+d_min_bottom = sqrt(4*A_o_bottom/pi); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
