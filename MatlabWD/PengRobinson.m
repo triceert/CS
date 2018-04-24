@@ -13,32 +13,31 @@ function [Vm,Z] = PengRobinson(p,T,pc,Tc,omega,F)
 
 R = 8.314; % [kg.m2.s-2.mol-1.K-1]
 
-F_tot = sum(F);
-z = F./F_tot; % molar fraction of each component
+F_mix = sum(F);
+z = F./F_mix; % molar fraction of each component
 
-kappa = 0.37464 + 1.54226*omega - 0.26992*omega.^2;
-Tr = T./Tc;
-alpha = (1 + kappa.*(1-sqrt(Tr))).^2;
+Tc_mix = sum(Tc.*z);
+pc_mix = sum(pc.*z);
+omega_mix = sum(omega.*z);
+
+kappa_mix = 0.37464 + 1.54226*omega_mix - 0.26992*omega_mix^2;
+Tr_mix = T/Tc_mix;
+alpha_mix = (1 + kappa_mix.*(1-sqrt(Tr_mix)))^2;
 
 a = (0.45724*R^2*Tc.^2)./pc;
 b = (0.07780*R.*Tc)./pc;
-a_tot = 0;
-b_tot = 0;
-for j = 1:length(a)
-    a_tot = a_tot + z(j)*sqrt(a(j));
-    b_tot = b_tot + z(j)*b(j);
-end
-a_tot = nthroot(a_tot,length(a));
+a_mix = nthroot(sum(z.*a.^(0.5)),length(a));
+b_mix = sum(z.*b);
 
-A = alpha*a_tot*p/(R^2*T^2);
-B = b_tot*p/(R*T);
+A = alpha_mix*a_mix*p/(R^2*T^2);
+B = b_mix*p/(R*T);
 
 %Polynomial solution for molar volume
 
 a1 = p;
-a2 = p*b_tot - R*T;
-a3 = a_tot*alpha - 3*p*b_tot^2 - 2*b_tot*R*T;
-a4 = p*b_tot^3 + R*T*b_tot^2 - a_tot*b_tot*alpha;
+a2 = p*b_mix - R*T;
+a3 = a_mix*alpha_mix - 3*p*b_mix^2 - 2*b_mix*R*T;
+a4 = p*b_mix^3 + R*T*b_mix^2 - a_mix*b_mix*alpha_mix;
 
 delta0Vm = a2^2 - 3*a1*a3;
 delta1Vm = 2*a2^3 - 9*a1*a2*a3 + 27*a1^2*a4;
@@ -47,7 +46,7 @@ CVm(2) = CVm(1)*(-0.5+0.5*i*sqrt(3));
 CVm(3) = CVm(1)*(-0.5-0.5*i*sqrt(3));
 
 for k = 1:3
-    Vmposs(k) = -1/(3*a_tot)*(b_tot+CVm(k)+delta0Vm/CVm(k));
+    Vmposs(k) = -1/(3*a_mix)*(b_mix+CVm(k)+delta0Vm/CVm(k));
 end
 
 %We only want real molar volumes, and if two are there, the biggest one
@@ -68,7 +67,7 @@ CZ(2) = CZ(1)*(-0.5+0.5*i*sqrt(3));
 CZ(3) = CZ(1)*(-0.5-0.5*i*sqrt(3));
 
 for k = 1:3
-    Zposs(k) = -1/(3*a_tot)*(b_tot+CZ(k)+delta0Z/CZ(k));
+    Zposs(k) = -1/(3*a_mix)*(b_mix+CZ(k)+delta0Z/CZ(k));
 end
 
 %We only want real compressibility factors
