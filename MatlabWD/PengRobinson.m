@@ -1,13 +1,11 @@
-function [Vm,Z] = PengRobinson(p,T,F,pc,Tc,omega)
+function [Vm,Z] = PengRobinson(p,T,F,cmp,unt)
 % - Calculates molar volume of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
 % INPUT: p = pressure  [Pa]
-%        T = Temperature [K]
-%        pc = critical pressure [Pa], vector for different components
-%        Tc = critical temperature [K], vector for different components
-%        omega = acentric factor, vector for different components
+%        T = Temperature [K]       
 %        F = flow [mol.s-1], vector for different components
+%           cmp,unt=compund and unit struct
 % OUTPUT: Vm: molar volume [m3.mol-1]
 %         Z: compressibility factor
 
@@ -15,25 +13,24 @@ function [Vm,Z] = PengRobinson(p,T,F,pc,Tc,omega)
 %Assign Vectors from Compound struct
 %   From Nitrogen to Hydrogen Cyanide (identifier 2-6)
 pc=cmp(2:6).pc;
-tc=cmp(2:6).Tc;
+Tc=cmp(2:6).Tc;
 omega =cmp(2:6).omega;
+R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
-
-R = 8.314; % [kg.m2.s-2.mol-1.K-1]
 
 F_mix = sum(F);
 z = F./F_mix; % molar fraction of each component
 
 Tc_mix = sum(Tc.*z);
-pc_mix = sum(pc.*z);
+pc_mix = sum(pc.*z);            %why we dont use this?
 omega_mix = sum(omega.*z);
 
 kappa_mix = 0.37464 + 1.54226*omega_mix - 0.26992*omega_mix^2;
-Tr_mix = T/Tc_mix;
+Tr_mix = T./Tc_mix;
 alpha_mix = (1 + kappa_mix.*(1-sqrt(Tr_mix)))^2;
 
-a = (0.45724*R^2*Tc.^2)./pc;
+a = (0.45724*R^2*Tc.^2)./pc;            
 b = (0.07780*R.*Tc)./pc;
 a_mix = nthroot(sum(z.*a.^(0.5)),length(a));
 b_mix = sum(z.*b);
