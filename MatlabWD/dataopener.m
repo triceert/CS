@@ -8,10 +8,12 @@
 %Outputs:
 %      compstruct        the  according compound data struct
 %      unitstruct        the  according compound data struct
+%      streamstruct      the according streams struct
 
-function [compstruct,unitstruct]=dataopener(table_string)
+function [compstruct,unitstruct,streamstruct]=dataopener(table_string)
     compstruct=structmaker(table_string,1);
     unitstruct=structmaker(table_string,2);
+    streamstruct=structmaker(table_string,3);
     disp('Dataopener terminated successfully')
 end
 
@@ -32,6 +34,7 @@ function struct=structmaker(string,i)
     [~,~,ImpArr]=xlsread(string,i); % Import Excel as mixed array (Sheet i)           
             ImpArr(1,:)=[];                 %Delte Row And Col Headers
             ImpArr(:,1)=[];
+            ImpArr(:,end:end-1)=[];    %delete last two columsn from excel
             ImpArr=rot90(ImpArr);           %flip for same order top as read from 
             ImpArr=flipud(ImpArr);          %left to right in excel file
     NewTab=array2table(ImpArr(2:end,:),...
