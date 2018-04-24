@@ -1,4 +1,4 @@
-function [Vmposs] = PengRobinson(p,T,pc,Tc,omega)
+function [Vm] = PengRobinson(p,T,pc,Tc,omega)
 % - Calculates molar volume of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
@@ -32,7 +32,9 @@ Vmposs(1) = -1/(3*a)*(b+C(1)+delta0/C(1));
 Vmposs(2) = -1/(3*a)*(b+C(2)+delta0/C(2));
 Vmposs(3) = -1/(3*a)*(b+C(3)+delta0/C(3));
 
-%We only want real molar volumes
+%We only want real molar volumes, and if two are there, the biggest one
+Vmposs(imag(Vmposs) ~= 0) = 0;
+Vm = max(Vmposs);
 end
 
 
