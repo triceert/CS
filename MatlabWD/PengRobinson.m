@@ -57,8 +57,8 @@ polZ = [b1 b2 b3 b4];
 Zposs = roots(polZ);
 
 %We only want real compressibility factors
-Zposs(imag(Zmposs) ~= 0) = 0;
-Z = Zposs(Zposs ~= 0));
+Zposs(imag(Zposs) ~= 0) = 0;
+Z = Zposs(Zposs ~= 0);
 end
 
 
