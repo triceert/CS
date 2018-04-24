@@ -1,5 +1,5 @@
 function [HT] = enthalpy_temperature(T,a,b1)
-% - Calculates the enthalpy of a GASEOUS compound with given 
+% - Calculates the enthalpy of a GASEOUS compound with given parameters as a function of the temperature
 %
 % INPUT: a = coefficients a0,a1,a2,a3,a4 from the NASA as 1x5 or 5x1 vector
 %        b1 = coefficient b1 from the NASA
