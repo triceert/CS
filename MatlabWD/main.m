@@ -100,12 +100,12 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
     cprintf('blue','Calculations started\n');
     
     %calculate different stuff
-        %Calc Function 1
+        [cmp,unt,str]=reactoroptimizer(cmpin,untin,strin);
         %Calc Function 2
         %Calc Function 3
-        cmpout=cmpin; %dummy
-        untout=untin; %dummy
-        strout=strin; %dummy
+        cmpout=cmp; %dummy
+        untout=unt; %dummy
+        strout=str; %dummy
         
      %assign for everyone
         assignin('base','cmpcalc',cmpout)   
