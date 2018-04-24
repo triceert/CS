@@ -39,15 +39,8 @@ a2 = p*b_mix - R*T;
 a3 = a_mix*alpha_mix - 3*p*b_mix^2 - 2*b_mix*R*T;
 a4 = p*b_mix^3 + R*T*b_mix^2 - a_mix*b_mix*alpha_mix;
 
-delta0Vm = a2^2 - 3*a1*a3;
-delta1Vm = 2*a2^3 - 9*a1*a2*a3 + 27*a1^2*a4;
-CVm(1) = nthroot((delta1Vm + sqrt(delta0Vm^3))/2,3);
-CVm(2) = CVm(1)*(-0.5+0.5*i*sqrt(3));
-CVm(3) = CVm(1)*(-0.5-0.5*i*sqrt(3));
-
-for k = 1:3
-    Vmposs(k) = -1/(3*a_mix)*(b_mix+CVm(k)+delta0Vm/CVm(k));
-end
+polVm = [a1 a2 a3 a4];
+Vmposs = roots(polVm);
 
 %We only want real molar volumes, and if two are there, the biggest one
 Vmposs(imag(Vmposs) ~= 0) = 0;
@@ -60,18 +53,11 @@ b2 = B-1;
 b3 = A - 2*B - 3*B^2;
 b4 = B^3 + B^2 - A*B;
 
-delta0Z = b2^2 - 3*b1*b3;
-delta1Z = 2*b2^3 - 9*b1*b2*b3 + 27*b1^2*b4;
-CZ(1) = nthroot((delta1Z + sqrt(delta1Z^2 - 4*delta0Z^3))/2,3);
-CZ(2) = CZ(1)*(-0.5+0.5*i*sqrt(3));
-CZ(3) = CZ(1)*(-0.5-0.5*i*sqrt(3));
-
-for k = 1:3
-    Zposs(k) = -1/(3*a_mix)*(b_mix+CZ(k)+delta0Z/CZ(k));
-end
+polZ = [b1 b2 b3 b4];
+Zposs = roots(polZ);
 
 %We only want real compressibility factors
-Zposs(imag(Vmposs) ~= 0) = 0;
+Zposs(imag(Zmposs) ~= 0) = 0;
 Z = Zposs(Zposs ~= 0));
 end
 
