@@ -130,7 +130,8 @@ end
 function [tables, plots]=evaluator(cmpin, untin,strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
-        %plots=Call Plotter Function
+        %Call Plotter Function
+        harry_plotter
         %tables= call tex table maker
         %call some economic evaluator
         tables=NaN; %dummy
