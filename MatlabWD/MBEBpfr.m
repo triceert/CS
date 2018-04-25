@@ -1,8 +1,8 @@
 function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
- 
+%% Provisorisch 
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
-    
+%% INIT    
 %Get PR if idealreal set to 1
     switch idealreal       
         case  1
@@ -12,9 +12,10 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
         PRCH4=1;
         PRNH3=1;            
     end
-    
+%% Assign Outputs from Handles    
     [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);
-  
+
+%% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(8,1);
     %# 1 Pressure
     dAdV(1)=0;  
@@ -35,7 +36,7 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
     %#8 T heating medium
     dAdV(8)=0;                             %
 
-    %P=A(2:6)
+
     
     
     
