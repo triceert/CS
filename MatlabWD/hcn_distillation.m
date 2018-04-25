@@ -114,7 +114,7 @@ B = F-D;
 % neglecting water in distillate: 
 T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 deltaH_HCN = cmpin(6).Hv;
-Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
+Q_cond = deltaH_HCN*V_R; % Heat duty condenser [J/s]
 area_cond = Q_cond/(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
 enthalpy_feed = enthalpy_temperature_liquid(T_boiling_mixture_assumption,cmpin,untin); 
 enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
@@ -146,7 +146,7 @@ OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1;
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
 CAPEX_cond = 25000*(area_cond^0.65); 
 %OPEX_column = OPEX_cooling_water + OPEX_steam; 
-
+%%% WHICH TEMPERATURE DIFFERENCE FOR REBOILER HEATED WITH STEAM? 
 
 
 
