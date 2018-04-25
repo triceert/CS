@@ -40,9 +40,9 @@ x_HK_B = 1-x_LK_B;
 
 T_boiling_H2O = cmpin(1).bp; 
 T_boiling_HCN = cmpin(6).bp;  
-%T_boiling_mixture_assumption = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
+%T_feed = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
 %--> use feed temperature once available 
-T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
+%T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
 T_feed = bubblepoint([z.H2O, z.HCN], pressure, cmpin, untin); 
 
 
@@ -65,7 +65,7 @@ end
 % calculation of geometric mean of alpha: 
 
 
-alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(T_boiling_HCN, x_LK_D) * alpha(T_boiling_mixture_assumption, z.HCN))^(1/3);
+alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(T_boiling_HCN, x_LK_D) * alpha(T_feed, z.HCN))^(1/3);
 % always need to pass alpha the mole fraction of the light key (--> HCN) at
 % the location corresponding to the used temperature
 
@@ -119,7 +119,7 @@ deltaH_HCN = cmpin(6).Hv;                               % Molar enthalpy of vapo
 Q_cond = deltaH_HCN*V_R;                                % Heat duty condenser [J/s]
 LMTD = (delta_T1-delta_T2)/log(delta_T1/delta_T2);      % Using log-mean temperature difference for counter-current HX
 area_cond = Q_cond/(700*LMTD);                          % 0.700 kW/(m2*K) from task sheet
-enthalpy_feed = enthalpy_temperature_liquid(T_boiling_mixture_assumption,cmpin,untin); 
+enthalpy_feed = enthalpy_temperature_liquid(T_feed,cmpin,untin); 
 enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
 enthalpy_bottom = enthalpy_temperature_liquid(T_boiling_H2O,cmpin,untin); 
 h_F = z.H2O*enthalpy_feed(1)+z.HCN*enthalpy_feed(6); 
@@ -127,11 +127,11 @@ h_D = x_HK_D*enthalpy_distillate(1) + x_LK_D*enthalpy_distillate(6);
 h_B = x_HK_B*enthalpy_bottom(1) + x_LK_B*enthalpy_bottom(6);
 Q_reboiler = D*h_D+B*h_B-F*h_F-Q_cond; 
 
-heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
+heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water_in)/2,cmpin,untin); 
 heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
 
 cP_cooling_water = @(temperature) heat_capacity(temperature, cp_coefficients_cooling_water);
-cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_HCN-T_cooling_water)); 
+cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_HCN-T_cooling_water_in)); 
 % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the 
 % region in question anyways)
 
