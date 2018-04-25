@@ -1,14 +1,14 @@
 function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo_model)
 % Calculation of HCN distillation using the Fenske-Underwood-Gilliland
 % method
-% since we are at bubble point (Aufgabenstellung: "fï¿½hren Sie den Feed im Siedezustand zu"), there's only L coming
+% since we are at bubble point (Aufgabenstellung: "führen Sie den Feed im Siedezustand zu"), there's only L coming
 % in (no V) --> might need a HX in stream 9 to get to saturated liquid 
 
 %%%%%%%%%%%%%%%%
 % cd /Users/Clemens/CS/MatlabWD
 %%%%%%%%%%%%%%%%
-
-feed_L = strin(9).L;
+R=untin(5).idgc;                                                          % ideal gas constant [J.mol-1.K-1]
+feed_L = strin(9).L;                                                    
 feed_V = strin(9).G;                                                    % molar flowrate in feed [mol/hr]
 q = 1;                                                                  % feed quality 
 % (fraction of feed that is liquid, q=1 since @ bubble point)
@@ -85,7 +85,7 @@ height = 1.2*N_S_real*0.6;
 D = z.HCN*F/0.995; % neglecting the 10 ppm HCN in bottom stream
 V_R = (RR_real+1)*D; 
 V_S = V_R;                                              % since at q=1
-V_flowrate = V_S*8.3144*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), 
+V_flowrate = V_S*R*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), 
 % which is hottest --> lowest gas density at same pressure
 rho_H2O_B = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
 rho_HCN_B = MW_HCN*pressure/(8.3144*T_boiling_H2O); 
@@ -94,7 +94,7 @@ rho_V_imperial_units = 0.06242796*rho_V;                % converting density fro
 v_max_imperial_units = 1/sqrt(rho_V_imperial_units);    % empirical formula only works with v_max [ft/s] and rho_V [lbm/ft3]
 v_max = 0.3048*v_max_imperial_units;                    % converting from ft/s to m/s
 A_o_bottom = V_flowrate/v_max;                          % cross-sectional area of column [m2]
-% --> probably need to account for "Anteil der Oberflï¿½che fï¿½r Volumenfluss:
+% --> probably need to account for "Anteil der Oberfläche für Volumenfluss:
 % 60%" from task sheet
 d_min_bottom = sqrt(4*A_o_bottom/pi);                   % column diameter [m]
 
@@ -104,32 +104,22 @@ L_S = F+L_R;
 B = F-D; 
 
 
-%LV_0 = [100 100 100 100];
-%LV = fsolve(@(LV) [(LV(1)-LV(2))/F-1; 
-%              (LV(4)-LV(3))/F; 
-%              (RR_real+1)*D-LV(4);
-%              LV(2)/D-RR_real], LV_0, options); 
-% LV(1) = L_S, LV(2) = L_R, LV(3) = V_S, LV(4) = V_R
-
-%%% NRTL (from J. Gmehling, U. Onken, W. Arlt, Vapor-Liquid Equilibrium Data Collection, Aqueous-Organic Systems (Supplement 1))
-%delta_g12 = 1298.9610; 
-%delta_g21 = 539.9577; 
-%alpha12 = 0.3836; 
-% need to call nrtl.m with species1 = HCN, species2 = water (see source)
-%gamma = nrtl(0.8, T_boiling_mixture_assumption, delta_g12, delta_g21, alpha12); 
-%gamma_HCN = gamma(1); 
-%gamma_H2O = gamma(2); 
-
-
 
 
 %%% Cost condenser & reboiler 
 % neglecting water in distillate: 
+T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 deltaH_HCN = cmpin(6).Hv;
 Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
+area_cond = Q_cond*(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
 Q_reboiler = 0; % NEED TO BE FIXED
+enthalpy_feed = enthalpy_temperature_liquid(T_boiling_mixture_assumption,cmpin,untin); 
+enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
+enthalpy_bottom = enthalpy_temperature_liquid(T_boiling_H2O,cmpin,untin); 
 
-T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
+
+
+
 heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
 heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
 
@@ -138,19 +128,19 @@ cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_
 % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the 
 % region in question anyways)
 
-test = 1;
+
 
 %%% McCabe Thiele
-x_plot = 0:0.01:1; 
-y_diagonal = x_plot; 
+%x_plot = 0:0.01:1; 
+%y_diagonal = x_plot; 
 
 
 %%% Cost calculation
 OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1; 
 % [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
-
-%OPEX_column = OPEX_cooling_water + OPEX_steam; 
+CAPEX_cond = 25000*(area_cond^0.65); 
+OPEX_column = OPEX_cooling_water + OPEX_steam; 
 
 
 
@@ -163,7 +153,7 @@ strout = strin;
 %untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
 %untout(4).En = Q_cond + Q_reboiler; 
 
-
+test = 1;
 
 
 
