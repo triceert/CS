@@ -1,26 +1,25 @@
-function [Z,Vm] = PengRobinson(p,T,F,cmp,unt)
+function [Z,Vm] = PengRobinsonNaturalGas(p,T,cmp,unt)
 % - Calculates molar volume of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
 % INPUT: p = pressure  [Pa]
 %        T = Temperature [K]       
-%        F = flow [mol.s-1], vector for different components
-%           cmp,unt=compund and unit struct
+%        cmp = compound struct     
+%        unt = unit struct
 % OUTPUT: Vm: molar volume [m3.mol-1]
 %         Z: compressibility factor
 
 
 %Assign Vectors from Compound struct
 %   From Nitrogen to Hydrogen Cyanide (identifier 2-6)
-pc=extractfield(cmp(2:6),'pc')';
-Tc=extractfield(cmp(2:6),'Tc')';
-omega =extractfield(cmp(2:6),'omega')';
-R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
+z = extractfield(cmp([2 3 10:18]),'xNatGas')';% molar fraction of each component
+pc = extractfield(cmp([2 3 10:18]),'pc')';
+Tc = extractfield(cmp([2 3 10:18]),'Tc')';
+omega = extractfield(cmp([2 3 10:18]),'omega')';
+R = unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
-
-F_mix = sum(F);
-z = F./F_mix; % molar fraction of each component
+ 
 
 Tc_mix = sum(Tc.*z);
 %pc_mix = sum(pc.*z);            %why we dont use this?
@@ -65,6 +64,7 @@ Zposs = roots(polZ);
 %We only want real compressibility factors
 Zposs(imag(Zposs) ~= 0) = 0;
 Z = Zposs(Zposs ~= 0);
+
 end
 
 
