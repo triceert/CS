@@ -7,8 +7,8 @@ function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo
 %%%%%%%%%%%%%%%%
 % cd /Users/Clemens/CS/MatlabWD
 %%%%%%%%%%%%%%%%
-
-feed_L = strin(9).L;
+R=unt(5).idgc;                                                          % ideal gas constant [J.mol-1.K-1]
+feed_L = strin(9).L;                                                    
 feed_V = strin(9).G;                                                    % molar flowrate in feed [mol/hr]
 q = 1;                                                                  % feed quality 
 % (fraction of feed that is liquid, q=1 since @ bubble point)
@@ -85,7 +85,7 @@ height = 1.2*N_S_real*0.6;
 D = z.HCN*F/0.995; % neglecting the 10 ppm HCN in bottom stream
 V_R = (RR_real+1)*D; 
 V_S = V_R;                                              % since at q=1
-V_flowrate = V_S*8.3144*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), 
+V_flowrate = V_S*R*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), 
 % which is hottest --> lowest gas density at same pressure
 rho_H2O_B = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
 rho_HCN_B = MW_HCN*pressure/(8.3144*T_boiling_H2O); 
@@ -125,11 +125,12 @@ B = F-D;
 
 %%% Cost condenser & reboiler 
 % neglecting water in distillate: 
+T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 deltaH_HCN = cmpin(6).Hv;
 Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
+area_cond = Q_cond(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
 Q_reboiler = 0; % NEED TO BE FIXED
 
-T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
 heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
 
@@ -149,7 +150,7 @@ y_diagonal = x_plot;
 OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1; 
 % [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
-
+CAPEX_cond = 25000*(area_cond^0.65); 
 OPEX_column = OPEX_cooling_water + OPEX_steam; 
 
 
