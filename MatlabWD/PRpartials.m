@@ -1,12 +1,15 @@
-function out = PRpartials(P,T,F,cmp,unt,n)
+function [out,Ztot] = PRpartials(P,T,F,cmp,unt,n)
 % - Calculates partial pressure of nth component of F of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
+% Second output, Z of PFR reaction mixture
+
 % INPUT: p = pressure  [Pa]
 %        T = Temperature [K]       
 %        F = flow [mol.s-1], vector for different components
 %           cmp,unt=compund and unit struct
-%        n=n th vcompenent of F vector;
+%        n=n th vcompenent of F vector; n is useless if one is just
+%        interessted in second output Z
 % OUTPUT: pi=partial pressure
 %         
 
