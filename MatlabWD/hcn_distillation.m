@@ -7,12 +7,13 @@ function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo
 %%%%%%%%%%%%%%%%
 % cd /Users/Clemens/CS/MatlabWD
 %%%%%%%%%%%%%%%%
-R=untin(5).idgc;                                                          % ideal gas constant [J.mol-1.K-1]
+R=untin(5).idgc;                                                           % ideal gas constant [J.mol-1.K-1]
 feed_L = strin(9).L;                                                    
-feed_V = strin(9).G;                                                    % molar flowrate in feed [mol/hr]
-q = 1; 
-% feed quality 
-% (fraction of feed that is liquid, q=1 since @ bubble point)
+feed_V = strin(9).G;                                                       % molar flowrate in feed [mol/hr]
+q = 1;                                                                     % feed quality 
+pressure = 1e5; 
+                                                                           
+                                                                           % (fraction of feed that is liquid, q=1 since @ bubble point)
 z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
 z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V); 
 %z.HCN = 0.035; 
@@ -42,6 +43,8 @@ T_boiling_HCN = cmpin(6).bp;
 %T_boiling_mixture_assumption = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
 %--> use feed temperature once available 
 T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
+T_feed = bubblepoint([z.H2O, z.HCN], pressure, cmpin, untin); 
+
 
 
 % want to operate the column at atmospheric pressure 
@@ -66,56 +69,56 @@ alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(T_boiling_HCN, x_LK_D) * alph
 % always need to pass alpha the mole fraction of the light key (--> HCN) at
 % the location corresponding to the used temperature
 
-%%% Fenske equation %%% 
+%%% FENSKE EQUATION %%% 
 N_S_min = log(x_LK_D/x_HK_D*x_HK_B/x_LK_B)/log(alpha_mean)-1; 
 
-%%% Underwood formula %%%
+%%% UNDERWOOD FORMULA %%%
 options = optimset('Display','off');
-theta0 = 1.1; % just some guess
+theta0 = 1.1;                      
 theta_sol = fsolve (@(theta) (alpha_mean*z.HCN)/(alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0, options);
 % theta_sol between 1 and alpha_mean --> :) 
 RR_min = (alpha_mean*x_LK_D)/(alpha_mean-theta_sol)+(1*x_HK_D)/(1-theta_sol)-1; 
 RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
 
 
-%%% Gilliland correlation %%%
+%%% GILLILAND CORRELATION %%%
 X = (RR_real-RR_min)/(RR_real+1); 
 Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X))); 
 N_S_real = (Y+N_S_min)/(1-Y); 
 
 
-%%% Sizing the column %%% 
-height = 1.2*N_S_real*0.6;
-D = z.HCN*F/0.995; % neglecting the 10 ppm HCN in bottom stream
+%%% SIZING THE COLUMN %%% 
+height = 1.2*N_S_real*0.6;                              % 0.5 m distance between plates, so use 0.6 m/plate
+D = z.HCN*F/0.995;                                      % neglecting the 10 ppm HCN in bottom stream
 V_R = (RR_real+1)*D; 
 V_S = V_R;                                              % since at q=1
-V_flowrate = V_S*R*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), 
-% which is hottest --> lowest gas density at same pressure
+V_flowrate = V_S*R*T_boiling_H2O/pressure;              % using V_S since this refers to stripping section (bottom of column), 
+                                                        % which is hottest --> lowest gas density at same pressure
 rho_H2O_B = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
 rho_HCN_B = MW_HCN*pressure/(8.3144*T_boiling_H2O); 
 rho_V = x_LK_B*rho_HCN_B+x_HK_B*rho_H2O_B;              % weighted average of densities
 rho_V_imperial_units = 0.06242796*rho_V;                % converting density from kg/m3 to lbm/ft3
 v_max_imperial_units = 1/sqrt(rho_V_imperial_units);    % empirical formula only works with v_max [ft/s] and rho_V [lbm/ft3]
 v_max = 0.3048*v_max_imperial_units;                    % converting from ft/s to m/s
-A_o_bottom = V_flowrate/v_max;                          % cross-sectional area of column [m2]
-% --> probably need to account for "Anteil der Oberfläche für Volumenfluss:
-% 60%" from task sheet
+A_o_bottom = V_flowrate/v_max/0.6;                      % cross-sectional area of column [m2]; 
+                                                        % 0.6 since only 60% avail. for flow (see task sheet)
 d_min_bottom = sqrt(4*A_o_bottom/pi);                   % column diameter [m]
 
-%%% Get molar flowrates in stripping and rectification section 
+%%% MOLAR FLOWRATES IN STRIPPING AND RECTIFICATION SECTION %%% 
 L_R = D*RR_real; 
 L_S = F+L_R; 
 B = F-D; 
 
-
-
-
 %%% Cost condenser & reboiler 
 % neglecting water in distillate: 
-T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
-deltaH_HCN = cmpin(6).Hv;
-Q_cond = deltaH_HCN*V_R; % Heat duty condenser [J/s]
-area_cond = Q_cond/(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
+T_cooling_water_in=5;                                   % assumed temperature difference of cooling water, [K], goes from 5°C --> 15 °C 
+T_cooling_water_out=15;                                 % assumption
+delta_T1 = T_boiling_HCN - T_cooling_water_in;          % needed for LMTD calculation
+delta_T2 = T_boiling_HCN - T_cooling_water_out;         % needed for LMTD calculation
+deltaH_HCN = cmpin(6).Hv;                               % Molar enthalpy of vaporization of HCN
+Q_cond = deltaH_HCN*V_R;                                % Heat duty condenser [J/s]
+LMTD = (delta_T1-delta_T2)/log(delta_T1/delta_T2);      % Using log-mean temperature difference for counter-current HX
+area_cond = Q_cond/(700*LMTD);                          % 0.700 kW/(m2*K) from task sheet
 enthalpy_feed = enthalpy_temperature_liquid(T_boiling_mixture_assumption,cmpin,untin); 
 enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
 enthalpy_bottom = enthalpy_temperature_liquid(T_boiling_H2O,cmpin,untin); 
@@ -123,7 +126,6 @@ h_F = z.H2O*enthalpy_feed(1)+z.HCN*enthalpy_feed(6);
 h_D = x_HK_D*enthalpy_distillate(1) + x_LK_D*enthalpy_distillate(6);
 h_B = x_HK_B*enthalpy_bottom(1) + x_LK_B*enthalpy_bottom(6);
 Q_reboiler = D*h_D+B*h_B-F*h_F-Q_cond; 
-
 
 heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
 heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
@@ -141,7 +143,9 @@ cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_
 
 
 %%% Cost calculation
-OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1; 
+OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.15; % using 0.15 USD/tonne instead of the given 0.10 USD/tonne to account
+                                                               % for the need to pre-cool
+
 % [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
 CAPEX_cond = 25000*(area_cond^0.65); 
