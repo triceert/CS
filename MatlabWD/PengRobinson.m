@@ -1,4 +1,4 @@
-function [Vm,Z] = PengRobinson(p,T,F,cmp,unt)
+function [pc,Vm,Z] = PengRobinson(p,T,F,cmp,unt)
 % - Calculates molar volume of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
@@ -12,10 +12,10 @@ function [Vm,Z] = PengRobinson(p,T,F,cmp,unt)
 
 %Assign Vectors from Compound struct
 %   From Nitrogen to Hydrogen Cyanide (identifier 2-6)
-pc=cmp(2:6).pc;
-Tc=cmp(2:6).Tc;
-omega =cmp(2:6).omega;
-R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
+pc=cmp(2:6).pc
+Tc=cmp(2:6).Tc
+omega =cmp(2:6).omega
+R=unt(5).idgc         %[kg.m2.s-2.mol-1.K-1]
 
 
 
@@ -24,7 +24,7 @@ z = F./F_mix; % molar fraction of each component
 
 Tc_mix = sum(Tc.*z);
 pc_mix = sum(pc.*z);            %why we dont use this?
-omega_mix = sum(omega.*z);
+omega_mix = sum(omega.*z)
 
 kappa_mix = 0.37464 + 1.54226*omega_mix - 0.26992*omega_mix^2;
 Tr_mix = T./Tc_mix;
