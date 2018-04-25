@@ -7,7 +7,7 @@ function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo
 %%%%%%%%%%%%%%%%
 % cd /Users/Clemens/CS/MatlabWD
 %%%%%%%%%%%%%%%%
-R=unt(5).idgc;                                                          % ideal gas constant [J.mol-1.K-1]
+R=untin(5).idgc;                                                          % ideal gas constant [J.mol-1.K-1]
 feed_L = strin(9).L;                                                    
 feed_V = strin(9).G;                                                    % molar flowrate in feed [mol/hr]
 q = 1;                                                                  % feed quality 
@@ -104,23 +104,6 @@ L_S = F+L_R;
 B = F-D; 
 
 
-%LV_0 = [100 100 100 100];
-%LV = fsolve(@(LV) [(LV(1)-LV(2))/F-1; 
-%              (LV(4)-LV(3))/F; 
-%              (RR_real+1)*D-LV(4);
-%              LV(2)/D-RR_real], LV_0, options); 
-% LV(1) = L_S, LV(2) = L_R, LV(3) = V_S, LV(4) = V_R
-
-%%% NRTL (from J. Gmehling, U. Onken, W. Arlt, Vapor-Liquid Equilibrium Data Collection, Aqueous-Organic Systems (Supplement 1))
-%delta_g12 = 1298.9610; 
-%delta_g21 = 539.9577; 
-%alpha12 = 0.3836; 
-% need to call nrtl.m with species1 = HCN, species2 = water (see source)
-%gamma = nrtl(0.8, T_boiling_mixture_assumption, delta_g12, delta_g21, alpha12); 
-%gamma_HCN = gamma(1); 
-%gamma_H2O = gamma(2); 
-
-
 
 
 %%% Cost condenser & reboiler 
@@ -128,8 +111,14 @@ B = F-D;
 T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 deltaH_HCN = cmpin(6).Hv;
 Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
-area_cond = Q_cond(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
+area_cond = Q_cond*(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
 Q_reboiler = 0; % NEED TO BE FIXED
+enthalpy_feed = enthalpy_temperature_liquid(T_boiling_mixture_assumption,cmpin,untin); 
+enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
+enthalpy_bottom = enthalpy_temperature_liquid(T_boiling_H2O,cmpin,untin); 
+
+
+
 
 heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
 heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
@@ -139,11 +128,11 @@ cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_
 % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the 
 % region in question anyways)
 
-test = 1;
+
 
 %%% McCabe Thiele
-x_plot = 0:0.01:1; 
-y_diagonal = x_plot; 
+%x_plot = 0:0.01:1; 
+%y_diagonal = x_plot; 
 
 
 %%% Cost calculation
@@ -164,7 +153,7 @@ strout = strin;
 %untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
 %untout(4).En = Q_cond + Q_reboiler; 
 
-
+test = 1;
 
 
 
