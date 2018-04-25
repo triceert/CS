@@ -1,7 +1,7 @@
 function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo_model)
 % Calculation of HCN distillation using the Fenske-Underwood-Gilliland
 % method
-% since we are at bubble point (Aufgabenstellung: "führen Sie den Feed im Siedezustand zu"), there's only L coming
+% since we are at bubble point (Aufgabenstellung: "fï¿½hren Sie den Feed im Siedezustand zu"), there's only L coming
 % in (no V) --> might need a HX in stream 9 to get to saturated liquid 
 
 %%%%%%%%%%%%%%%%
@@ -94,7 +94,7 @@ rho_V_imperial_units = 0.06242796*rho_V;                % converting density fro
 v_max_imperial_units = 1/sqrt(rho_V_imperial_units);    % empirical formula only works with v_max [ft/s] and rho_V [lbm/ft3]
 v_max = 0.3048*v_max_imperial_units;                    % converting from ft/s to m/s
 A_o_bottom = V_flowrate/v_max;                          % cross-sectional area of column [m2]
-% --> probably need to account for "Anteil der Oberfläche für Volumenfluss:
+% --> probably need to account for "Anteil der Oberflï¿½che fï¿½r Volumenfluss:
 % 60%" from task sheet
 d_min_bottom = sqrt(4*A_o_bottom/pi);                   % column diameter [m]
 
@@ -150,7 +150,7 @@ OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1;
 % [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
 
-OPEX_column = OPEX_cooling_water + OPEX_steam; 
+%OPEX_column = OPEX_cooling_water + OPEX_steam; 
 
 
 

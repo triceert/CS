@@ -12,10 +12,10 @@ function [Z,Vm] = PengRobinson(p,T,F,cmp,unt)
 
 %Assign Vectors from Compound struct
 %   From Nitrogen to Hydrogen Cyanide (identifier 2-6)
-pc=extractfield(cmp(2:6),'pc');
-Tc=extractfield(cmp(2:6),'Tc');
-omega =extractfield(cmp(2:6),'omega');
-R=unt(5).idgc         %[kg.m2.s-2.mol-1.K-1]
+pc=extractfield(cmp(2:6),'pc')';
+Tc=extractfield(cmp(2:6),'Tc')';
+omega =extractfield(cmp(2:6),'omega')';
+R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
 
