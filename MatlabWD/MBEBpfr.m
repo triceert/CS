@@ -1,14 +1,20 @@
-function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str)
+function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
  
-%kinhand = @(T,F), -- nth reaction
-%parthand  = @(p,T,F,cmp,unt,n) -- partial pressure of nth comp
+
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
     
-
-    [r1,r2]=kinhand(A(7),A(1:6));
+%Get PR if idealreal set to 1
+    switch idealreal       
+        case  1
+        PRCH4=parthand(A(1),A(7),A(2:6),cmp,unt,2);
+        PRNH3=parthand(A(1),A(7),A(2:6),cmp,unt,3);        
+        case 0            
+        PRCH4=1;
+        PRNH3=1;            
+    end
+    
+    [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);
   
-
-
     dAdV=zeros(8,1);
     %# 1 Pressure
     dAdV(1)=0;  

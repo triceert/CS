@@ -1,4 +1,4 @@
-function pi = PRpartials(p,T,F,cmp,unt,n)
+function out = PRpartials(P,T,F,cmp,unt,n)
 % - Calculates partial pressure of nth component of F of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
@@ -13,68 +13,85 @@ function pi = PRpartials(p,T,F,cmp,unt,n)
 
 %Assign Vectors from Compound struct
 %   From Nitrogen to Hydrogen Cyanide (identifier 2-6)
-pc=extractfield(cmp(2:6),'pc')';
+Pc=extractfield(cmp(2:6),'pc')';
 Tc=extractfield(cmp(2:6),'Tc')';
-omega =extractfield(cmp(2:6),'omega')';
+w =extractfield(cmp(2:6),'omega')';
 R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
 
-F_mix = sum(F)
-z = F./F_mix % molar fraction of each component
+% %We only want real compressibility factors
+% Zposs(imag(Zposs) ~= 0) = 0;
+% Z = Zposs(Zposs ~= 0);
+% Z=max(Z);
+% 
 
-Tc_mix = sum(Tc.*z);
-%pc_mix = sum(pc.*z);            %why we dont use this?
-omega_mix = sum(omega.*z);
-
-kappa_mix = 0.37464 + 1.54226*omega_mix - 0.26992*omega_mix^2;
-Tr_mix = T./Tc_mix;
-alpha_mix = (1 + kappa_mix.*(1-sqrt(Tr_mix)))^2;
-
-a = (0.45724*R^2*Tc.^2)./pc;            
-b = (0.07780*R.*Tc)./pc;
-a_mix = nthroot(sum(z.*a.^(0.5)),length(a));
-b_mix = sum(z.*b);
-
-A = alpha_mix*a_mix*p/(R^2*T^2);
-B = b_mix*p/(R*T);
-
-%Polynomial solution for molar volume
-
-a1 = p;
-a2 = p*b_mix - R*T;
-a3 = a_mix*alpha_mix - 3*p*b_mix^2 - 2*b_mix*R*T;
-a4 = p*b_mix^3 + R*T*b_mix^2 - a_mix*b_mix*alpha_mix;
-
-polVm = [a1 a2 a3 a4];
-Vmposs = roots(polVm);
-
-%We only want real molar volumes, and if two are there, the biggest one
-Vmposs(imag(Vmposs) ~= 0) = 0;
-Vm = max(Vmposs);
-
-%Polynomial solution for compressibility factor
-
-b1 = 1;
-b2 = B-1;
-b3 = A - 2*B - 3*B^2;
-b4 = B^3 + B^2 - A*B;
-
-polZ = [b1 b2 b3 b4];
-Zposs = roots(polZ);
-
-%We only want real compressibility factors
-Zposs(imag(Zposs) ~= 0) = 0;
-Z = Zposs(Zposs ~= 0);
-Z=max(Z);
 
 %% GET Partial Pressure of nth component
 
-pi=z.*Z.*((R.*T)./Vm);
+% pi=z.*Z.*((R.*T)./Vm);
+% 
+% pi=pi(n);
+% 
 
-pi=abs(pi(n))
 
 
+% Symbols:
+% P = final pressure of the gas mixture.
+% pza, pzb, pzc, ... pzn = corrected partial pressure of the gas.
+% a, b, c, ...., n = concentration of the specific gas (%Gas/100).
+% za, zb, zc, .., zn = compressibility factors of the different components at pressures a*P, b*P, c*P, ...n*P. Ztot = compressibility factor for the gas mixture, and
+% Ztot =(a*za)+(b*zb)+(c*zc)+....+(n*zn)
+% pza =(a*za *P)/Ztot
+% pzb =(b*zb *P)/Ztot
+% pzc =(c*zc *P)/Ztot
+
+%[{'N2';'CH4';'NH3';'H2';'HCN'}]
+
+x=F./sum(F)
+
+
+zN2=getZ(w(1),R,T,Tc(1),P*x(1),Pc(1)); 
+zCH4=getZ(w(2),R,T,Tc(2),P*x(2),Pc(2)); 
+zNH3=getZ(w(1),R,T,Tc(3),P*x(3),Pc(3));
+zH2=getZ(w(1),R,T,Tc(4),P*x(4),Pc(4));
+zHCN=getZ(w(1),R,T,Tc(5),P*x(5),Pc(5));
+
+Ztot=(x(1).*zN2+x(2).*zCH4+x(3)*zNH3+x(4).*zH2+x(5).*zHCN);
+
+pN2=(x(1).*zN2*P)/Ztot;
+pCH4=(x(2).*zCH4*P)/Ztot;
+PNH3=(x(3).*zNH3*P)/Ztot;
+PH2=(x(4).*zH2*P)/Ztot;
+pHCN=(x(5).*zHCN*P)/Ztot;
+
+out=[pN2;pCH4;PNH3;PH2;pHCN];
+out=out(n);
+
+function Z=getZ(w,R,T,Tc,P,Pc)
+% Reduced variables
+Tr = T./Tc ;
+Pc = P./Pc;
+
+% Parameters of the EOS for a pure component
+m = 0.37464 + 1.54226.*w - 0.26992.*w.^2;
+alfa = (1 + m.*(1 - sqrt(Tr))).^2;
+a = 0.45724.*(R.*Tc).^2./Pc.*alfa;
+b = 0.0778.*R.*Tc./Pc;
+A = a.*P/(R.*T).^2;
+B = b.*P/(R.*T);
+
+% Compressibility factor
+Zposs = roots([1 -(1-B) (A-3.*B.^2-2.*B) -(A.*B-B.^2-B.^3)]);
+
+ %We only want real compressibility factors
+ Zposs(imag(Zposs) ~= 0) = 0;
+ Z = Zposs(Zposs ~= 0);
+ Z=max(Z);
+ 
+
+
+end
 
 end
 
