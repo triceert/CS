@@ -65,6 +65,7 @@ Zposs = roots(polZ);
 %We only want real compressibility factors
 Zposs(imag(Zposs) ~= 0) = 0;
 Z = Zposs(Zposs ~= 0);
+
 end
 
 
