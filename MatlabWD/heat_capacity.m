@@ -1,5 +1,6 @@
 function [cpT] = heat_capacity(T,a)
-% - Calculates the heat capacity of a GASEOUS compound with given 
+% - Calculates the heat capacity of a GASEOUS compound with given
+% parameters as a function of the temperature
 %
 % INPUT: a = coefficients from the NASA as 1x5 or 5x1 vector
 %        T = Temperature [K]
