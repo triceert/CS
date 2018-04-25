@@ -1,4 +1,4 @@
-function H = HenrysConstant(T,cmp)
+function [H] = HenrysConstant(T,cmp)
 % - Calculates Henry's constant for a given compound at a given temperature
 %
 % INPUT: T = Temperature [K]
