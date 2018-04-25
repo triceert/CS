@@ -127,6 +127,7 @@ B = F-D;
 % neglecting water in distillate: 
 deltaH_HCN = cmpin(6).Hv;
 Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
+Q_reboiler = 0; % NEED TO BE FIXED
 
 T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
@@ -138,6 +139,32 @@ cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_
 % region in question anyways)
 
 test = 1;
+
+%%% McCabe Thiele
+x_plot = 0:0.01:1; 
+y_diagonal = x_plot; 
+
+
+%%% Cost calculation
+OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1; 
+% [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
+CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
+
+OPEX_column = OPEX_cooling_water + OPEX_steam; 
+
+
+
+
+cmpout = cmpin; 
+untout = untin; 
+strout = strin; 
+%untout(4).h = height; 
+%untout(4).rad = d_min_bottom/2; 
+%untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
+%untout(4).En = Q_cond + Q_reboiler; 
+
+
+
 
 
 
