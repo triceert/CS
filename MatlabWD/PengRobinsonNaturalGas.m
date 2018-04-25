@@ -12,10 +12,10 @@ function [Z,Vm] = PengRobinsonNaturalGas(p,T,cmp,unt)
 
 %Assign Vectors from Compound struct
 %   From Nitrogen to Hydrogen Cyanide (identifier 2-6)
-z = extractfield(cmp([2 3 10:18]),'xNatGas')';% molar fraction of each component
-pc = extractfield(cmp([2 3 10:18]),'pc')';
-Tc = extractfield(cmp([2 3 10:18]),'Tc')';
-omega = extractfield(cmp([2 3 10:18]),'omega')';
+z = extractfield(cmp([2 3 9:17]),'xNatGas')';% molar fraction of each component
+pc = extractfield(cmp([2 3 9:17]),'pc')';
+Tc = extractfield(cmp([2 3 9:17]),'Tc')';
+omega = extractfield(cmp([2 3 9:17]),'omega')';
 R = unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
