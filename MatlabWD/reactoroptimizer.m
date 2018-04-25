@@ -7,8 +7,8 @@ y0=[1; 1; 0; 0.1; 0.2; 0.3; 0.4; 0.5];
 
 
 %declare needed handles
-kinhand = @(T,pCH4,pNH3,n)kinetics(T,pCH4,pNH3,n);
-prhand  = @()
+kinhand = @(T,pCH4,pNH3,n)kinetics(T,pCH4,pNH3,n); %gives rate of nth rxn
+prhand  = @(p,T,F,cmp,unt)PengRobinson(p,T,F,cmp,unt);%gives compressibility factor of mixture
 
 %MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
 MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,prhand,cmp,unt,str);
