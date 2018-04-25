@@ -1,25 +1,28 @@
 function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 
 
+Volmax=0.000353*800;
+
 %initialize solver
-Vspan=linspace(0,1,100);
-y0=[1; 1; 0; 0.1; 0.2; 0.3; 0.4; 0.5];
+Vspan=linspace(0,Volmax,100);
+y0=[800000; 0; 0.00005; 0.00005; 0; 0; 700; 1600];
 
 
 %declare needed handles
-kinhand = @(T,pCH4,pNH3,n)kinetics(T,pCH4,pNH3,n); %gives rate of nth rxn
-prhand  = @(p,T,F,cmp,unt)PengRobinson(p,T,F,cmp,unt);%gives compressibility factor of mixture
+kinhand = @(T,F)kinetics(T,F); %gives rate of nth rxn
+parthand  = @(p,T,F,cmp,unt,n)PRpartials(p,T,F,cmp,unt,n);%gives partial pressure for nth comp in F calc with PR
 
 %MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
-MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,prhand,cmp,unt,str);
+MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cmp,unt,str);
 disp('MBEB handles set')
 
 %SOLVE
-[Vspan,A] = ode15s(MBEBhandle,Vspan,y0);
+options = odeset('NonNegative',1);
+[Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options);
 
 
 %EVAL
-plot(Vspan,A)
+plot(Vspan,A(:,2:6))
 
 
 

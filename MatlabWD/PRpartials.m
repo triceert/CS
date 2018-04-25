@@ -19,7 +19,7 @@ omega =extractfield(cmp(2:6),'omega')';
 R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
-G=F
+
 F_mix = sum(F)
 z = F./F_mix % molar fraction of each component
 
@@ -72,7 +72,7 @@ Z=max(Z);
 
 pi=z.*Z.*((R.*T)./Vm);
 
-pi=pi(n);
+pi=abs(pi(n))
 
 
 
