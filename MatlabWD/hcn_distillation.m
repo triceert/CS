@@ -119,7 +119,7 @@ d_min_bottom = sqrt(4*A_o_bottom/pi);                   % column diameter [m]
 %%% Get molar flowrates in stripping and rectification section 
 L_R = D*RR_real; 
 L_S = F+L_R; 
-
+B = F-D; 
 
 
 %LV_0 = [100 100 100 100];
@@ -145,6 +145,16 @@ x_plot = 0:0.01:1;
 y_plot = x_plot; 
 %y_eq = 
 
+
+
+%%% Cost condenser & reboiler 
+% neglecting water in distillate: 
+deltaH_HCN = 25220; % Enthalpy of vaporization of HCN at BP, [J/mol], cmpin.Hv(6)
+Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
+cp_coefficients_cooling_water = [34.51; -0.01; 4.686e-5; -3.781e-8; 1.173e-11]; % [cmpin.para(1), cmpin.parb(1), cmpin.parc(1), cmpin.pard(1), cmpin.pare(1)]
+T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
+cP_cooling_water = @(temperature) heat_capacity(temperature, cp_coefficients_cooling_water);
+cooling_water_mass_flow = Q_cond*MW_H2O/(cP_cooling_water((T_boiling_HCN+T_cooling_water)/2)*(T_boiling_HCN-T_cooling_water)); % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the region in question anyways)
 
 
 
