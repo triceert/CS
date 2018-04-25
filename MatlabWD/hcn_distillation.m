@@ -8,15 +8,15 @@ function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo
 % cd /Users/Clemens/CS/MatlabWD
 %%%%%%%%%%%%%%%%
 
-feed_L = strin(9).L 
+feed_L = strin(9).L;
 feed_V = strin(9).G;                                                    % molar flowrate in feed [mol/hr]
-q = 1;                                                                  % feed quality (fraction of feed that is liquid, q=1 since @ bubble point)
+q = 1;                                                                  % feed quality 
+% (fraction of feed that is liquid, q=1 since @ bubble point)
 z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
 z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V); 
 %z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
 %z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
-%F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
-F = 100; % mol/hr, just some value to try calculations
+F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
 MW_H2O = cmpin(1).MW; 
 MW_HCN = cmpin(6).MW;
 thermo_model = 'nrtl';  
@@ -33,9 +33,10 @@ x_LK_B = 10e-6;
 x_HK_B = 1-x_LK_B;
 
 
-T_boiling_H2O = cmpin.bp(1); 
-T_boiling_HCN = cmpin.bp(6);  
-%T_boiling_mixture_assumption = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here --> use feed temperature once available 
+T_boiling_H2O = cmpin(1).bp; 
+T_boiling_HCN = cmpin(6).bp;  
+%T_boiling_mixture_assumption = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
+%--> use feed temperature once available 
 T_boiling_mixture_assumption = 317.17; %%% need to do bubble point calculation
 
 
@@ -84,7 +85,8 @@ height = 1.2*N_S_real*0.6;
 D = z.HCN*F/0.995; % neglecting the 10 ppm HCN in bottom stream
 V_R = (RR_real+1)*D; 
 V_S = V_R;                                              % since at q=1
-V_flowrate = V_S*8.3144*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), which is hottest --> lowest gas density at same pressure
+V_flowrate = V_S*8.3144*T_boiling_H2O/pressure;         % using V_S since this refers to stripping section (bottom of column), 
+% which is hottest --> lowest gas density at same pressure
 rho_H2O_B = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
 rho_HCN_B = MW_HCN*pressure/(8.3144*T_boiling_H2O); 
 rho_V = x_LK_B*rho_HCN_B+x_HK_B*rho_H2O_B;              % weighted average of densities
@@ -123,12 +125,17 @@ B = F-D;
 
 %%% Cost condenser & reboiler 
 % neglecting water in distillate: 
-deltaH_HCN = 25220; % Enthalpy of vaporization of HCN at BP, [J/mol], cmpin.Hv(6)
+deltaH_HCN = cmpin(6).Hv;
 Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
-cp_coefficients_cooling_water = [cmpin(1).para, cmpin(1).parb, cmpin(1).parc, cmpin(1).pard, cmpin(1).pare];
+
 T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
+heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
+heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
+
 cP_cooling_water = @(temperature) heat_capacity(temperature, cp_coefficients_cooling_water);
-cooling_water_mass_flow = Q_cond*MW_H2O/(cP_cooling_water((T_boiling_HCN+T_cooling_water)/2)*(T_boiling_HCN-T_cooling_water)); % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the region in question anyways)
+cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_HCN-T_cooling_water)); 
+% cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the 
+% region in question anyways)
 
 test = 1;
 
