@@ -1,4 +1,4 @@
-function [Z,Vm] = PengRobinson(p,T,F,cmp,unt)
+function [Z,Vm] = PengRobinsonClean(p,T,F,cmp,unt)
 % - Calculates molar volume of a compound for given pressure and
 % temperature from the Peng-Robinson equation of state
 %
@@ -65,6 +65,7 @@ Zposs = roots(polZ);
 %We only want real compressibility factors
 Zposs(imag(Zposs) ~= 0) = 0;
 Z = Zposs(Zposs ~= 0);
+
 end
 
 
