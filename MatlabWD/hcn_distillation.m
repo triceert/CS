@@ -10,13 +10,17 @@ function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo
 R=untin(5).idgc;                                                          % ideal gas constant [J.mol-1.K-1]
 feed_L = strin(9).L;                                                    
 feed_V = strin(9).G;                                                    % molar flowrate in feed [mol/hr]
-q = 1;                                                                  % feed quality 
+q = 1; 
+% feed quality 
 % (fraction of feed that is liquid, q=1 since @ bubble point)
 z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
 z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V); 
+%z.HCN = 0.035; 
+%z.H2O = 1-z.HCN; 
 %z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
 %z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
 F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
+F = 100; 
 MW_H2O = cmpin(1).MW; 
 MW_HCN = cmpin(6).MW;
 thermo_model = 'nrtl';  
@@ -37,7 +41,7 @@ T_boiling_H2O = cmpin(1).bp;
 T_boiling_HCN = cmpin(6).bp;  
 %T_boiling_mixture_assumption = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
 %--> use feed temperature once available 
-T_boiling_mixture_assumption = 317.17; %%% need to do bubble point calculation
+T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
 
 
 % want to operate the column at atmospheric pressure 
@@ -111,13 +115,14 @@ B = F-D;
 T_cooling_water=15+273.15; % assumed temperature of available cooling water, [K]
 deltaH_HCN = cmpin(6).Hv;
 Q_cond = deltaH_HCN*D; % Heat duty condenser [J/s]
-area_cond = Q_cond*(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
-Q_reboiler = 0; % NEED TO BE FIXED
+area_cond = Q_cond/(700*(T_boiling_HCN-T_cooling_water)); % 0.700 kW/(m2*K) from task sheet
 enthalpy_feed = enthalpy_temperature_liquid(T_boiling_mixture_assumption,cmpin,untin); 
 enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
 enthalpy_bottom = enthalpy_temperature_liquid(T_boiling_H2O,cmpin,untin); 
-
-
+h_F = z.H2O*enthalpy_feed(1)+z.HCN*enthalpy_feed(6); 
+h_D = x_HK_D*enthalpy_distillate(1) + x_LK_D*enthalpy_distillate(6);
+h_B = x_HK_B*enthalpy_bottom(1) + x_LK_B*enthalpy_bottom(6);
+Q_reboiler = D*h_D+B*h_B-F*h_F-Q_cond; 
 
 
 heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water)/2,cmpin,untin); 
@@ -140,7 +145,7 @@ OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.1;
 % [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
 CAPEX_cond = 25000*(area_cond^0.65); 
-OPEX_column = OPEX_cooling_water + OPEX_steam; 
+%OPEX_column = OPEX_cooling_water + OPEX_steam; 
 
 
 
