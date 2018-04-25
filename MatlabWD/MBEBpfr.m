@@ -12,7 +12,7 @@ function dAdV=MBEBpfr(t,A,kinhand,prhand,cmp,unt,str)
     %#2 Nitrogen
     dAdV(2)=kinhand(200,101354,101354,2);  
     %#3 Methane
-    dAdV(3)=0;
+    dAdV(3)=PengRobinson(5,400,[1;2;3;4;5],cmp,unt);
     %#4 Ammonia
     dAdV(4)=0; 
     %#5 Hydrogen
