@@ -22,7 +22,7 @@ unt(1).a=unt(1).As/unt(1).V;%Specific surface of reactor
 Vspan=linspace(0,unt(1).V,100);
 
 %Starting Values
-y0=[500000; 1e-35; 0.001; 0.001; 1e-35; 1e-35; 600; 1600];
+y0=[800000; 1e-35; 0.001; 0.001; 1e-35; 1e-35; 600; 1600];
 
 %% HANDlES
 %declare needed handles

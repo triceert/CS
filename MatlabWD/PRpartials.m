@@ -23,20 +23,6 @@ R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 
 
-% %We only want real compressibility factors
-% Zposs(imag(Zposs) ~= 0) = 0;
-% Z = Zposs(Zposs ~= 0);
-% Z=max(Z);
-% 
-
-
-%% GET Partial Pressure of nth component
-
-% pi=z.*Z.*((R.*T)./Vm);
-% 
-% pi=pi(n);
-% 
-
 
 
 % Symbols:
