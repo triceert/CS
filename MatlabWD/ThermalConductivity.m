@@ -4,7 +4,7 @@ function [plambda] = ThermalConductivity(cmp)
 %
 % INPUT: cmp = compound struct     
 %
-% OUTPUT: plambda 2x17 array with polynom of the compound on each line 
+% OUTPUT: plambda 17x2 array with polynom of the compound on each line 
 % Indexes: 1: Water, 2:Nitrogen,3:Methane, 4:Ammonia,5: Hydrogen, 6:Hydrogen cyanide,
 % 7:Sulfuric acid, 8:Ammonium sulfate, 9:Ethane, 10:Propane, 11:Isobutane
 % 12:Butane, 13:Isopentane, 14:Pentane, 15:Hexane, 16:Carbon dioxide, 17:Oxygen
@@ -39,22 +39,24 @@ lambdaliq6 = [cmp(6).lambda253,cmp(6).lambda273,cmp(6).lambda293,cmp(6).lambda31
 lambdaliq7 = cmp(7).lambdaliq300;
 lambdaliq13 = cmp(13).lambdaliq298;
 
-p = zeros(17,2);
-p(1,:) = polyfit([Tliq Tgas400],[lambdaliq1 lambdagas1],1);
-p(2,:) = polyfit(Tgas100,lambdagas2,1);
-p(3,:) = polyfit(Tgas100,lambdagas3,1);
-p(4,:) = polyfit(Tgas300,lambdagas4,1);
-p(5,:) = polyfit(Tgas100,lambdagas5,1);
-p(6,:) = polyfit(TLange,lambdaliq6,1);
-p(7,:) = [0,lambdaliq7];
-p(8,:) = [NaN,NaN];
-p(9,:) = polyfit(Tgas200,lambdagas9,1);
-p(10,:) = polyfit(Tgas300,lambdagas10,1);
-p(11,:) = polyfit(Tgas300,lambdagas11,1);
-p(12,:) = polyfit(Tgas300,lambdagas12,1);
-p(13,:) = [0,lambdaliq13];
-p(14,:) = polyfit(Tgas400,lambdagas14,1);
-p(15,:) = polyfit(Tgas400,lambdagas15,1);
-p(16,:) = polyfit(Tgas200,lambdagas16,1);
-p(17,:) = polyfit(Tgas100,lambdagas17,1);
+%Polynomial fitting
+plambda = zeros(17,2);
+
+plambda(1,:) = polyfit([Tliq Tgas400],[lambdaliq1 lambdagas1],1);
+plambda(2,:) = polyfit(Tgas100,lambdagas2,1);
+plambda(3,:) = polyfit(Tgas100,lambdagas3,1);
+plambda(4,:) = polyfit(Tgas300,lambdagas4,1);
+plambda(5,:) = polyfit(Tgas100,lambdagas5,1);
+plambda(6,:) = polyfit(TLange,lambdaliq6,1);
+plambda(7,:) = [0,lambdaliq7];
+plambda(8,:) = [NaN,NaN];
+plambda(9,:) = polyfit(Tgas200,lambdagas9,1);
+plambda(10,:) = polyfit(Tgas300,lambdagas10,1);
+plambda(11,:) = polyfit(Tgas300,lambdagas11,1);
+plambda(12,:) = polyfit(Tgas300,lambdagas12,1);
+plambda(13,:) = [0,lambdaliq13];
+plambda(14,:) = polyfit(Tgas400,lambdagas14,1);
+plambda(15,:) = polyfit(Tgas400,lambdagas15,1);
+plambda(16,:) = polyfit(Tgas200,lambdagas16,1);
+plambda(17,:) = polyfit(Tgas100,lambdagas17,1);
 end
