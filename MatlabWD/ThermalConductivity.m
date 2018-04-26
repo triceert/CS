@@ -22,8 +22,9 @@ lambdagas5 = [cmp(5).lambdagas100,cmp(5).lambdagas200,cmp(5).lambdagas300,cmp(5)
 lambdagas9 = [cmp(9).lambdagas200,cmp(9).lambdagas300,cmp(9).lambdagas400,cmp(9).lambdagas500,cmp(9).lambdagas600];
 
 %Other compounds
-Tliq = 273.16:25:373.16;
-lambdaliq1 = [cmp(1).lambdaliq273,cmp(1).lambdaliq298,cmp(1).lambdaliq323,cmp(1).lambdaliq348,cmp(1).lambdaliq373];
+
+%Tliq = 273.16:25:373.16; It will not be liquid
+%lambdaliq1 = [cmp(1).lambdaliq273,cmp(1).lambdaliq298,cmp(1).lambdaliq323,cmp(1).lambdaliq348,cmp(1).lambdaliq373];
 
 TLange = 253.16:20:333.16;
 lambdaliq6 = [cmp(6).lambda253,cmp(6).lambda273,cmp(6).lambda293,cmp(6).lambda313,cmp(6).lambda333];
@@ -33,7 +34,8 @@ lambdaliq7 = cmp(7).lambdaliq300;
 %Polynomial fitting
 plambda = zeros(9,2);
 
-plambda(1,:) = polyfit([Tliq Tgas400],[lambdaliq1 lambdagas1],1);
+%plambda(1,:) = polyfit([Tliq Tgas400],[lambdaliq1 lambdagas1],1);
+plambda(1,:) = polyfit(Tgas400,lambdagas1,1);
 plambda(2,:) = polyfit(Tgas100,lambdagas2,1);
 plambda(3,:) = polyfit(Tgas100,lambdagas3,1);
 plambda(4,:) = polyfit(Tgas300,lambdagas4,1);

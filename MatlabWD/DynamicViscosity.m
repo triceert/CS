@@ -22,18 +22,19 @@ mugas5 = [cmp(5).mugas100,cmp(5).mugas200,cmp(5).mugas300,cmp(5).mugas400,cmp(5)
 mugas9 = [cmp(9).mugas200,cmp(9).mugas300,cmp(9).mugas400,cmp(9).mugas500,cmp(9).mugas600];
 
 %Liquids
-Tliq1 = 273.16:25:373.16;
+%Tliq1 = 273.16:25:373.16; At those temperatures, water will not be liquid
 Tliq6 = [273.16,298.16];
 Tliq7 = 298.16:25:373.16;
 
-muliq1 = [cmp(1).muliq273,cmp(1).muliq298,cmp(1).muliq323,cmp(1).muliq348,cmp(1).muliq373];
+%muliq1 = [cmp(1).muliq273,cmp(1).muliq298,cmp(1).muliq323,cmp(1).muliq348,cmp(1).muliq373];
 muliq6 = [cmp(6).muliq273,cmp(6).muliq298];
 muliq7 = [cmp(7).muliq298,cmp(7).muliq323,cmp(7).muliq348,cmp(7).muliq373];
 
 %Polynomial fitting
 pmu = zeros(9,3);
 
-pmu(1,:) = polyfit([Tliq1 Tgas400],[muliq1 mugas1],2);
+%pmu(1,:) = polyfit([Tliq1 Tgas400],[muliq1 mugas1],2);
+pmu(1,:) = polyfit(Tgas400,mugas1,2);
 pmu(2,:) = polyfit(Tgas100,mugas2,2);
 pmu(3,:) = polyfit(Tgas100,mugas3,2);
 pmu(4,:) = polyfit(Tgas300,mugas4,2);
