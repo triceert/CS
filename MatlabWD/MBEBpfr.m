@@ -1,8 +1,8 @@
 function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
 %% Provisorisch 
     H1=unt(1).deltaHHCN;
-    %H2=unt(2).deltaHNH3 does not load
-    H2=91880;
+    H2=unt(1).deltaHNH; %does not load
+    %H2=91880;
 
   
     a=unt(1).a;
