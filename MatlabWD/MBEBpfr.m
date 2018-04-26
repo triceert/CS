@@ -1,5 +1,13 @@
 function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
 %% Provisorisch 
+    H1=unt(1).deltaHHCN;
+    %H2=unt(2).deltaHNH3 does not load
+    H2=91880;
+
+  
+    a=unt(1).a;
+    U=4.5/2.5e-3;
+    cp=71000;
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
 %% INIT    
@@ -32,7 +40,10 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
     dAdV(6)=r1;
     
     %#7 Trxn
-    dAdV(7)=0;
+    %dAdV(7)=   a *(U* (A(8) - A(7)) - (r1 * H1 + r2 * H2))/...
+       % ( A(2) * cp + A(3) * cp + A(4) * cp + A(5) * cp...
+       % + A(6) * cp);
+       dAdV(7)=0;
     %#8 T heating medium
     dAdV(8)=0;                             %
 

@@ -60,7 +60,7 @@ subplot(2,2,3)
 plot(Vspan,A(:,7))
 title('Trxn')
 subplot(2,2,4)
-plot(Vspan,A(:,7))
+plot(Vspan,A(:,8))
 title('Tflu')
 
 
