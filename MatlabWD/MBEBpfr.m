@@ -1,4 +1,4 @@
-function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal)
+function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
 %Defining odesystem
 %All used handles declared in reactorptimizer.m
 
@@ -11,7 +11,7 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealrea
 
   
     a=unt(1).a;
-    U=4.5/2.5e-3;
+    
     cp=71000;
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
@@ -32,6 +32,8 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealrea
     cpNH3=cphand(A(7),cmp,unt,4);
     cpH2=cphand(A(7),cmp,unt,5);
     cpHCN=cphand(A(7),cmp,unt,6);
+    
+    U=Uhand(cmp,unt,A(1),A(7),A(2:6));
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(8,1);
     %# 1 Pressure

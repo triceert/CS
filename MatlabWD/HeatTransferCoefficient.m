@@ -1,7 +1,7 @@
 function [U] = HeatTransferCoefficient(cmp,unt,p,T,F)
 % INPUT: p = pressure  [Pa]
 %        T = Temperature [K]
-%        F = stream
+%        F = stream %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
 %        cmp = compound struct     
 %        unt = unit struct
 % OUTPUT: U
@@ -24,7 +24,9 @@ Tout = 1600; %[K]
 
 
 
-U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
+%U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
+
+U=4.5/2.5e-3;
 
 end
 

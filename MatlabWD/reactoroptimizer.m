@@ -22,7 +22,7 @@ unt(1).a=unt(1).As/unt(1).V;%Specific surface of reactor
 Vspan=linspace(0,unt(1).V,100);
 
 %Starting Values
-y0=[800000; 1e-35; 0.001; 0.001; 1e-35; 1e-35; 600; 1600];
+y0=[800000; 1e-35; 0.001; 0.001; 1e-35; 1e-35; 700; 1600];
 
 %% HANDlES
 %declare needed handles
@@ -31,8 +31,11 @@ kinhand = @(T,F,unt,PRNH3,PRCH4,idealreal)...
 parthand  = @(p,T,F,cmp,unt,n)...
     PRpartials(p,T,F,cmp,unt,n);%gives partial pressure for nth comp in F calc with PR
 cphand=@(T,cmp,unt,n) heat_capacity(T,cmp,unt,n); %handle for cp as fun of t for nth component in struct
+Uhand=@(cmp,unt,p,T,F)HeatTransferCoefficient(cmp,unt,p,T,F);
+
+
 %MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
-MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal);
+MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal);
 disp('MBEB handles set')
 
 %% SOLVE
@@ -50,8 +53,8 @@ str(5).yNH3=y(3);
 str(5).yH2=y(4);
 str(5).yHCN=y(5);
 
-
-
+HCNout=A(end,6)
+NRTubes=12.86/HCNout
 
 %% EVAL (to be externalized)
 figure
