@@ -2,8 +2,7 @@ function [plambda] = ThermalConductivity(cmp)
 % - Calculates the thermal conductivity of a compound as a function of the
 % temperature, calculated as a linear regression of given data
 %
-% INPUT: T = Temperature [K]
-%        cmp = compound struct     
+% INPUT: cmp = compound struct     
 %
 % OUTPUT: plambda 2x17 array with polynom of the compound on each line 
 % Indexes: 1: Water, 2:Nitrogen,3:Methane, 4:Ammonia,5: Hydrogen, 6:Hydrogen cyanide,
