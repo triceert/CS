@@ -14,6 +14,9 @@ F_tot = sum(F);
 D_reactor = unt(1).rad;
 L = unt(1).h;
 
+plambda = ThermalConductivity(cmp);
+pmu = DynamicViscosity(cmp);
+
 %Wall thermal diffusivity
 
 lambdaWall = cmp(10).lambda; %[m]
@@ -22,8 +25,8 @@ alphaWall = deltaWall/lambdaWall;
 
 %Inside the reactor
 
-lambda_mix_in = MixtureThermalConductivityReactorNew(cmp,F,T);
-mu_mix_in = MixtureDynamicViscosityReactorNew(cmp,F,T);
+lambda_mix_in = MixtureThermalConductivityReactor(F,T,plambda);
+mu_mix_in = MixtureDynamicViscosityReactor(F,T,pmu);
 cp_mix_in = sum(F.*cp)/F_tot;
 rho_mix_in = p/(R*T)*sum(F.*MW_in)/F_tot;
 
@@ -45,10 +48,10 @@ alpha_in = Nu_in*lambda_mix_in/D_reactor;
 y = [2;1]/3;
 cp1 = heat_capacity(T,cmp,unt,1);
 cp2 = heat_capacity(T,cmp,unt,9);
-%MW_out = [cmp(1).MW;cmp(9).MW];
+MW_out = [cmp(1).MW;cmp(9).MW];
 
-lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y,T);
-mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y,T);
+lambda_mix_out = MixtureThermalConductivityNaturalGas(y,T,plambda);
+mu_mix_out = MixtureDynamicViscosityNaturalGas(y,T,pmu);
 cp_mix_out = y(1)*cp1 + y(2)*cp2;
 %rho_mix_out = p/(R*T)*sum(y.*MW_out);
 
