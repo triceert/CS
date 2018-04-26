@@ -37,17 +37,20 @@ disp('MBEB handles set')
 
 %% SOLVE
 options = odeset('NonNegative',1);
-[Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options);
 
-y=A(end,2:6)./sum(A(end,2:6))
+[Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options); %get solution
 
+
+
+%% Assign Outputs
+y=A(end,2:6)./sum(A(end,2:6));
 str(5).yN2=y(1);
 str(5).yCH4=y(2);
 str(5).yNH3=y(3);
 str(5).yH2=y(4);
 str(5).yHCN=y(5);
 
-%% Assign Outputs
+
 
 
 %% EVAL (to be externalized)

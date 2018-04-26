@@ -37,7 +37,7 @@ R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 
 %[{'N2';'CH4';'NH3';'H2';'HCN'}]
 
-x=F./sum(F)
+x=F./sum(F);
 
 
 zN2=getZ(w(1),R,T,Tc(1),P*x(1),Pc(1)); 

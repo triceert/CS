@@ -1,8 +1,10 @@
-function dAdV=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal)
+function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal)
 %Defining odesystem
 %All used handles declared in reactorptimizer.m
 
 %% Provisorisch 
+%pass extra variables
+
     H1=unt(1).deltaHHCN;
     H2=unt(1).deltaHNH; %does not load
     %H2=91880;
@@ -25,11 +27,11 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal)
     end
 %% Assign Outputs from Handles    
     [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);
-    cpN2=cphand(A(7),cmp,unt,2)
-    cpCH4=cphand(A(7),cmp,unt,3)
-    cpNH3=cphand(A(7),cmp,unt,4)
-    cpH2=cphand(A(7),cmp,unt,5)
-    cpHCN=cphand(A(7),cmp,unt,6)
+    cpN2=cphand(A(7),cmp,unt,2);
+    cpCH4=cphand(A(7),cmp,unt,3);
+    cpNH3=cphand(A(7),cmp,unt,4);
+    cpH2=cphand(A(7),cmp,unt,5);
+    cpHCN=cphand(A(7),cmp,unt,6);
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(8,1);
     %# 1 Pressure
@@ -55,8 +57,7 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal)
     dAdV(8)=0;                             %
 
 
-    
-    
+
     
 end
 
