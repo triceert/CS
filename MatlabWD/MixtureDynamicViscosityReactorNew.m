@@ -11,7 +11,7 @@ A = extractfield(cmp(2:6),'viscA')';
 B = extractfield(cmp(2:6),'viscB')';
 C = extractfield(cmp(2:6),'viscC')';
 
-muT = (C*T^2 + B*T + A)'*10^(-6);
+muT = (C*T^2 + B*T + A)*10^(-6);
 F_tot = sum(F);
 mu_mix = sum(F.*muT)/F_tot;
 end

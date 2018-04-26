@@ -11,7 +11,7 @@ A = extractfield(cmp(2:6),'condA')';
 B = extractfield(cmp(2:6),'condB')';
 C = extractfield(cmp(2:6),'condC')';
 
-lambdaT = (C*T^2 + B*T + A)';
+lambdaT = (C*T^2 + B*T + A);
 F_tot = sum(F);
 lambda_mix = sum(F.*lambdaT)/F_tot;
 end
