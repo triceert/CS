@@ -25,7 +25,8 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
         PRCH4=1;
         PRNH3=1;            
     end
-%% Assign Outputs from Handles    
+%% Assign Outputs from Handles 
+     [~, Z]=parthand(A(1),A(7),A(2:6),cmp,unt,3)
     [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);
     cpN2=cphand(A(7),cmp,unt,2);
     cpCH4=cphand(A(7),cmp,unt,3);

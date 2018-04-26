@@ -31,7 +31,7 @@ kinhand = @(T,F,unt,PRNH3,PRCH4,idealreal)...
 parthand  = @(p,T,F,cmp,unt,n)...
     PRpartials(p,T,F,cmp,unt,n);%gives partial pressure for nth comp in F calc with PR
 cphand=@(T,cmp,unt,n) heat_capacity(T,cmp,unt,n); %handle for cp as fun of t for nth component in struct
-Uhand=@(cmp,unt,p,T,F,cp) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z);
+Uhand=@(cmp,unt,p,T,F,cp,Z) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z);
 
 
 %MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE

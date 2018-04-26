@@ -5,7 +5,7 @@ function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 %        cmp = compound struct     
 %        unt = unit struct
 %        cp = vector (1x5) containing the different heat capacities
-%        Vm 
+%        Z compressibility factor
 % OUTPUT: U
 
 R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
