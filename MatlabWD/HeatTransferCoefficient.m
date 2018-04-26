@@ -51,7 +51,7 @@ alpha_in = Nu_in*lambda_mix_in/D_reactor;
 
 %U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
 
-%U=4.5/2.5e-3;
-U = 1/(1/alpha_in + 1/alphaWall);
+U=4.5/2.5e-3;
+%U = 1/(1/alpha_in + 1/alphaWall);
 end
 
