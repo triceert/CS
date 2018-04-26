@@ -5,7 +5,7 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 %% PRovisorisch
 
 %idealreal 0 ideal 1 real(Peng robinson)
-idealreal=0
+idealreal=1
 
 
 %% ASSIGN
@@ -22,7 +22,7 @@ unt(1).a=unt(1).As/unt(1).V;%Specific surface of reactor
 Vspan=linspace(0,unt(1).V,100);
 
 %Starting Values
-y0=[800000; 1e-35; 0.001; 0.001; 1e-35; 1e-35; 700; 1600];
+y0=[300000; 1e-55; 0.0079; 0.0079; 1e-55; 1e-35; 700; 1600];
 
 %% HANDlES
 %declare needed handles

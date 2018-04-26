@@ -18,7 +18,7 @@ L = unt(1).h;
 
 lambdaWall = cmp(10).lambda; %[m]
 deltaWall = unt(1).deltaWall; %[m]
-alphaWall = deltaWall/lambdaWall;
+alphaWall = lambdaWall/deltaWall;
 
 %Inside the reactor
 
@@ -48,7 +48,7 @@ cp2 = heat_capacity(T,cmp,unt,9);
 %MW_out = [cmp(1).MW;cmp(9).MW];
 
 lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y,T);
-mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y,T);
+mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y,T)/100;
 cp_mix_out = y(1)*cp1 + y(2)*cp2;
 %rho_mix_out = p/(R*T)*sum(y.*MW_out);
 
@@ -65,8 +65,11 @@ tube_char_length = V_tube/A_tube;
 alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
 
-U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
 
-%U = 1/(1/alpha_in + 1/alphaWall);
+
+%U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
+U = 1/( 1/alphaWall);
+
+
 end
 
