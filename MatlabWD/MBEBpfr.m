@@ -8,11 +8,9 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     H1=unt(1).deltaHHCN;
     H2=unt(1).deltaHNH; %does not load
     %H2=91880;
-
+    a=unt(1).a;
   
-    a=unt(1).a
-    
-    cp=71000;
+  
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
 %% INIT    
@@ -26,7 +24,8 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
         PRNH3=1;            
     end
 %% Assign Outputs from Handles 
-     [~, Z]=parthand(A(1),A(7),A(2:6),cmp,unt,3);
+    
+    [~, Z]=parthand(A(1),A(7),A(2:6),cmp,unt,3);
     [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);
     cpN2=cphand(A(7),cmp,unt,2);
     cpCH4=cphand(A(7),cmp,unt,3);
@@ -34,8 +33,8 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     cpH2=cphand(A(7),cmp,unt,5);
     cpHCN=cphand(A(7),cmp,unt,6);
     cp = [cpN2; cpCH4; cpNH3; cpH2; cpHCN];
-    
     U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z);
+    
     
     
 %% DEFINE THE PROBLEM  ODEs  
@@ -55,12 +54,12 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     dAdV(6)=r1;
     
     %#7 Trxn
-    dAdV(7)=   a *(U* (A(8) - A(7)) - (r1 * H1 + r2 * H2))/...
+    dAdV(7)=   a *U* (A(8) - A(7)) - (r1 * H1 + r2 * H2)/...
         ( A(2) * cpN2 + A(3) * cpCH4 + A(4) * cpNH3 + A(5) * cpH2...
         + A(6) * cpHCN);
        %dAdV(7)=0;
     %#8 T heating medium
-    dAdV(8)= 0%-a *U* (A(7) - A(8)) /(1000*0.02);                            %
+    dAdV(8)= 0;%-a *U* (A(7) - A(8)) /(71000*0.02);                            %
 
 
 

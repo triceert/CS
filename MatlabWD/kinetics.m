@@ -4,7 +4,7 @@ function [r1,r2]=kinetics(T,F,unt,PRNH3,PRCH4,idealreal)
 
 
     
-    Factor=unt(1).a/6.022e23*1e4; 
+    Factor=(unt(1).a*1e4)/6.022e23; 
     %Correction Factor with specific surface
     %Avogadro und Flächenkorrektur für 
     

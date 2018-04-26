@@ -5,24 +5,32 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 %% PRovisorisch
 
 %idealreal 0 ideal 1 real(Peng robinson)
-idealreal=1
+idealreal=0;
 
 
-%% ASSIGN
+%% ASSIGNn
 %Calculate and assign reactor data for one tube
-unt(1).Aq=unt(1).rad.^2*pi;%Querschnittfl
-unt(1).As=unt(1).h*2*pi*unt(1).rad; %Radius
-unt(1).V=unt(1).Aq.*unt(1).h;%Volume
-unt(1).a=unt(1).As/unt(1).V;%Specific surface of reactor
+rad=unt(1).rad;%Radius
+l=unt(1).h;
+unt(1).Aq=pi.*rad.^2;%Querschnittsfläche
+unt(1).As=2.*pi.*rad.*l;%Oberfläche
+unt(1).V=l.*unt(1).Aq;%Volumen
+unt(1).a=unt(1).As./unt(1).V;   %specific surface (m2)/m3
 
 
 
 %% INIT SOLVER
-%Integration Vector (Volume of one Tube)
-Vspan=linspace(0,unt(1).V,100);
+Pressure=80325;
+%FeedCH4=3.87*1e-2;
+FeedCH4=0.0233;
+uberschuss=1.05;
+Tfeed=700;
+Touter=1600;
+pfrseries=6;
 
-%Starting Values
-y0=[300000; 1e-55; 0.0079; 0.0079; 1e-55; 1e-35; 700; 1600];
+
+%Integration Vector (Volume of one Tube)
+Vspan=linspace(0,unt(1).V*pfrseries,100);
 
 %% HANDlES
 %declare needed handles
@@ -31,30 +39,49 @@ kinhand = @(T,F,unt,PRNH3,PRCH4,idealreal)...
 parthand  = @(p,T,F,cmp,unt,n)...
     PRpartials(p,T,F,cmp,unt,n);%gives partial pressure for nth comp in F calc with PR
 cphand=@(T,cmp,unt,n) heat_capacity(T,cmp,unt,n); %handle for cp as fun of t for nth component in struct
-Uhand=@(cmp,unt,p,T,F,cp,Z) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z);
+Uhand=@(cmp,unt,p,T,F,cp,Z) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z);%local heat transfer coefficient as function of..
 
 
-%MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
-MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal);
-disp('MBEB handles set')
+%Starting Values
+
+
+y0=[Pressure; 0; FeedCH4; uberschuss*FeedCH4; 0; 0; Tfeed; Touter];
+
+
 
 %% SOLVE
+
+
+
+
+
 options = odeset('NonNegative',1);
-
+MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal);
 [Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options); %get solution
+%MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
 
+disp('MBEB handles set')
 
-
-%% Assign Outputs
-y=A(end,2:6)./sum(A(end,2:6));
+y=A(end,2:6)./sum(A(end,2:6))
 str(5).yN2=y(1);
 str(5).yCH4=y(2);
 str(5).yNH3=y(3);
 str(5).yH2=y(4);
 str(5).yHCN=y(5);
 
-HCNout=A(end,6)
-NRTubes=12.86/HCNout
+HCNout=A(end,6);
+
+
+
+%
+
+
+opti=12.86/HCNout %NR TUBES
+opti2=A(end,6)/A(1,3)
+
+%% Assign Outputs
+
+
 
 %% EVAL (to be externalized)
 figure
@@ -76,4 +103,8 @@ title('Tflu')
 
 
 disp('Reactor optimizer completed normally, calculated as ideal or real')
+%NRTubes=12.86/HCNout
+
+
+
 end

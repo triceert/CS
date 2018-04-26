@@ -67,8 +67,8 @@ alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
 
 
-%U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
-U = 1/( 1/alphaWall);
+U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
+%U = 1/( 1/alphaWall);
 
 
 end
