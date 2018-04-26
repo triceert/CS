@@ -5,7 +5,7 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 %% PRovisorisch
 
 %idealreal 0 ideal 1 real(Peng robinson)
-idealreal=1
+idealreal=0
 
 
 %% ASSIGN
