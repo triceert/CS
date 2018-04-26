@@ -1,4 +1,6 @@
 function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
+%optimizes the reactor
+
 
 %% PRovisorisch
 
