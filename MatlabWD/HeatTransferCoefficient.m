@@ -6,7 +6,7 @@ function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 %        unt = unit struct
 %        cp = vector (1x5) containing the different heat capacities
 %        Z compressibility factor
-% OUTPUT: U
+% OUTPUT: U heat transfer coefficient
 
 R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 MW = extractfield(cmp(1:10),'MW')';
@@ -24,11 +24,11 @@ alphaWall = deltaWall/lambdaWall;
 plambda_in = ThermalConductivity(cmp);
 pmu_in = DynamicViscosity(cmp);
 
-F_in = [0 F 0 0 0];
+F_in = [0; F; 0; 0; 0];
 lambda_mix_in = MixtureThermalConductivity(F_in,T,plambda_in);
 mu_mix_in = MixtureDynamicViscosity(F_in,T,pmu_in);
 cp_mix_in = sum(F.*cp)/F_tot;
-rho_mix_in = p/(R*T)*(F_in.*MW);
+rho_mix_in = p/(R*T)*(F_in.*MW(1:9));
 
 Pr_in = Prandtl(cp_mix_in,mu_mix_in,lambda_mix_in);
 
