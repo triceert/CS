@@ -60,7 +60,12 @@ Pr_out = Prandtl(cp_mix_out,mu_mix_out,lambda_mix_out);
 Re_out = 2000; %laminar
 
 Nu_out = Nusselt_out(Re_out,Pr_out);
-alpha_out = Nu_out*lambda_mix_out/L;
+
+V_tube = L*pi*(D_reactor/2 + deltaWall)^2;
+A_tube = L*pi*(D_reactor + 2*deltaWall);
+tube_char_length = V_tube/A_tube;
+
+alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
 
 U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
