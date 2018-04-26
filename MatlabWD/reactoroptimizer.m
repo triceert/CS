@@ -5,7 +5,7 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 %% PRovisorisch
 
 %idealreal 0 ideal 1 real(Peng robinson)
-idealreal=0
+idealreal=1
 
 
 %% ASSIGN
@@ -22,7 +22,7 @@ unt(1).a=unt(1).As/unt(1).V;%Specific surface of reactor
 Vspan=linspace(0,unt(1).V,100);
 
 %Starting Values
-y0=[100000; 1e-35; 0.00001; 0.00001; 1e-35; 1e-35; 700; 1600];
+y0=[500000; 1e-35; 0.001; 0.001; 1e-35; 1e-35; 600; 1600];
 
 %% HANDlES
 %declare needed handles
@@ -30,9 +30,9 @@ kinhand = @(T,F,unt,PRNH3,PRCH4,idealreal)...
     kinetics(T,F,unt,PRNH3,PRCH4,idealreal); %gives rate of nth rxn
 parthand  = @(p,T,F,cmp,unt,n)...
     PRpartials(p,T,F,cmp,unt,n);%gives partial pressure for nth comp in F calc with PR
-
+cphand=@(T,cmp,unt,n) heat_capacity(T,cmp,unt,n); %handle for cp as fun of t for nth component in struct
 %MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
-MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal);
+MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal);
 disp('MBEB handles set')
 
 %% SOLVE

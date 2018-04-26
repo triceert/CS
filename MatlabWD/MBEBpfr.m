@@ -1,4 +1,4 @@
-function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
+function dAdV=MBEBpfr(t,A,kinhand,parthand,cphand,cmp,unt,str,idealreal)
 %Defining odesystem
 %All used handles declared in reactorptimizer.m
 
@@ -14,7 +14,7 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
 %% INIT    
-%Get PR if idealreal set to 1
+%Get PengR if idealreal set to 1 and set handle accordingly
     switch idealreal       
         case  1
         PRCH4=parthand(A(1),A(7),A(2:6),cmp,unt,2);
@@ -25,7 +25,11 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
     end
 %% Assign Outputs from Handles    
     [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);
-    
+    cpN2=cphand(A(7),cmp,unt,2)
+    cpCH4=cphand(A(7),cmp,unt,3)
+    cpNH3=cphand(A(7),cmp,unt,4)
+    cpH2=cphand(A(7),cmp,unt,5)
+    cpHCN=cphand(A(7),cmp,unt,6)
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(8,1);
     %# 1 Pressure
@@ -43,10 +47,10 @@ function dAdV=MBEBpfr(t,A,kinhand,parthand,cmp,unt,str,idealreal)
     dAdV(6)=r1;
     
     %#7 Trxn
-    %dAdV(7)=   a *(U* (A(8) - A(7)) - (r1 * H1 + r2 * H2))/...
-       % ( A(2) * cp + A(3) * cp + A(4) * cp + A(5) * cp...
-       % + A(6) * cp);
-       dAdV(7)=0;
+    dAdV(7)=   a *(U* (A(8) - A(7)) - (r1 * H1 + r2 * H2))/...
+        ( A(2) * cpN2 + A(3) * cpCH4 + A(4) * cpNH3 + A(5) * cpH2...
+        + A(6) * cpHCN);
+       %dAdV(7)=0;
     %#8 T heating medium
     dAdV(8)=0;                             %
 
