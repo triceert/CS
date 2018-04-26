@@ -33,7 +33,7 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     cpNH3=cphand(A(7),cmp,unt,4);
     cpH2=cphand(A(7),cmp,unt,5);
     cpHCN=cphand(A(7),cmp,unt,6);
-    cp = [cpN2 cpCH4 cpNH3 cpH2 cpHCN];
+    cp = [cpN2; cpCH4; cpNH3; cpH2; cpHCN];
     
     U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z);
 %% DEFINE THE PROBLEM  ODEs  

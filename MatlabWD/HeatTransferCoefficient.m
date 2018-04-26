@@ -9,7 +9,7 @@ function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 % OUTPUT: U heat transfer coefficient
 
 R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
-MW = extractfield(cmp(1:10),'MW')';
+MW = extractfield(cmp(2:6),'MW')';
 F_tot = sum(F);
 D_reactor = unt(1).rad;
 
@@ -24,11 +24,10 @@ alphaWall = deltaWall/lambdaWall;
 plambda_in = ThermalConductivity(cmp);
 pmu_in = DynamicViscosity(cmp);
 
-F_in = [0; F; 0; 0; 0];
-lambda_mix_in = MixtureThermalConductivity(F_in,T,plambda_in);
-mu_mix_in = MixtureDynamicViscosity(F_in,T,pmu_in);
+lambda_mix_in = MixtureThermalConductivityReactor(F,T,plambda_in);
+mu_mix_in = MixtureDynamicViscosityReactor(F,T,pmu_in);
 cp_mix_in = sum(F.*cp)/F_tot;
-rho_mix_in = p/(R*T)*(F_in.*MW(1:9));
+rho_mix_in = p/(R*T)*sum(F.*MW);
 
 Pr_in = Prandtl(cp_mix_in,mu_mix_in,lambda_mix_in);
 
@@ -51,7 +50,7 @@ alpha_in = Nu_in*lambda_mix_in/D_reactor;
 
 %U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
 
-U=4.5/2.5e-3;
-%U = 1/(1/alpha_in + 1/alphaWall);
+%U=4.5/2.5e-3;
+U = 1/(1/alpha_in + 1/alphaWall);
 end
 
