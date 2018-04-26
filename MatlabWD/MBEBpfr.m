@@ -34,7 +34,7 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     cpHCN=cphand(A(7),cmp,unt,6);
     cp = [cpN2 cpCH4 cpNH3 cpH2 cpHCN];
     
-    U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Vm);
+    U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z);
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(8,1);
     %# 1 Pressure

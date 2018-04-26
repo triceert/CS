@@ -1,4 +1,4 @@
-function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Vm)
+function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 % INPUT: p = pressure  [Pa]
 %        T = Temperature [K]
 %        F = stream %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
@@ -28,14 +28,22 @@ F_in = [0 F 0 0 0];
 lambda_mix_in = MixtureThermalConductivity(F_in,T,plambda_in);
 mu_mix_in = MixtureDynamicViscosity(F_in,T,pmu_in);
 cp_mix_in = sum(F.*cp)/F_tot;
-rho_mix_in = 
+rho_mix_in = p/(R*T)*(F_in.*MW);
 
 Pr_in = Prandtl(cp_mix_in,mu_mix_in,lambda_mix_in);
 
-Q_in = F_tot*Vm;
+Q_in = F_tot*Z*R*T/p;
 A_in = pi*D_reactor^2;
+nu_mix_in = mu_mix_in/rho_mix_in;
+
+Re_in = Reynolds(Q_in,D_reactor,A_in,nu_mix_in);
+
+Nu_in = Nusselt_in(Re_in,Pr_in);
+
+alpha_in = Nu_in*lambda_mix_in/D_reactor;
 
 %Out
+
 %Tout = 1600; %[K]
 
 
@@ -43,7 +51,7 @@ A_in = pi*D_reactor^2;
 
 %U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
 
-U=4.5/2.5e-3;
-
+%U=4.5/2.5e-3;
+U = 1/(1/alpha_in + 1/alphaWall);
 end
 
