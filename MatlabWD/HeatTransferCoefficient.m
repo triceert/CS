@@ -1,4 +1,4 @@
-function [U,Q_in,Re_in] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
+function [U,Q_in,Re_in] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z,heatedwith)
 % INPUT: p = pressure  [Pa]
 %        T = Temperature [K]
 %        F = stream %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
@@ -6,6 +6,8 @@ function [U,Q_in,Re_in] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 %        unt = unit struct
 %        cp = vector (1x5) containing the different heat capacities
 %        Z compressibility factor
+%        heatedwith Boolean 0 heated with Natural Gas, 1 heated with
+%        Hydrogen
 % OUTPUT: U heat transfer coefficient %[W.m-2.K-1]
           %Q_in flow on inside
           %Re_in reynolds on inside
@@ -47,7 +49,13 @@ alpha_in = Nu_in*lambda_mix_in/D_reactor;
 %Outside the reactor
 %Index 1:Water, 2:CO2
 
-y_out = [2;1]/3;
+switch heatedwith
+    case 0
+    y_out = [2;1]/3;
+    case 1
+    y_out = [1;0];
+end
+
 MW_out = [cmp(1).MW;cmp(9).MW];
 MW_mix_out = sum(y_out.*MW_out);
 cp1 = heat_capacity(T,cmp,unt,1);
@@ -71,12 +79,6 @@ tube_char_length = V_tube/A_tube;
 
 alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
-
-
-
 U = 1/( 1/alphaWall +1/alpha_out+1/alpha_in);
-
-
-
 end
 
