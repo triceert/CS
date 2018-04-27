@@ -5,16 +5,24 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 %% PRovisorisch
 
 %idealreal 0 ideal 1 real(Peng robinson)
-idealreal=1;
+idealreal=0;
 
 % INIT SOLVER
 %set parameters
 Pressure=101325;
-FeedCH4= 2.9403e-04;
+FeedCH4= 0.0181;
 uberschuss=1.05;
 Tfeed=700;
 Touter=1600;
-pfrseries=1;
+pfrseries=2;
+
+%idealreal=0;
+% Pressure=101325;
+% FeedCH4= 0.0181;
+% uberschuss=1.05;
+% Tfeed=700;
+% Touter=1600;
+% pfrseries=2  or 1;
 
 
 %% ASSIGN
@@ -68,7 +76,7 @@ options = odeset('NonNegative',1);
 
 
 
-y=A(end,2:6)./sum(A(end,2:6))
+y=A(end,2:6)./sum(A(end,2:6));
 str(5).yN2=y(1);
 str(5).yCH4=y(2);
 str(5).yNH3=y(3);
@@ -76,7 +84,7 @@ str(5).yH2=y(4);
 str(5).yHCN=y(5);
 
 HCNout=A(end,6);
-NTubes=12.86/HCNout %NR TUBES
+NTubes=12.86/HCNout; %NR TUBES
 
 
 
@@ -99,7 +107,7 @@ options = optimoptions('lsqnonlin', 'display','off');
 CH4_guess = FeedCH4;
 CH4_min = 1e-4;
 CH4_max = 0.1;
-F_CH4_opti = lsqnonlin(targetfun,CH4_guess,CH4_min,CH4_max,options)
+F_CH4_opti = lsqnonlin(targetfun,CH4_guess,CH4_min,CH4_max,options);
 
 %% EVAL (to be externalized)
 figure

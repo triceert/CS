@@ -73,7 +73,7 @@ alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
 
 U = 1/( 1/alphaWall +1/alpha_out+1/alpha_in);
-%U2=alphaWall;
+
 
 
 end
