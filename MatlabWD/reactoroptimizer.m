@@ -108,7 +108,7 @@ str(5).yCH4=y(2);
 str(5).yNH3=y(3);
 str(5).yH2=y(4);
 str(5).yHCN=y(5);
-str(5).G=sum(A(end,:));
+
 
 
 Qneeded=A(end,9);
@@ -117,6 +117,7 @@ Qneeded=A(end,9);
 HCNout=A(end,6);
 NTubes=HCNneeded/HCNout; %NR TUBES
 unt(1).N_tubes=NTubes.*pfrseries;
+str(5).G=sum(A(end,2:6))*NTubes;
 
 %Assign Stream corrected with n tubes
 str(1).G=Ftot_in*NTubes;
