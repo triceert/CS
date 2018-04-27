@@ -8,6 +8,7 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     H1=unt(1).deltaHHCN;
     H2=unt(1).deltaHNH; %does not load
     a=unt(1).a;
+    Diameter=unt(1).rad*2;
     
 
   
@@ -50,7 +51,7 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(8,1);
     %# 1 Pressure
-    dAdV(1)=(0);  
+    dAdV(1)=-pi*(Diameter/2).^2*32*(64/Re.*(rho_mix_in.*Q_in)*Q)./(Diameter^5*pi^2);  
     
     %#2 Nitrogen
     dAdV(2)=r2;  
