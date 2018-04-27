@@ -1,4 +1,4 @@
-function [unt,str] = OPEX_reactor(unt,cmp,str)
+function [unt,str] = OPEX_reactor(cmp,unt,str)
 % INPUT: unt = unit struct
 %        cmp = compound struct
 %        str = stream struct
