@@ -1,6 +1,6 @@
 function [cmpout, untout, strout] = NH3_absorber_ideal(cmpin, untin, strin)
 %%Main code for ammonia absorber
-
+cmpout=cmpin;
 %% Defining variables
 
 G = strin(5).G;
@@ -114,7 +114,7 @@ h_rxn = 275020;                 %[J/mol]
 
 
 E_gas_in = G.*(y_HCN_in.*(hf_hcn) + y_NH3_in.*(hf_nh3) + y_H2_in.*(hf_h2) + y_CH4_in.*(hf_ch4) + y_N2_in.*(hf_n2));
-E_liquid_in = L.*(x_H2SO4_in*cmpin(7).deltaHf + x_H2O_in*cmpin(1).deltaHf);                 %no variation for enthalpies needed since the liquid has a temperature of 20 °C
+E_liquid_in = L.*(x_H2SO4_in*cmpin(7).deltaHf + x_H2O_in*cmpin(1).deltaHf);                 %no variation for enthalpies needed since the liquid has a temperature of 20 ï¿½C
 E_gas_out = @(T) G.*(y_HCN_out*hf_hcn_out(T) + y_NH3_out*hf_nh3_out(T) + y_H2_out*hf_h2_out(T) + y_CH4_out*hf_ch4_out(T)+ y_N2_out*hf_n2_out(T));
 E_liquid_out = @(T) L.*(x_H2SO4_out*hf_h2so4_out(T) + x_H2O_out*hf_h2o_out(T)+ x_ammoniumsulfate_out*hf_ammoniumsulfate(T));
 E_rxn = G*h_rxn*(y_NH3_in - y_NH3_out)/2;
@@ -198,7 +198,7 @@ untout(2).opex = opex_tot2;
 fprintf('Number of theoretical units: NTU = %g\n', NTU);
 fprintf('Height of theoretical units: HTU = %g\n', HTU);
 fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
-fprintf('Outlet temperature [°C]: T = %g\n', T_celsius);
+fprintf('Outlet temperature [ï¿½C]: T = %g\n', T_celsius);
 fprintf('Column Height [m]: H = %g\n', Z);
 fprintf('Column Diameter [m]: D = %g\n', dia );
 fprintf('NH3 Column CAPEX [Mio. US$]: Capex = %g\n', capex);
