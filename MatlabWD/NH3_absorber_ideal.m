@@ -1,9 +1,11 @@
 function [cmpout, untout, strout] = NH3_absorber_ideal(cmpin, untin, strin)
 %%Main code for ammonia absorber
 cmpout=cmpin;
+untout=untin;
+strout=strin;
 %% Defining variables
 
-G = strin(5).G;
+G = strin(5).G
 %G = 64;        %test value 
 L = 250;
 strout(7).G = G;
@@ -13,7 +15,7 @@ strout(7).L = L;
 y_HCN_in = strin(5).yHCN;
 y_NH3_in = strin(5).yNH3;
 y_H2_in = strin(5).yH2;
-y_CH4_in = strin(5).yEgas;
+y_CH4_in = strin(5).yCH4;
 y_N2_in = strin(5).yN2;
 %y_HCN_in = 0.1706;
 %y_NH3_in = 0.04;
@@ -119,7 +121,13 @@ E_gas_out = @(T) G.*(y_HCN_out*hf_hcn_out(T) + y_NH3_out*hf_nh3_out(T) + y_H2_ou
 E_liquid_out = @(T) L.*(x_H2SO4_out*hf_h2so4_out(T) + x_H2O_out*hf_h2o_out(T)+ x_ammoniumsulfate_out*hf_ammoniumsulfate(T));
 E_rxn = G*h_rxn*(y_NH3_in - y_NH3_out)/2;
 
+
+
+
 energy_balance = @(T) E_gas_in + E_liquid_in - E_gas_out(T) - E_liquid_out(T) + E_rxn;
+
+
+
 
 T = fsolve(energy_balance, 300);
 T_celsius = T-273;

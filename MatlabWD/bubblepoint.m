@@ -5,27 +5,27 @@ function [bubbleT] = bubblepoint(x, P, cmp, unt, thermo_model)
 % cmp & unt: structs from Excel-file 
 
 
-x1 = x(1); 
+%x1 = x(1); 
 options = optimset('Display', 'off'); 
 bubbleT_0 = 50+273.15; 
 delta_g12 = 500.9610; % data from J. Gmehling, U. Onken, W. Arlt, Vapor-Liquid Equilibrium Data Collection, Aqueous-Organic Systems (Supplement 1)
 delta_g21 = 539.9577; 
 alpha12 = 0.3836; % this has nothing to do with the relative volatility alpha 
 if strcmp(thermo_model, 'nrtl')
-    gamma = @(bubbleT) nrtl(x1, bubbleT, delta_g12, delta_g21, alpha12); 
+    gamma = @(bubbleT) nrtl(x(1), bubbleT, delta_g12, delta_g21, alpha12); 
 elseif strcmp(thermo_model, 'vanlaar')
-    gamma = @(bubbleT) vanlaar(x1, bubbleT, delta_g12, delta_g21, alpha12); 
+    gamma = @(bubbleT) vanlaar(x(1), bubbleT, delta_g12, delta_g21, alpha12); 
 elseif strcmp(thermo_model, 'ideal')
     gamma = @(bubbleT) [1 1];   % ideal model, need to pass bubbleT to have same syntax as in other cases     
 end
-bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT, gamma), bubbleT_0, options); 
+bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT, gamma,x,cmp), bubbleT_0, options); 
 
 
 
 
 
 
-function [bT] = bubbleT_solver(bubbleT, gamma)
+function [bT] = bubbleT_solver(bubbleT, gamma,x,cmp)
     gamma_vector = gamma(bubbleT);  
     gamma_HCN = gamma_vector(1); 
     gamma_H2O = gamma_vector(2); 

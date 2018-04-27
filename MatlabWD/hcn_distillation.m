@@ -1,7 +1,7 @@
 function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo_model)
 % Calculation of HCN distillation using the Fenske-Underwood-Gilliland
 % method
-% since we are at bubble point (Aufgabenstellung: "führen Sie den Feed im Siedezustand zu"), there's only L coming
+% since we are at bubble point (Aufgabenstellung: "fï¿½hren Sie den Feed im Siedezustand zu"), there's only L coming
 % in (no V) --> need a HX in stream 9 to get to saturated liquid 
 
 %%%%%%%%%%%%%%%%
@@ -59,7 +59,7 @@ specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg],
                                            % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
 area_HX_before_distillation_column = Q_HX_before_distillation_column/(700*(T_steam_at_6_bar-T_feed_before_HX));
 steam_flow_HX_before_distillation_column = Q_HX_before_distillation_column/specific_enthalpy_of_evaporation_of_steam_at_6_bar; % [kg/s]
-OPEX_HX_before_distillation_column
+%OPEX_HX_before_distillation_column
 
 % want to operate the column at atmospheric pressure 
 % pressure = @(temperature) z.CH4*P_sat_CH4(temperature) + z.NH3*P_sat_NH3(temperature) + z.Egas*P_sat_Egas(temperature) + 
@@ -155,7 +155,7 @@ B = F-D;
 
 %%% Cost condenser & reboiler 
 % neglecting water in distillate: 
-T_cooling_water_in=5;                             % assumed temperature difference of cooling water, [K], goes from 5°C --> 15 °C 
+T_cooling_water_in=5;                             % assumed temperature difference of cooling water, [K], goes from 5ï¿½C --> 15 ï¿½C 
 T_cooling_water_out=15;                                 % assumption
 delta_T1 = T_boiling_HCN - T_cooling_water_in;          % needed for LMTD calculation
 delta_T2 = T_boiling_HCN - T_cooling_water_out;         % needed for LMTD calculation

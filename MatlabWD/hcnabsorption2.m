@@ -1,8 +1,9 @@
 % HCN Absorption column all
 
 function [cmpout, untout, strout] = hcnabsorption2(cmpin, untin, strin)
-
-
+cmpout=cmpin;
+untout=untin;
+strout=strin;
 %G_in = 64;             % Molar gas stream [mol/s]
  G_in = strin(7).G;
  
@@ -189,7 +190,7 @@ hf_HCN_out_non = @(t_out) (A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3
  
  
  % Assumption that the gas phase consists only of hydrogen and HCN
- henry_HCN = HenrysConstant(Temp_out,cmp,6) ;    % Henry coefficient of HCN in [Pa]
+ henry_HCN = HenrysConstant(Temp_out,cmpin,6) ;    % Henry coefficient of HCN in [Pa]
  velocity = 2;  % Gas velocity in [m/s]
  dia = diameter_calc2 (velocity,G_in, y_H2_in, y_N2_in, y_HCN_in, y_CH4_in, y_NH3_in);    % Diameter in m
  area = pi*((dia/2)^2);           % Cross sectional area 
@@ -198,7 +199,7 @@ hf_HCN_out_non = @(t_out) (A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3
  G_m = G_in*(y_NH3_in*M_NH3 + y_H2_in*M_H2 + y_HCN_in*M_HCN + y_N2_in*M_N2 + y_CH4_in*M_CH4)/1000;
  rho_sum = rho_calc(Temp_out, y_HCN_in, y_H2_in, y_NH3_in, y_CH4_in, y_N2_in)/1000;   % Calculation of the densitites in dependance of the outlet temperature in [g/m^3]
  nu = mu_sum/rho_sum;                                        % Kinematic viscosity [m^2/s]
- dp = 0.025;                                                 % Diameter of the Füllkörper in m
+ dp = 0.025;                                                 % Diameter of the Fï¿½llkï¿½rper in m
  R = 8.314;                                                  % Ideal Gas constant
  phi = 2.6;                                                  % Empirical parameter for water for the calculation of the diffusioncoefficient
  mol_vol_HCN = (M_HCN/cmpin(6).rho)* 1000;                     % Molar volume of HCN in cm^3/mol
@@ -210,7 +211,7 @@ hf_HCN_out_non = @(t_out) (A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3
  aw = 587;                    % Packungsfaktor nass aus Perry's
  L_m = L_in * M_H2O/1000;          % Mass flux in kg/s
  g = 9.81;                    % Erdbeschleunigung in m/s
-mu_H2O = 547* 10^(-6);        % Dynamic viscosity of water at 50 °C
+mu_H2O = 547* 10^(-6);        % Dynamic viscosity of water at 50 ï¿½C
 k_L = ((cmpin(1).rho/(mu_H2O*g))^(-1/3)) * 0.0051 * ((L_m/(aw*mu_H2O))^(2/3)) * (Sc^(-1/2)) * ((ap * dp)^0.4); % Mass transport coefficient in the liquid phase
 K_L = k_L *rho_sum/(M_H2O/1000);     % Overall mass transfer coefficient
 H_L = L_in/(area * K_L * tot_surf);     % H_L Value
@@ -253,7 +254,7 @@ L_true = L_min * 1.5;
 fprintf('Number of theoretical units: NTU = %g\n', NTU);
 fprintf('Height of theoretical units: HTU = %g\n', HTU);
 fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
-fprintf('Outlet temperature [°C]: T = %g\n', Temp_out_celsius);
+fprintf('Outlet temperature [ï¿½C]: T = %g\n', Temp_out_celsius);
 fprintf('Column Height [m]: H = %g\n', h);
 fprintf('Column Diameter [m]: D = %g\n', dia );
 fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n', CAPEX_mil);
@@ -265,6 +266,8 @@ untout(3).opex = opex_tot;
 untout(3).ntu = NTU;
 untout(3).htu = HTU;
 untout(3).V = V_column;
+
+
 
 
  end

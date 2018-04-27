@@ -108,7 +108,7 @@ str(5).yCH4=y(2);
 str(5).yNH3=y(3);
 str(5).yH2=y(4);
 str(5).yHCN=y(5);
-
+str(5).G=sum(A(end,:));
 
 
 Qneeded=A(end,9);

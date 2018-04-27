@@ -101,11 +101,19 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
     
     %calculate different stuff
         [cmp,unt,str]=reactoroptimizer(cmpin,untin,strin);
-        [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str)
-        [cmp,unt,str]=hcn_distillation(cmpin,untin,strin); 
+        
+        
+        
+        [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);
+        
+        [cmp,unt,str] = hcnabsorption2(cmp,unt,str);
+        
+        [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
+        
         %Calc Function 2
         %Calc Function 3
         cmpout=cmp; %dummy
+        
         untout=unt; %dummy
         strout=str; %dummy
         
