@@ -25,7 +25,7 @@ alphaWall = lambdaWall/deltaWall;
 lambda_mix_in = MixtureThermalConductivityReactorNew(cmp,F,T);
 mu_mix_in = MixtureDynamicViscosityReactorNew(cmp,F,T);
 cp_mix_in = sum(F.*cp)/F_tot;
-rho_mix_in = p/(R*T)*sum(F.*MW_in)/F_tot;
+rho_mix_in = F_tot*Z*R*T/(p*sum(F.*MW_in));
 
 Pr_in = Prandtl(cp_mix_in,mu_mix_in,lambda_mix_in);
 
@@ -42,20 +42,19 @@ alpha_in = Nu_in*lambda_mix_in/D_reactor;
 %Outside the reactor
 %Index 1:Water, 2:CO2
 
-y = [2;1]/3;
+y_out = [2;1]/3;
 cp1 = heat_capacity(T,cmp,unt,1);
 cp2 = heat_capacity(T,cmp,unt,9);
 %MW_out = [cmp(1).MW;cmp(9).MW];
 
-lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y,T);
-mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y,T)/100;
-cp_mix_out = y(1)*cp1 + y(2)*cp2;
+lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y_out,T);
+mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y_out,T)/100;
+cp_mix_out = y_out(1)*cp1 + y_out(2)*cp2;
 %rho_mix_out = p/(R*T)*sum(y.*MW_out);
 
 Pr_out = Prandtl(cp_mix_out,mu_mix_out,lambda_mix_out);
 
-Re_out = unt(1).Reout; %laminar
-Re_out=10000;
+Re_out = unt(1).Reout; %turbulent
 
 Nu_out = Nusselt_out(Re_out,Pr_out);
 
@@ -68,7 +67,7 @@ alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
 
 
-U = 1/( 1/alphaWall +1/alpha_out);%+1/alpha_in );
+U = 1/( 1/alphaWall +1/alpha_out);%+1/alpha_in);
 %U2=alphaWall;
 
 
