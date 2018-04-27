@@ -40,8 +40,16 @@ price_preheating_flow_CH4 = (mflow_preheat_CH4/1000)*price_natural_gas;
 %Heating of the reactor
 
 FCH4 = (-Qtot-FH2*deltaHc_H2)/deltaHc_CH4; %[mol.s-1]
-mflow_CH4 = FCH4*MW_CH4; % [kg.s-1]
-price_heating_flow_CH4 = (mflow_CH4/1000)*price_natural_gas;
+
+boo = (FCH4 > 0);
+
+switch boo
+    case 0 %(FCH4 <= 0)
+        price_heating_flow_CH4 = 0;
+    case 1 
+        mflow_CH4 = FCH4*MW_CH4; % [kg.s-1]
+        price_heating_flow_CH4 = (mflow_CH4/1000)*price_natural_gas;
+end
 
 %Total price
 

@@ -9,7 +9,7 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     H2=unt(1).deltaHNH; %does not load
     a=unt(1).a;
     Diameter=unt(1).rad*2;
-    
+    heatedwith = 0; %heated with Natural Gas
 
   
   
@@ -29,7 +29,6 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     end
 %% Assign Outputs from Handles 
     
-    
     [r1,r2]=kinhand(A(7),A(1:6),unt,PRNH3,PRCH4,idealreal);%get rates
     cpN2=cphand(A(7),cmp,unt,2);    %get all the live cps
     cpCH4=cphand(A(7),cmp,unt,3);
@@ -37,9 +36,9 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     cpH2=cphand(A(7),cmp,unt,5);
     cpHCN=cphand(A(7),cmp,unt,6);
     cp = [cpN2; cpCH4; cpNH3; cpH2; cpHCN];
-    U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z); %get live ht coeff
-    [~,~,Re]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z);
-    [~,Q,~]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z);%get live vol flow 
+    U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith); %get live ht coeff
+    [~,~,Re]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith);
+    [~,Q,~]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith);%get live vol flow 
     
     
    %other needed stuff from initial conditions
