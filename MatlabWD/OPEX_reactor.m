@@ -1,4 +1,4 @@
-function [OPEX_reactor_USdollars,str] = OPEX_reactor(unt,cmp,str)
+function [unt,str] = OPEX_reactor(unt,cmp,str)
 % INPUT: unt = unit struct
 %        cmp = compound struct
 %        str = stream struct
@@ -52,8 +52,10 @@ switch boo
 end
 
 %Total price
-
 OPEX_reactor_USdollars = price_feeding_reactor_flow + price_preheating_flow_CH4 + price_heating_flow_CH4; %[US$.s-1]
+
+%OPEX in unt
+unt(1).opex = OPEX_reactor_USdollars*8000*3600; %[$.y-1]
 
 %Values for stream 2
 switch boo
