@@ -52,7 +52,7 @@ T_feed_before_HX = strin(9).T;
 T_feed = bubblepoint([z.H2O, z.HCN], pressure, cmpin, untin, thermo_model); 
 [HT_L_before_HX] = enthalpy_temperature_liquid(T_feed_before_HX,cmpin,untin); 
 [HT_L_after_HX] = enthalpy_temperature_liquid(T_feed,cmpin,untin);
-Q_HX_before_distillation_column = z.H2O*HT_L_before_HX(1)+z.HCN*HT_L_before_HX(6)-z.H2O*HT_L_after_HX(1)-z.HCN*HT_L_after_HX(6); 
+Q_HX_before_distillation_column = z.H2O*HT_L_after_HX(1)+z.HCN*HT_L_after_HX(6)-z.H2O*HT_L_before_HX(1)-z.HCN*HT_L_before_HX(6); 
 T_steam_at_6_bar = 158.8+273.15;                        % [K], 6 bar: see task sheet,                                                        
                                                 % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
 specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg], 
@@ -286,7 +286,10 @@ end
 plot(1-x1, y1);
 legend('Bubble point experimental', 'Dew point experimental', 'Bubble point model');
 end
-
+N_S_min
+N_S_real
+RR_min
+RR_real
 
 test = 1;
 
