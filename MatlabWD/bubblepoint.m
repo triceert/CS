@@ -7,7 +7,7 @@ function [bubbleT] = bubblepoint(x, P, cmp, unt)
 
 
 options = optimset('Display', 'off'); 
-bubbleT_0 = 373; 
+bubbleT_0 = 300; 
 bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT), bubbleT_0, options); 
 
 

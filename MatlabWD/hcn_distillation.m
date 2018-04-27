@@ -13,13 +13,14 @@ feed_V = strin(9).G;                                                       % mol
 q = 1;                                                                     % feed quality 
 pressure = 1e5; 
                                                                            
-                                                                           % (fraction of feed that is liquid, q=1 since @ bubble point)
+                                                            % (fraction of feed that is liquid, q=1 since @ bubble point)
+
+z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V);  
 z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
-z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V); 
 %z.HCN = 0.035; 
 %z.H2O = 1-z.HCN; 
-%z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
-%z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
+z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
+z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
 F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
 F = 100; 
 MW_H2O = cmpin(1).MW; 
@@ -54,7 +55,7 @@ T_feed = bubblepoint([z.H2O, z.HCN], pressure, cmpin, untin);
 %pressure = @(temperature) z.HCN*P_sat_HCN(temperature) + z.H2O*P_sat_H2O(temperature);
 pressure = strin(9).p; % Pa
 
-
+% WOULD NEED TO START AGAIN HERE FOR PRESSURE DROP CALCULATIONS
 if strcmp(thermo_model, 'ideal') 
     alpha = @(temperature, x_LK) P_sat_HCN(temperature)/P_sat_H2O(temperature); % relative volatility
 end
@@ -84,7 +85,39 @@ RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
 %%% GILLILAND CORRELATION %%%
 X = (RR_real-RR_min)/(RR_real+1); 
 Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X))); 
-N_S_real = (Y+N_S_min)/(1-Y); 
+%N_S_real = ceil((Y+N_S_min)/(1-Y)); % rounding up to nearest integer
+N_S_real = (Y+N_S_min)/(1-Y);
+
+N_S_real_new = 0; % initializing so that we do at least one iteration
+while N_S_real ~= N_S_real_new
+    pressure_drop = 700*N_S_real; % 0.7 kPa/tray pressure drop over bubble cap column
+                                  % from: "Separation Process Principles", J.
+                                  % D. Seader, E. J. Henley, p. 375
+    pressure_top = pressure-pressure_drop; 
+    new_temperature_at_top = bubblepoint([x_HK_D, x_LK_D], pressure_top, cmpin, untin);
+    new_alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(new_temperature_at_top, x_LK_D) * alpha(T_feed, z.HCN))^(1/3);
+    N_S_min = log(x_LK_D/x_HK_D*x_HK_B/x_LK_B)/log(new_alpha_mean)-1; 
+    new_theta_sol = fsolve (@(theta) (new_alpha_mean*z.HCN)/(new_alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0, options);
+    RR_min = (new_alpha_mean*x_LK_D)/(new_alpha_mean-new_theta_sol)+(1*x_HK_D)/(1-new_theta_sol)-1; 
+    RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
+    X = (RR_real-RR_min)/(RR_real+1); 
+    Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X)));
+    N_S_real = N_S_real_new;                % saving for next iteration
+    %N_S_real_new = ceil((Y+N_S_min)/(1-Y)) % rounding up to nearest integer
+    N_S_real_new = (Y+N_S_min)/(1-Y);
+    clear new_theta_sol;  
+end
+% when this while-loop terminates, N_S_real = N_S_real_new --> no need to replace it
+efficiency = 0.75;                                      % Stavros said a plate efficiency between 0.7 and 0.8 is reasonable
+N_S_real = ceil(N_S_real/efficiency);                   % accounting for plate efficiency <1 and rounding up to nearest integer
+
+x1=0:0.01:1; 
+for i=1:101
+    y1(i) = bubblepoint([x1(i), 1-x1(i)], 1e5, cmpin, untin)-273; 
+end
+figure(2); 
+plot(x1, y1); 
+
 
 
 %%% SIZING THE COLUMN %%% 
@@ -94,9 +127,11 @@ V_R = (RR_real+1)*D;
 V_S = V_R;                                              % since at q=1
 V_flowrate = V_S*R*T_boiling_H2O/pressure;              % using V_S since this refers to stripping section (bottom of column), 
                                                         % which is hottest --> lowest gas density at same pressure
-rho_H2O_B = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
-rho_HCN_B = MW_HCN*pressure/(8.3144*T_boiling_H2O); 
-rho_V = x_LK_B*rho_HCN_B+x_HK_B*rho_H2O_B;              % weighted average of densities
+%rho_H2O_B = MW_H2O*pressure/(8.3144*T_boiling_H2O); 
+%rho_HCN_B = MW_HCN*pressure/(8.3144*T_boiling_H2O); 
+%rho_V = x_LK_B*rho_HCN_B+x_HK_B*rho_H2O_B;             % weighted average of densities
+rho_V = 0.598;                                          % in reboiler: almost pure water, 
+                                                        % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
 rho_V_imperial_units = 0.06242796*rho_V;                % converting density from kg/m3 to lbm/ft3
 v_max_imperial_units = 1/sqrt(rho_V_imperial_units);    % empirical formula only works with v_max [ft/s] and rho_V [lbm/ft3]
 v_max = 0.3048*v_max_imperial_units;                    % converting from ft/s to m/s
@@ -111,31 +146,34 @@ B = F-D;
 
 %%% Cost condenser & reboiler 
 % neglecting water in distillate: 
-T_cooling_water_in=5;                                   % assumed temperature difference of cooling water, [K], goes from 5°C --> 15 °C 
+T_cooling_water_in=5;                             % assumed temperature difference of cooling water, [K], goes from 5°C --> 15 °C 
 T_cooling_water_out=15;                                 % assumption
 delta_T1 = T_boiling_HCN - T_cooling_water_in;          % needed for LMTD calculation
 delta_T2 = T_boiling_HCN - T_cooling_water_out;         % needed for LMTD calculation
 deltaH_HCN = cmpin(6).Hv;                               % Molar enthalpy of vaporization of HCN
-Q_cond = deltaH_HCN*V_R;                                % Heat duty condenser [J/s]
+L_0 = D*RR_real; 
+V_1 = L_0 + D; 
+Q_cond = deltaH_HCN*V_1;                                % Heat duty condenser [J/s], "-" due to convention
 LMTD = (delta_T1-delta_T2)/log(delta_T1/delta_T2);      % Using log-mean temperature difference for counter-current HX
 area_cond = Q_cond/(700*LMTD);                          % 0.700 kW/(m2*K) from task sheet
 enthalpy_feed = enthalpy_temperature_liquid(T_feed,cmpin,untin); 
-enthalpy_distillate = enthalpy_temperature_liquid(T_boiling_HCN,cmpin,untin); 
+enthalpy_distillate = enthalpy_temperature_liquid(new_temperature_at_top,cmpin,untin); 
 enthalpy_bottom = enthalpy_temperature_liquid(T_boiling_H2O,cmpin,untin); 
 h_F = z.H2O*enthalpy_feed(1)+z.HCN*enthalpy_feed(6); 
 h_D = x_HK_D*enthalpy_distillate(1) + x_LK_D*enthalpy_distillate(6);
-h_B = x_HK_B*enthalpy_bottom(1) + x_LK_B*enthalpy_bottom(6);
-Q_reboiler = D*h_D+B*h_B-F*h_F-Q_cond; 
-
-heat_capacity_cooling_water_all = heat_capacity((T_boiling_HCN+T_cooling_water_in)/2,cmpin,untin); 
-heat_capacity_cooling_water = heat_capacity_cooling_water_all(1); 
-
+h_B = x_HK_B*enthalpy_bottom(1) + x_LK_B*enthalpy_bottom(6);        % not yet any residual enthalpies
+Q_reboiler = D*h_D+B*h_B-F*h_F+Q_cond;               % "-" due to convention
+T_steam_at_6_bar = 158.8+273.15;                        % [K], 6 bar: see task sheet,                                                        
+                                                % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
+area_reboiler = Q_reboiler/(700*(T_steam_at_6_bar-T_boiling_H2O));
+heat_capacity_cooling_water = heat_capacity((new_temperature_at_top+T_cooling_water_in)/2,cmpin,untin, 1); 
 cP_cooling_water = @(temperature) heat_capacity(temperature, cp_coefficients_cooling_water);
-cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_HCN-T_cooling_water_in)); 
+cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(new_temperature_at_top-T_cooling_water_in)); 
 % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the 
-% region in question anyways)
-
-
+% region in question anyways) 
+specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg], 
+                                           % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
+steam_flow_condenser = Q_reboiler/(specific_enthalpy_of_evaporation_of_steam_at_6_bar); % [kg/s] steam mass flow rate
 
 %%% McCabe Thiele
 %x_plot = 0:0.01:1; 
@@ -143,12 +181,15 @@ cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(T_boiling_
 
 
 %%% Cost calculation
-OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*0.15; % using 0.15 USD/tonne instead of the given 0.10 USD/tonne to account
+OPEX_cooling_water = (cooling_water_mass_flow/1000)*8000*3600*0.15; 
+% using 0.15 USD/tonne instead of the given 0.10 USD/tonne to account
                                                                % for the need to pre-cool
-
-% [USD/a], /1000 to convert to tonnes, *8000 since 8000 operating hours/a, *0.1 is cost in USD/tonne
+OPEX_steam = steam_flow_condenser/1000*8000*3600*20;           % steam cost: 20 USD/tonne
+                                                        % [USD/a], /1000 to convert to tonnes, 
+                                                        % *8000 since 8000 operating hours/a
 CAPEX_column_itself = 80320*(height^0.76)*(d_min_bottom^1.21);
 CAPEX_cond = 25000*(area_cond^0.65); 
+CAPEX_reboiler = 25000*(area_reboiler^0.65); 
 %OPEX_column = OPEX_cooling_water + OPEX_steam; 
 %%% WHICH TEMPERATURE DIFFERENCE FOR REBOILER HEATED WITH STEAM? 
 
