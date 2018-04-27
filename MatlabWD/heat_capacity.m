@@ -7,7 +7,7 @@ function [cpT] = heat_capacity(T,cmp,unt,n)
 %        unt = unit struct
 %        n idientifier of compound in excel table
 %        1   {'H2O';'N2';'CH4';'NH3';'H2';'HCN'} 6, CO2 9
-% OUTPUT: heat capacity [J.mol-1.K-1]
+% OUTPUT: heat capacity [J.mol-1.K-1] !!!!!!!!!!!!!!!!!!!! AND NOT [J.kg-1.K-1]
 
 R=unt(5).idgc; % [J.mol-1.K-1]
 
