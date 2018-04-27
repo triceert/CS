@@ -1,24 +1,32 @@
-function [bubbleT] = bubblepoint(x, P, cmp, unt)
+function [bubbleT] = bubblepoint(x, P, cmp, unt, thermo_model)
 % calculates the bubble point for a binary mixture of H2O and HCN
 % INPUT: x = vector of mole fractions; x(1) = H2O, x(2) = HCN; 
 % P: pressure [Pa]
 % cmp & unt: structs from Excel-file 
 
 
-
+x1 = x(1); 
 options = optimset('Display', 'off'); 
-bubbleT_0 = 300; 
-bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT), bubbleT_0, options); 
+bubbleT_0 = 50+273.15; 
+delta_g12 = 500.9610; % data from J. Gmehling, U. Onken, W. Arlt, Vapor-Liquid Equilibrium Data Collection, Aqueous-Organic Systems (Supplement 1)
+delta_g21 = 539.9577; 
+alpha12 = 0.3836; % this has nothing to do with the relative volatility alpha 
+if strcmp(thermo_model, 'nrtl')
+    gamma = @(bubbleT) nrtl(x1, bubbleT, delta_g12, delta_g21, alpha12); 
+elseif strcmp(thermo_model, 'vanlaar')
+    gamma = @(bubbleT) vanlaar(x1, bubbleT, delta_g12, delta_g21, alpha12); 
+end
+bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT, gamma), bubbleT_0, options); 
 
 
-function [bT] = bubbleT_solver(bubbleT)
-    delta_g12 = 1298.9610; % data from J. Gmehling, U. Onken, W. Arlt, Vapor-Liquid Equilibrium Data Collection, Aqueous-Organic Systems (Supplement 1)
-    delta_g21 = 539.9577; 
-    alpha12 = 0.3836; % this has nothing to do with the relative volatility alpha 
-    x1 = x(1); 
-    gamma = nrtl(x1, bubbleT, delta_g12, delta_g21, alpha12); 
-    gamma_HCN = gamma(1); 
-    gamma_H2O = gamma(2); 
+
+
+
+
+function [bT] = bubbleT_solver(bubbleT, gamma)
+    gamma_vector = gamma(bubbleT);  
+    gamma_HCN = gamma_vector(1); 
+    gamma_H2O = gamma_vector(2); 
     P_sat = @(Ai, Bi, Ci, bubbleT) antoine_equation(Ai, Bi, Ci, bubbleT);
     A_HCN = cmp(6).antaRT; % HCN
     B_HCN = cmp(6).antbRT; % HCN
