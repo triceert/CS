@@ -39,7 +39,7 @@ R=unt(5).idgc;
 
 %calc additional  reactor data dependent from IC and assign
 FeedNH3=uberschuss*FeedCH4;
-Ftot_in=FeedCH4+FeedNH3
+Ftot_in=FeedCH4+FeedNH3;
 MW_mix_in =  (FeedCH4.*MW_in(2)+FeedNH3*MW_in(3))./Ftot_in;    
 yCH4=FeedCH4/Ftot_in;
 yNH3=FeedNH3/Ftot_in;
@@ -92,16 +92,25 @@ disp('MBEB handles set')
 
 
 
-y=A(end,2:6)./sum(A(end,2:6))
+y=A(end,2:6)./sum(A(end,2:6));
 str(5).yN2=y(1);
 str(5).yCH4=y(2);
 str(5).yNH3=y(3);
 str(5).yH2=y(4);
 str(5).yHCN=y(5);
 
-HCNout=A(end,6);
-NTubes=12.86/HCNout %NR TUBES
 
+
+Qneeded=A(end,9);
+
+
+HCNout=A(end,6);
+NTubes=12.86/HCNout; %NR TUBES
+
+
+%Assign Stream corrected with n tubes
+str(1).G=Ftot_in*NTubes;
+unt(1).Q_tot=Qneeded.*NTubes;
 
 
 %% Optimize
@@ -112,7 +121,7 @@ NTubes=12.86/HCNout %NR TUBES
         y0opti=[Pressure; 0; FCH4opt; 1.05*FCH4opt; 0; 0; 700; 1600;0];
         
 
-        [Vopt,Aopt] = ode15s(MBEBhandle,Vspan,y0opti,options);
+        [~,Aopt] = ode15s(MBEBhandle,Vspan,y0opti,options);
 
    opti=1-Aopt(end,6)/Aopt(1,3); %find optimal yield i terms of methane, 
    %opti=1-Aopt(end,6)/sum(Aopt(end,2:6)); %find max molar fraction HCN
@@ -123,7 +132,7 @@ options = optimoptions('lsqnonlin', 'display','off');
 CH4_guess = FeedCH4;
 CH4_min = 1e-4;
 CH4_max = 0.1;
-F_CH4_opti = lsqnonlin(targetfun,CH4_guess,CH4_min,CH4_max,options)
+F_CH4_opti = lsqnonlin(targetfun,CH4_guess,CH4_min,CH4_max,options);
 
 %% EVAL (to be externalized)
 figure
@@ -142,9 +151,6 @@ title('Tflu')
 
 
 
-%Assign Stream corrected with n tubes
-
-str(1).G=Ftot_in*NTubes
 
 disp('Reactor optimizer completed normally, calculated as ideal or real')
 %NRTubes=12.86/HCNout
