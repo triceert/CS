@@ -17,22 +17,22 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 % Touter=1600;     %Rxn Mixture Temperature
 % pfrseries=2;     %how many PFRs in Series
 
-idealreal=0; %best for ideal
-Pressure=101325;
-FeedCH4=  0.0590;
-uberschuss=1.05;
-Tfeed=700;
-Touter=1600;
-pfrseries=  1;
-
-
 % idealreal=0; %best for ideal
 % Pressure=101325;
-% FeedCH4= 0.0181;
+% FeedCH4=  0.0590;
 % uberschuss=1.05;
 % Tfeed=700;
 % Touter=1600;
 % pfrseries=  1;
+
+
+idealreal=0; %best for ideal
+Pressure=101325;
+FeedCH4= 0.0181;
+uberschuss=1.05;
+Tfeed=700;
+Touter=1600;
+pfrseries=  1;
 
 
 %% ASSIGN
