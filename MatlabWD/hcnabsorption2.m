@@ -267,6 +267,8 @@ untout(3).ntu = NTU;
 untout(3).htu = HTU;
 untout(3).V = V_column;
 
+strout(9).p = p;   % pressure in Pa 
+
 
 
 
