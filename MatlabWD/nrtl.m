@@ -1,4 +1,5 @@
 function [gamma] = nrtl(x1, T, delta_g12, delta_g21, alpha12)
+% x1 = x_LK = x_HCN
 alpha21 = alpha12;                                                              % typical assumption in NRTL
 R = 8.3144;                                                                     % ideal gas constant, [J/(mol*K)]
 x2 = x1;    % indices were wrong and had to relabel
