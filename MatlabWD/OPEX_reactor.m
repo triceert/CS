@@ -1,14 +1,14 @@
-function [priceUSdollars] = OPEX_reactor(unt,cmp,str,Qtot,FH2,G_feed_mix)
+function [OPEX_reactor_USdollars] = OPEX_reactor(unt,cmp,str)
 % INPUT: unt = unit struct
 %        cmp = compound struct
 %        str = stream struct
-%        Qtot = total heat needed in the reactor [J.s-1]
-%        FH2 = flow of hydrogen [mol.s-1]
-%        G_feed_mix = totales gas flow feed [mol.s-1]
 % OUTPUT: operating costs for the reactor [US$.s-1]
 
 %Constants
 %Indexes: 1:CH4, 2:NH3
+G_feed_mix = str(1).G; %total gas flow feed [mol.s-1]
+FH2 = str(8).G*str(8).yH2; %flow of hydrogen [mol.s-1]
+Qtot = unt(1).Q_tot; %total heat needed in the reactor [J.s-1]
 y_feed = [str(1).yCH4 ; str(1).yNH3];
 MW_feed = extractfield(cmp(3:4),'MW')'; %[kg.mol-1]
 MW_CH4 = MW_feed(1);
@@ -42,7 +42,6 @@ price_preheating_flow_CH4 = (mflow_preheat_CH4/1000)*price_natural_gas; %[US$.s-
 FCH4 = (-Qtot-FH2*deltaHc_H2)/deltaHc_CH4; %[mol.s-1]
 
 boo = (FCH4 > 0);
-
 switch boo
     case 0 %(FCH4 <= 0)
         price_heating_flow_CH4 = 0; %[US$.s-1]
@@ -53,6 +52,6 @@ end
 
 %Total price
 
-priceUSdollars = price_feeding_reactor_flow + price_preheating_flow_CH4 + price_heating_flow_CH4; %[US$.s-1]
+OPEX_reactor_USdollars = price_feeding_reactor_flow + price_preheating_flow_CH4 + price_heating_flow_CH4; %[US$.s-1]
 end
 
