@@ -4,14 +4,13 @@ function [mu_mix] = MixtureDynamicViscosityReactorNew(cmp,F,T)
 %
 % INPUT: F = flux with indexes : 1:Nitrogen, 2:Methane, 3:Ammonia, 4: Hydrogen, 5:Hydrogen cyanide
 %        T = temperature
-%
-% OUTPUT: mu_mix
+% OUTPUT: mu_mix [Pa.s]
 
 A = extractfield(cmp(2:6),'viscA')';
 B = extractfield(cmp(2:6),'viscB')';
 C = extractfield(cmp(2:6),'viscC')';
 
-muT = (C*T^2 + B*T + A)*10^(-6);
+muT = (C*T^2 + B*T + A)*10^(-7);
 F_tot = sum(F);
 mu_mix = sum(F.*muT)/F_tot;
 end
