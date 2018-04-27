@@ -55,6 +55,7 @@ cp_mix_out = y(1)*cp1 + y(2)*cp2;
 Pr_out = Prandtl(cp_mix_out,mu_mix_out,lambda_mix_out);
 
 Re_out = unt(1).Reout; %laminar
+Re_out=10000;
 
 Nu_out = Nusselt_out(Re_out,Pr_out);
 
@@ -67,8 +68,8 @@ alpha_out = Nu_out*lambda_mix_out/tube_char_length;
 
 
 
-U = 1/(1/alpha_in + 1/alphaWall + 1/alpha_out);
-%U = 1/( 1/alphaWall);
+U = 1/( 1/alphaWall +1/alpha_out);%+1/alpha_in );
+%U2=alphaWall;
 
 
 end

@@ -5,10 +5,19 @@ function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
 %% PRovisorisch
 
 %idealreal 0 ideal 1 real(Peng robinson)
-idealreal=0;
+idealreal=1;
+
+% INIT SOLVER
+%set parameters
+Pressure=101325;
+FeedCH4= 2.9403e-04;
+uberschuss=1.05;
+Tfeed=700;
+Touter=1600;
+pfrseries=1;
 
 
-%% ASSIGNn
+%% ASSIGN
 %Calculate and assign reactor data for one tube
 rad=unt(1).rad;%Radius
 l=unt(1).h;
@@ -19,18 +28,7 @@ unt(1).a=unt(1).As./unt(1).V;   %specific surface (m2)/m3
 
 
 
-%% INIT SOLVER
-Pressure=80325;
-%FeedCH4=3.87*1e-2;
-FeedCH4=0.0233;
-uberschuss=1.05;
-Tfeed=700;
-Touter=1600;
-pfrseries=6;
 
-
-%Integration Vector (Volume of one Tube)
-Vspan=linspace(0,unt(1).V*pfrseries,100);
 
 %% HANDlES
 %declare needed handles
@@ -42,11 +40,11 @@ cphand=@(T,cmp,unt,n) heat_capacity(T,cmp,unt,n); %handle for cp as fun of t for
 Uhand=@(cmp,unt,p,T,F,cp,Z) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z);%local heat transfer coefficient as function of..
 
 
-%Starting Values
+%MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
 
 
-y0=[Pressure; 0; FeedCH4; uberschuss*FeedCH4; 0; 0; Tfeed; Touter];
-
+MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal);
+disp('MBEB handles set')
 
 
 %% SOLVE
@@ -55,12 +53,20 @@ y0=[Pressure; 0; FeedCH4; uberschuss*FeedCH4; 0; 0; Tfeed; Touter];
 
 
 
-options = odeset('NonNegative',1);
-MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal);
-[Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options); %get solution
-%MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
+%Integration Vector (Volume of one Tube)
+Vspan=linspace(0,unt(1).V*pfrseries,100);
 
-disp('MBEB handles set')
+%Starting Values/Options
+y0=[Pressure; 0; FeedCH4; uberschuss*FeedCH4; 0; 0; Tfeed; Touter];
+options = odeset('NonNegative',1);
+
+%solve
+[Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options); %get solution
+
+
+%% Assign Outputs
+
+
 
 y=A(end,2:6)./sum(A(end,2:6))
 str(5).yN2=y(1);
@@ -70,18 +76,30 @@ str(5).yH2=y(4);
 str(5).yHCN=y(5);
 
 HCNout=A(end,6);
+NTubes=12.86/HCNout %NR TUBES
 
 
 
-%
+%% Optimize
 
+   function opti=optiyield(FCH4opt,MBEBhandle,options,Vspan,Pressure)       
 
-opti=12.86/HCNout %NR TUBES
-opti2=A(end,6)/A(1,3)
+        %Starting Values/Options
+        y0opti=[Pressure; 0; FCH4opt; 1.05*FCH4opt; 0; 0; 700; 1600];
+        
 
-%% Assign Outputs
+        [Vopt,Aopt] = ode15s(MBEBhandle,Vspan,y0opti,options);
 
+   opti=1-Aopt(end,6)/Aopt(1,3); %find optimal yield i terms of methane, 
+   %opti=1-Aopt(end,6)/sum(Aopt(end,2:6)); %find max molar fraction HCN
+   end
 
+ targetfun = @(FCH4opt)optiyield(FCH4opt, MBEBhandle,options,Vspan,Pressure);
+options = optimoptions('lsqnonlin', 'display','off');
+CH4_guess = FeedCH4;
+CH4_min = 1e-4;
+CH4_max = 0.1;
+F_CH4_opti = lsqnonlin(targetfun,CH4_guess,CH4_min,CH4_max,options)
 
 %% EVAL (to be externalized)
 figure
