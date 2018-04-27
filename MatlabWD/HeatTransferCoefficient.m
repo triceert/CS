@@ -52,7 +52,7 @@ cp1 = heat_capacity(T,cmp,unt,1);
 cp2 = heat_capacity(T,cmp,unt,9);
 
 lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y_out,T);
-mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y_out,T);%/100;
+mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y_out,T);%/100 sollte nicht mehr nötig sein nach der Korrektur
 cp_mix_out = y_out(1)*cp1 + y_out(2)*cp2; % [J.mol-1.K-1]
 cp_kg_mix_out = cp_mix_out/MW_mix_out; % [J.kg-1.K-1]
 %rho_mix_out = p/(R*T)*sum(y.*MW_out);
