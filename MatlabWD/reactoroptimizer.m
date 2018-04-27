@@ -75,7 +75,7 @@ kinhand = @(T,F,unt,PRNH3,PRCH4,idealreal)...
 parthand  = @(p,T,F,cmp,unt,n)...
     PRpartials(p,T,F,cmp,unt,n);%gives partial pressure for nth comp in F calc with PR
 cphand=@(T,cmp,unt,n) heat_capacity(T,cmp,unt,n); %handle for cp as fun of t for nth component in struct
-Uhand=@(cmp,unt,p,T,F,cp,Z) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z);%local heat transfer coefficient as well as flow and Reynolds number inside reactor
+Uhand=@(cmp,unt,p,T,F,cp,Z,heatedwith) HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z,heatedwith);%local heat transfer coefficient as well as flow and Reynolds number inside reactor
 
 
 
