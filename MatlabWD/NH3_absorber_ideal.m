@@ -5,9 +5,9 @@ untout=untin;
 strout=strin;
 %% Defining variables
 
-G = strin(5).G
+G = strin(5).G;
 %G = 64;        %test value 
-L = 250;
+L = 400;
 strout(7).G = G;
 strout(7).L = L;
 
@@ -194,7 +194,7 @@ untout(2).V = V_column;
 
 ratio = Z/dia;
 
-[opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out)
+[opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);
 opex_heatexchanger = A_exchanger^0.65 * 25000 /10^6;        %[Mio. US$]
 opex_tot2 = opex_tot+opex_heatexchanger;
 opex_H2O=opex_H2O;
