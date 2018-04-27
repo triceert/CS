@@ -59,7 +59,8 @@ specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg],
                                            % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
 area_HX_before_distillation_column = Q_HX_before_distillation_column/(700*(T_steam_at_6_bar-T_feed_before_HX));
 steam_flow_HX_before_distillation_column = Q_HX_before_distillation_column/specific_enthalpy_of_evaporation_of_steam_at_6_bar; % [kg/s]
-%OPEX_HX_before_distillation_column
+OPEX_HX_before_distillation_column = steam_flow_HX_before_distillation_column/1000*8000*3600*20; % steam cost: 20 USD/tonne
+CAPEX_HX_before_distillation_column = 25000*(area_HX_before_distillation_column^0.65);
 
 % want to operate the column at atmospheric pressure 
 % pressure = @(temperature) z.CH4*P_sat_CH4(temperature) + z.NH3*P_sat_NH3(temperature) + z.Egas*P_sat_Egas(temperature) + 
@@ -212,8 +213,8 @@ strout = strin;
 %untout(4).rad = d_min_bottom/2; 
 %untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
 %untout(4).En = Q_cond + Q_reboiler; 
-%untout(4).capex = CAPEX_column_itself+CAPEX_cond+CAPEX_reboiler; 
-%untout(4).opex = OPEX_steam + OPEX_cooling_water; 
+%untout(4).capex = CAPEX_column_itself+CAPEX_cond+CAPEX_reboiler+CAPEX_HX_before_distillation_column; 
+%untout(4).opex = OPEX_steam + OPEX_cooling_water+OPEX_HX_before_distillation_column; 
 %strout(11).L = D; 
 %strout(11).G = 0; % total condenser
 %strout(11).p = pressure_top; 
