@@ -6,7 +6,7 @@ function [U,Q_in,Re_in] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z,heatedwith)
 %        unt = unit struct
 %        cp = vector (1x5) containing the different heat capacities
 %        Z compressibility factor
-%        heatedwith Boolean 0 heated with Natural Gas, 1 heated with
+%        heatedwith = Boolean: 0 heated with Natural Gas, 1 heated with
 %        Hydrogen
 % OUTPUT: U heat transfer coefficient %[W.m-2.K-1]
           %Q_in flow on inside
@@ -44,7 +44,7 @@ Re_in = Reynolds(Q_in,D_reactor,A_in,nu_mix_in);
 
 Nu_in = Nusselt_in(Re_in,Pr_in);
 
-alpha_in = Nu_in*lambda_mix_in/D_reactor;
+alpha_in = Nu_in*lambda_mix_in/D_reactor; %[W.m-2.K-1]
 
 %Outside the reactor
 %Index 1:Water, 2:CO2
@@ -61,8 +61,8 @@ MW_mix_out = sum(y_out.*MW_out);
 cp1 = heat_capacity(T,cmp,unt,1);
 cp2 = heat_capacity(T,cmp,unt,9);
 
-lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y_out,T);
-mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y_out,T);%/100 sollte nicht mehr nötig sein nach der Korrektur
+lambda_mix_out = MixtureThermalConductivityNaturalGasNew(cmp,y_out,T); %[W.m-1.K-1]
+mu_mix_out = MixtureDynamicViscosityNaturalGasNew(cmp,y_out,T); %[Pa.s]
 cp_mix_out = y_out(1)*cp1 + y_out(2)*cp2; % [J.mol-1.K-1]
 cp_kg_mix_out = cp_mix_out/MW_mix_out; % [J.kg-1.K-1]
 %rho_mix_out = p/(R*T)*sum(y.*MW_out);
@@ -73,12 +73,12 @@ Re_out = unt(1).Reout; %turbulent
 
 Nu_out = Nusselt_out(Re_out,Pr_out);
 
-V_tube = L*pi*(r_reactor + deltaWall)^2;
-A_tube = L*pi*(D_reactor + 2*deltaWall);
-tube_char_length = V_tube/A_tube;
+V_tube = L*pi*(r_reactor + deltaWall)^2; %[m3]
+A_tube = L*pi*(D_reactor + 2*deltaWall); %[m2]
+tube_char_length = V_tube/A_tube; %[m]
 
-alpha_out = Nu_out*lambda_mix_out/tube_char_length;
+alpha_out = Nu_out*lambda_mix_out/tube_char_length; %[W.m-2.K-1]
 
-U = 1/( 1/alphaWall +1/alpha_out+1/alpha_in);
+U = 1/( 1/alphaWall +1/alpha_out+1/alpha_in); %[W.m-2.K-1]
 end
 
