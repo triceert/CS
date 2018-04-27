@@ -35,7 +35,7 @@ deltaH_preheating = y_feed(1)*deltaH_CH4 + y_feed(2)*deltaH_NH3; %[J.mol-1]
 Q_preheat = G_feed_mix*deltaH_preheating; %[J.s-1]
 FCH4_preheat = -Q_preheat/deltaHc_CH4; %[mol.s-1]
 mflow_preheat_CH4 = FCH4_preheat*MW_CH4; % [kg.s-1]
-price_preheating_flow_CH4 = (mflow_preheat_CH4/1000)*price_natural_gas;
+price_preheating_flow_CH4 = (mflow_preheat_CH4/1000)*price_natural_gas; %[US$.s-1]
 
 %Heating of the reactor
 
@@ -45,14 +45,14 @@ boo = (FCH4 > 0);
 
 switch boo
     case 0 %(FCH4 <= 0)
-        price_heating_flow_CH4 = 0;
-    case 1 
+        price_heating_flow_CH4 = 0; %[US$.s-1]
+    case 1 %(FCH4 > 0)
         mflow_CH4 = FCH4*MW_CH4; % [kg.s-1]
-        price_heating_flow_CH4 = (mflow_CH4/1000)*price_natural_gas;
+        price_heating_flow_CH4 = (mflow_CH4/1000)*price_natural_gas; %[US$.s-1]
 end
 
 %Total price
 
-priceUSdollars = price_feeding_reactor_flow + price_preheating_flow_CH4 + price_heating_flow_CH4;
+priceUSdollars = price_feeding_reactor_flow + price_preheating_flow_CH4 + price_heating_flow_CH4; %[US$.s-1]
 end
 
