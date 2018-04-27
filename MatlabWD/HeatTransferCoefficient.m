@@ -1,4 +1,4 @@
-function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
+function [U,Q_in,Re_in] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 % INPUT: p = pressure  [Pa]
 %        T = Temperature [K]
 %        F = stream %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
@@ -7,6 +7,8 @@ function [U] = HeatTransferCoefficient(cmp,unt,p,T,F,cp,Z)
 %        cp = vector (1x5) containing the different heat capacities
 %        Z compressibility factor
 % OUTPUT: U heat transfer coefficient %[W.m-2.K-1]
+          %Q_in flow on inside
+          %Re_in reynolds on inside
 
 R=unt(5).idgc;         %[kg.m2.s-2.mol-1.K-1]
 MW_in = extractfield(cmp(2:6),'MW')';
