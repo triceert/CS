@@ -2,51 +2,64 @@ function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo
 % Calculation of HCN distillation using the Fenske-Underwood-Gilliland
 % method
 % since we are at bubble point (Aufgabenstellung: "führen Sie den Feed im Siedezustand zu"), there's only L coming
-% in (no V) --> might need a HX in stream 9 to get to saturated liquid 
+% in (no V) --> need a HX in stream 9 to get to saturated liquid 
 
 %%%%%%%%%%%%%%%%
 % cd /Users/Clemens/CS/MatlabWD
 %%%%%%%%%%%%%%%%
-R=untin(5).idgc;                                                           % ideal gas constant [J.mol-1.K-1]
-feed_L = strin(9).L;                                                    
-feed_V = strin(9).G;                                                       % molar flowrate in feed [mol/hr]
-q = 1;                                                                     % feed quality 
-pressure = 1e5; 
-                                                                           
-                                                            % (fraction of feed that is liquid, q=1 since @ bubble point)
 
-z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V);  
-z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
-z.HCN = 0.025; 
-z.H2O = 1-z.HCN; 
-z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
-z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
-F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
-F = 531.4; 
-MW_H2O = cmpin(1).MW; 
-MW_HCN = cmpin(6).MW;
-thermo_model = 'nrtl';  
+%% Setting/extracting parameters
+R=untin(5).idgc;                                                       % ideal gas constant [J.mol-1.K-1]
+feed_L = strin(9).L;                                                   % molar liquid flowrate in feed                                             
+feed_V = strin(9).G;                                                   % molar gas flowrate in feed [mol/hr] (= 0 since only liquid)
+q = 1;                                                                 % feed quality 
+                                                                       % (fraction of feed that is liquid, q=1 since @ bubble point)
+pressure = 1e5;                                                        % operating the column at atmospheric pressure
+MW_H2O = cmpin(1).MW;                                                  % molecular weight H2O [kg/mol]
+MW_HCN = cmpin(6).MW;                                                  % molecular weight HCN [kg/mol]
+thermo_model = 'ideal';                                                % thermodynamic model, can use 'nrtl' or 'ideal'
 
 A_H2O = cmpin(1).anta100; B_H2O = cmpin(1).antb100; C_H2O = cmpin(1).antc100; 
 A_HCN = cmpin(6).anta100; B_HCN = cmpin(6).antb100; C_HCN = cmpin(6).antc100; 
 
+T_boiling_H2O = cmpin(1).bp; 
+T_boiling_HCN = cmpin(6).bp; 
+
 P_sat_H2O = @(temperature) antoine_equation(A_H2O, B_H2O, C_H2O, temperature);
 P_sat_HCN = @(temperature) antoine_equation(A_HCN, B_HCN, C_HCN, temperature);
+         
+z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V);  
+z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
+%z.HCN = 0.025; 
+%z.H2O = 1-z.HCN; 
+%z.AS = (strin(9).xAS*feed_L + strin(9).yAS *feed_V)/(feed_L+feed_V);  
+%z.H2 = (strin(9).xH2*feed_L + strin(9).yH2 *feed_V)/(feed_L+feed_V); 
+F = feed_L + feed_V; % since the whole outlet stream of the HCN absorption unit will be condensed before entering the column
+%F = 531.4; 
 
+%% Specifications for outlet streams
 x_LK_D = 0.995;         % from specifications on tasksheet
 x_HK_D = 1-x_LK_D; 
 x_LK_B = 10e-6; 
 x_HK_B = 1-x_LK_B;
 
 
-T_boiling_H2O = cmpin(1).bp; 
-T_boiling_HCN = cmpin(6).bp;  
+%% Calculation of feed conditions & HX before distillation column 
 %T_feed = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
 %--> use feed temperature once available 
 %T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
+T_feed_before_HX = strin(9).T; 
 T_feed = bubblepoint([z.H2O, z.HCN], pressure, cmpin, untin, thermo_model); 
-
-
+[HT_L_before_HX] = enthalpy_temperature_liquid(T_feed_before_HX,cmpin,untin); 
+[HT_L_after_HX] = enthalpy_temperature_liquid(T_feed,cmpin,untin);
+Q_HX_before_distillation_column = z.H2O*HT_L_before_HX(1)+z.HCN*HT_L_before_HX(6)-z.H2O*HT_L_after_HX(1)-z.HCN*HT_L_after_HX(6); 
+T_steam_at_6_bar = 158.8+273.15;                        % [K], 6 bar: see task sheet,                                                        
+                                                % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
+specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg], 
+                                           % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
+area_HX_before_distillation_column = Q_HX_before_distillation_column/(700*(T_steam_at_6_bar-T_feed_before_HX));
+steam_flow_HX_before_distillation_column = Q_HX_before_distillation_column/specific_enthalpy_of_evaporation_of_steam_at_6_bar; % [kg/s]
+OPEX_HX_before_distillation_column
 
 % want to operate the column at atmospheric pressure 
 % pressure = @(temperature) z.CH4*P_sat_CH4(temperature) + z.NH3*P_sat_NH3(temperature) + z.Egas*P_sat_Egas(temperature) + 
@@ -165,6 +178,7 @@ area_reboiler = Q_reboiler/(700*(T_steam_at_6_bar-T_boiling_H2O));
 heat_capacity_cooling_water = heat_capacity((new_temperature_at_top+T_cooling_water_in)/2,cmpin,untin, 1); 
 cP_cooling_water = @(temperature) heat_capacity(temperature, cp_coefficients_cooling_water);
 cooling_water_mass_flow = Q_cond*MW_H2O/(heat_capacity_cooling_water*(new_temperature_at_top-T_cooling_water_in)); 
+
 % cooling water mass flow [kg/s], evaluating cp_cooling_water at average temperature (cp of H2O doesn't change much in the 
 % region in question anyways) 
 specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg], 

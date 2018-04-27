@@ -15,6 +15,8 @@ if strcmp(thermo_model, 'nrtl')
     gamma = @(bubbleT) nrtl(x1, bubbleT, delta_g12, delta_g21, alpha12); 
 elseif strcmp(thermo_model, 'vanlaar')
     gamma = @(bubbleT) vanlaar(x1, bubbleT, delta_g12, delta_g21, alpha12); 
+elseif strcmp(thermo_model, 'ideal')
+    gamma = @(bubbleT) [1 1];   % ideal model, need to pass bubbleT to have same syntax as in other cases     
 end
 bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT, gamma), bubbleT_0, options); 
 
