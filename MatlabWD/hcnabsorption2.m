@@ -66,7 +66,7 @@ L_in_i = L_in.*x_in;
 L_out_i= L_out.*x_out;
 
 %T_gas_in = 273 + 60;
-T_gas_in = strin(7).T 
+T_gas_in = strin(7).T; 
 T_liquid_in = 273 + 20;
 t_gas_in = T_gas_in/1000;            % Modified temperature used for the Shomate equations
 t_liquid_in = T_liquid_in/1000;
@@ -123,8 +123,8 @@ t_liquid_in = T_liquid_in/1000;
             (x_HCN_out * hf_HCN_liquid_out(T_out))); 
  
 Ebalance = @(T_out) E_gas_in + E_liquid_in - E_gas_out(T_out) - E_liquid_out(T_out);
-Temp_out = fsolve (Ebalance, 300)
-Temp_out_celsius = Temp_out - 273
+Temp_out = fsolve (Ebalance, 300);
+Temp_out_celsius = Temp_out - 273;
 strout(9).T = Temp_out;
 strout(8).T = Temp_out;
 %%
@@ -254,7 +254,7 @@ L_true = L_min * 1.5;
 fprintf('Number of theoretical units: NTU = %g\n', NTU);
 fprintf('Height of theoretical units: HTU = %g\n', HTU);
 fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
-fprintf('Outlet temperature [ï¿½C]: T = %g\n', Temp_out_celsius);
+fprintf('Outlet temperature [°C]: T = %g\n', Temp_out_celsius);
 fprintf('Column Height [m]: H = %g\n', h);
 fprintf('Column Diameter [m]: D = %g\n', dia );
 fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n', CAPEX_mil);
