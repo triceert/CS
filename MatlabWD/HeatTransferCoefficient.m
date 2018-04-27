@@ -49,7 +49,13 @@ alpha_in = Nu_in*lambda_mix_in/D_reactor;
 %Outside the reactor
 %Index 1:Water, 2:CO2
 
-y_out = [2;1]/3;
+switch heatedwith
+    case 0
+    y_out = [2;1]/3;
+    case 1
+    y_out = [1;0];
+end
+
 MW_out = [cmp(1).MW;cmp(9).MW];
 MW_mix_out = sum(y_out.*MW_out);
 cp1 = heat_capacity(T,cmp,unt,1);
