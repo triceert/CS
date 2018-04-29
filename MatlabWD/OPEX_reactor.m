@@ -40,7 +40,13 @@ price_preheating_flow_CH4 = (mflow_preheat_CH4/1000)*price_natural_gas; %[US$.s-
 
 %Heating of the reactor
 
-FCH4 = (-Qtot-FH2*deltaHc_H2)/deltaHc_CH4; %[mol.s-1]
+%provisorisch für bestimmten outer heatant feed with profile
+CH4heatfeed=str(4).G*unt(1).N_tubes_aside*0.3;  %preset feed of heating stream 0.3 to account stöchi for CH4;
+correctedHeat=CH4heatfeed*deltaHc_CH4-FH2*deltaHc_H2; %see how much heat it gives and sbtract heat given
+FCH4=correctedHeat/deltaHc_CH4;                        %by h2 stream to get true feed needed
+
+    %calculation with constant outer profile
+        %FCH4 = (-Qtot-FH2*deltaHc_H2)/deltaHc_CH4 %[mol.s-1]
 
 boo = (FCH4 > 0);
 switch boo
@@ -62,9 +68,14 @@ switch boo
     case 0 %(FCH4 <= 0)
         FCH4_tot = FCH4_preheat;
     case 1 %(FCH4 > 0)
-        FCH4_tot = FCH4_preheat+FCH4;
+        FCH4_tot = FCH4_preheat+FCH4;  
 end
 str(2).G = FCH4_tot;
-str(2).yCH4 = 1;
+str(2).yCH4 = 1;   %EV FEHLER? O2 Nicht berücksichtigt oder gar luft?
+
+
+%assign stöchio feed 4 flow for iteratve calculation of needed mass stream
+
+
 
 end

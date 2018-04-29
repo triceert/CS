@@ -105,7 +105,7 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 %idealreal 0 ideal 1 real(Peng robinson)
 
 
-% idealreal=1; %best for real
+% idealreal=1; %best for real ohne t profile
 % Pressure=101325;
 % FeedCH4=   0.0010;   %varieren zwischen 0.001 und 0.1
 % uberschuss=1.05;
@@ -113,7 +113,7 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 % Touter=1600;
 % pfrseries= 3;       %varieren zwischen 1 und 10
 
-%set parameters BEST FOR REAL
+%set parameters BEST FOR REAL ohne T profile
 
 
 % idealreal=0; %best for ideal
@@ -125,14 +125,14 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 % pfrseries=  1;
 
 
-strin(1).p=101325;
-strin(1).T=700;
-strin(2).T=1600;
-strin(1).FCH4=0.0010;%absolute feed ch4 per single tube mol s-1    
-untin(1).ideal_real=0;%
-strin(1).ubsch=1.05;
-untin(1).nrow=5;
-
+strin(1).p=501325;   %feed pressure
+strin(1).T=700;       %feed temperature
+strin(2).T=1600;      %touter as inverse integration limit
+strin(1).FCH4=0.001; %absolute feed ch4 per single tube mol s-1    
+untin(1).ideal_real=1;%PR(1) or IDG (0)
+strin(1).ubsch=1.05;  %überschuss NH3
+untin(1).nrow=5;      %number reactr elements in row
+strin(4).G=0.1;      %per fucking tube
 
     
     
@@ -143,13 +143,13 @@ untin(1).nrow=5;
         
         
         
-        %[cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
-        %[cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
-        %[cmp,unt,str]=hcn_distillation(cmp,unt,str); 
+        [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
+        [cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
+        [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
         
-        %[unt,str]=OPEX_reactor(cmp,unt,str);
-        %[unt]=CAPEX_reactor(unt);
-        %[unt]=TOTEX_reactor(unt);
+        [unt,str]=OPEX_reactor(cmp,unt,str);
+        [unt]=CAPEX_reactor(unt);
+        [unt]=TOTEX_reactor(unt);
         
         cmpout=cmp;
         strout=str;
