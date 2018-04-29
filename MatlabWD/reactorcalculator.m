@@ -1,7 +1,12 @@
-function [cmp,unt,str]=reactorcalculator(cmp,unt,str)
+function [cmp,unt,str]=reactorcalculator(cmp,unt,str,plotpar)
 %Function for Reactor Calculaion and Manual optimization if wanted
 %% GET INITIAL VALUES
 
+
+%single inputs for meshgrid
+
+
+%normal inputs defined bevore
 
 Pressure=str(1).p;
 Tfeed=str(1).T;
@@ -56,7 +61,7 @@ R=unt(5).idgc; %ideal gas constant
 
 
 %mixture rho of inlet
-rho_mix_in = Zin*R*Tfeed/(Pressure*MW_mix_in); %[m3.kg-1]
+rho_mix_in = Zin*R*Tfeed./(Pressure*MW_mix_in); %[m3.kg-1]
 unt(1).rho_mix_in=rho_mix_in;
 
 
@@ -181,28 +186,38 @@ unt(1).Q_tot=Qneeded.*NTubesaside;
 
 
 %PLOT
-figure
-subplot(5,1,1)
-plot(Vspan,A(:,2:6))
-title('F')
-subplot(5,1,2)
-plot(Vspan,A(:,1))
-title('P')
-subplot(5,1,3)
-plot(Vspan,A(:,7))
-title('Trxn')
-subplot(5,1,4)
-plot(Vspan,A(:,8))
-title('Tflu')
 
-subplot(5,1,5)
-plot(Vspan,velo)
-title('Velprofile')
+switch plotpar
+    
+    case 1
+    figure
+    subplot(5,1,1)
+    plot(Vspan,A(:,2:6))
+    title('F')
+    subplot(5,1,2)
+    plot(Vspan,A(:,1))
+    title('P')
+    subplot(5,1,3)
+    plot(Vspan,A(:,7))
+    title('Trxn')
+    subplot(5,1,4)
+    plot(Vspan,A(:,8))
+    title('Tflu')
+
+    subplot(5,1,5)
+    plot(Vspan,velo)
+    title('Velprofile')
+    
+    disp('Reactor calculator completed normally for one run, plots no done')
+
+    case 0
+        
+        disp('Reactor calculater completed normally.')
+    end
 
 
 
 
-disp('Reactor calculater completed normally, calculated as ')
 
 
 

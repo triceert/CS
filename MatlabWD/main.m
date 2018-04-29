@@ -118,40 +118,53 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 
 % idealreal=0; %best for ideal
 % Pressure=101325;
-% FeedCH4=  0.0181;
+% FeedCH4=  0.01;
 % uberschuss=1.05;
 % Tfeed=700;
 % Touter=1600;
 % pfrseries=  1;
 
 
-
+%% VALUES FOR ONE CONSISTENT RUN
 
 
 %COCROSS AND IDEAL REAL SWITCH
 
-untin(1).cocross=1;       %0 cross or 1 cocurrent heating
-    strin(4).G=0.01;      %flow heating medium per fucking tube(ignored if cross heated)
-untin(1).ideal_real=1;    %PR(1) or IDG (0)
 
 
 
-strin(2).T=1600;      %touter as inverse integration limit 1600 if cocruss=1
+
+idealreal=1;
+cocross=0;
+
+strin(4).G=0.1;      %flow heating medium per fucking tube(ignored if cross heated)
+
+
 
 strin(1).p=101325;   %feed pressure
 strin(1).T=700;       %feed temperature
-strin(1).FCH4=0.0181; %absolute feed ch4 per single tube mol s-1    
+strin(2).T=1600;      %touter 
+
+
+strin(1).FCH4=0.0181; %absolute feed ch4 per single tube mol s-1   
 strin(1).ubsch=1.05;  %überschuss NH3
-untin(1).nrow=5;      %number reactr elements in row
+
+untin(1).nrow=1;      %number reactr elements in row
+
+
+   
+optimizor(cmpin,untin,strin,idealreal,cocross);
+                   
+
+
+
+
+ %% MAKE ONE CONSISTENT RUN AND PLOT   
     
     
     
-    
-    
-        [cmp,unt,str]=reactorcalculator(cmpin,untin,strin);
         
-        
-        
+        [cmp,unt,str]=reactorcalculator(cmpin,untin,strin,1);       %plotparamter 1
         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
         [cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
         [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
@@ -159,6 +172,7 @@ untin(1).nrow=5;      %number reactr elements in row
         [unt,str]=OPEX_reactor(cmp,unt,str);
         [unt]=CAPEX_reactor(unt);
         [unt]=TOTEX_reactor(unt);
+        break_even_price=pricecalculator(unt,cmp)
         
 
         
