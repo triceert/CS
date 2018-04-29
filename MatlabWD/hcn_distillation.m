@@ -286,12 +286,12 @@ end
 plot(1-x1, y1);
 legend('Bubble point experimental', 'Dew point experimental', 'Bubble point model');
 end
-N_S_min
-N_S_real
-RR_min
-RR_real
+%N_S_min
+%N_S_real
+%RR_min
+%RR_real
 
-test = 1;
+%test = 1;
 
 
 

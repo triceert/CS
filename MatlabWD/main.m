@@ -125,21 +125,30 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 % pfrseries=  1;
 
 
-strin(1).p=501325;   %feed pressure
+
+
+
+%COCROSS AND IDEAL REAL SWITCH
+
+untin(1).cocross=1;       %0 cross or 1 cocurrent heating
+    strin(4).G=0.01;      %flow heating medium per fucking tube(ignored if cross heated)
+untin(1).ideal_real=1;    %PR(1) or IDG (0)
+
+
+
+strin(2).T=1600;      %touter as inverse integration limit 1600 if cocruss=1
+
+strin(1).p=101325;   %feed pressure
 strin(1).T=700;       %feed temperature
-strin(2).T=1600;      %touter as inverse integration limit
-strin(1).FCH4=0.001; %absolute feed ch4 per single tube mol s-1    
-untin(1).ideal_real=1;%PR(1) or IDG (0)
+strin(1).FCH4=0.0181; %absolute feed ch4 per single tube mol s-1    
 strin(1).ubsch=1.05;  %überschuss NH3
 untin(1).nrow=5;      %number reactr elements in row
-strin(4).G=0.1;      %per fucking tube
-
     
     
     
     
     
-        [cmp,unt,str]=reactoroptimizer(cmpin,untin,strin);
+        [cmp,unt,str]=reactorcalculator(cmpin,untin,strin);
         
         
         
@@ -150,6 +159,8 @@ strin(4).G=0.1;      %per fucking tube
         [unt,str]=OPEX_reactor(cmp,unt,str);
         [unt]=CAPEX_reactor(unt);
         [unt]=TOTEX_reactor(unt);
+        
+
         
         cmpout=cmp;
         strout=str;
@@ -179,7 +190,19 @@ function [tables, plots]=evaluator(cmpin, untin,strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
     
-        %EvaluateCost For Reaction Unit
+%         untout(2).htu = HTU;    %height theoretical units NH3 ADSORBER
+%         untout(2).ntu = NTU;    %number theoritac units
+%         untout(2).h = Z;        %height NH3 Absorber
+%         untout(2).V = V_column; %VOlume
+%         untout(2).capex = capex;
+%         untout(2).opex = opex_tot2;
+%         
+%         untout(3).h = h;       %height             %HCN ABSORBTION
+%         untout(3).capex = CAPEX_mil; %capex
+%         untout(3).opex = opex_tot;   %opex
+%         untout(3).ntu = NTU;            %theoretical number units   
+%         untout(3).htu = HTU;            %height tu
+%         untout(3).V = V_column;         %volume
 
         
         %Call Plotter Function

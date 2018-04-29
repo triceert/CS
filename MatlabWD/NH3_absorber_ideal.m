@@ -186,10 +186,7 @@ flow_ratio = L/G;
 Z = NTU*HTU;
 V_column = (dia/2)^2*pi*Z;
 
-untout(2).htu = HTU;
-untout(2).ntu = NTU;
-untout(2).h = Z;
-untout(2).V = V_column;
+
 
 
 ratio = Z/dia;
@@ -204,17 +201,24 @@ opex_tot = opex_tot;
 
 capex = capex_calc(Z, dia)/10^6;
 
+%VARS OUT
+
+
+untout(2).htu = HTU;    %height theoretical units NH3 ADSORBER
+untout(2).ntu = NTU;    %number theoritac units
+untout(2).h = Z;        %height NH3 Absorber
+untout(2).V = V_column; %VOlume
 untout(2).capex = capex;
 untout(2).opex = opex_tot2;
 
-fprintf('Number of theoretical units: NTU = %g\n', NTU);
-fprintf('Height of theoretical units: HTU = %g\n', HTU);
-fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
-fprintf('Outlet temperature [�C]: T = %g\n', T_celsius);
-fprintf('Column Height [m]: H = %g\n', Z);
-fprintf('Column Diameter [m]: D = %g\n', dia );
-fprintf('NH3 Column CAPEX [Mio. US$]: Capex = %g\n', capex);
-fprintf('NH3 Column OPEX [Mio. US$]: Opex = %g\n', opex_tot2);
+% fprintf('Number of theoretical units: NTU = %g\n', NTU);
+% fprintf('Height of theoretical units: HTU = %g\n', HTU);
+% fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
+% fprintf('Outlet temperature [�C]: T = %g\n', T_celsius);
+% fprintf('Column Height [m]: H = %g\n', Z);
+% fprintf('Column Diameter [m]: D = %g\n', dia );
+% fprintf('NH3 Column CAPEX [Mio. US$]: Capex = %g\n', capex);
+% fprintf('NH3 Column OPEX [Mio. US$]: Opex = %g\n', opex_tot2);
 
 
 end

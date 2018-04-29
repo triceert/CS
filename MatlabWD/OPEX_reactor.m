@@ -38,15 +38,21 @@ FCH4_preheat = -Q_preheat/deltaHc_CH4; %[mol.s-1]
 mflow_preheat_CH4 = FCH4_preheat*MW_CH4; % [kg.s-1]
 price_preheating_flow_CH4 = (mflow_preheat_CH4/1000)*price_natural_gas; %[US$.s-1]
 
-%Heating of the reactor
+%Heating of the reactor (Co or cross current)
+    cocross=unt(1).cocross;
+    switch cocross
+        
+        case 1 %cocurrent
+        %provisorisch für bestimmten outer heatant feed with profile
+        CH4heatfeed=str(4).G*unt(1).N_tubes_aside*0.3;  %preset feed of heating stream 0.3 to account stöchi for CH4;
+        correctedHeat=CH4heatfeed*deltaHc_CH4-FH2*deltaHc_H2; %see how much heat it gives and sbtract heat given
+        FCH4=correctedHeat/deltaHc_CH4;                        %by h2 stream to get true feed needed
 
-%provisorisch für bestimmten outer heatant feed with profile
-CH4heatfeed=str(4).G*unt(1).N_tubes_aside*0.3;  %preset feed of heating stream 0.3 to account stöchi for CH4;
-correctedHeat=CH4heatfeed*deltaHc_CH4-FH2*deltaHc_H2; %see how much heat it gives and sbtract heat given
-FCH4=correctedHeat/deltaHc_CH4;                        %by h2 stream to get true feed needed
-
-    %calculation with constant outer profile
-        %FCH4 = (-Qtot-FH2*deltaHc_H2)/deltaHc_CH4 %[mol.s-1]
+        case 0 %crosscurent
+        %calculation with constant outer profile
+        FCH4 = (-Qtot-FH2*deltaHc_H2)/deltaHc_CH4; %[mol.s-1]
+        
+    end
 
 boo = (FCH4 > 0);
 switch boo

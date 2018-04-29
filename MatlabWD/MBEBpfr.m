@@ -54,6 +54,8 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     %molar flow of heating mixture
     heatflow=str(4).G;
     
+    %cocorss parameter
+    cocross=unt(1).cocross;;
     
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(9,1);
@@ -77,7 +79,14 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
         + A(6) * cpHCN);
        %dAdV(7)=0;
     %#8 T heating medium
-    dAdV(8)=a *U* (A(7) - A(8))./(heatstreamcpmix*heatflow);
+    switch cocross
+        
+        case 1 %crosscurrent heating
+        dAdV(8)=a *U* (A(7) - A(8))./(heatstreamcpmix*heatflow);
+        case 0
+        dAdV(8)=0;
+        
+    end
     %9 DQdot/Dv
     dAdV(9)=   a *U* (A(8) - A(7)) ;%
 

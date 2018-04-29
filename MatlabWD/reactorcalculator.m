@@ -1,4 +1,4 @@
-function [cmp,unt,str]=reactoroptimizer(cmp,unt,str)
+function [cmp,unt,str]=reactorcalculator(cmp,unt,str)
 %Function for Reactor Calculaion and Manual optimization if wanted
 %% GET INITIAL VALUES
 
@@ -202,7 +202,7 @@ title('Velprofile')
 
 
 
-disp('Reactor optimizer completed normally, calculated as ideal or real')
+disp('Reactor calculater completed normally, calculated as ')
 
 
 
