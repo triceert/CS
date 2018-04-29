@@ -213,7 +213,7 @@ switch plotpar
     case 0
         
         disp('Reactor calculater completed normally.')
-    end
+end
 
 
 
