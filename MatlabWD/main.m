@@ -100,22 +100,60 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
     cprintf('blue','Calculations started\n');
     
     %calculate different stuff
+    
+            
+%idealreal 0 ideal 1 real(Peng robinson)
+
+
+% idealreal=1; %best for real
+% Pressure=101325;
+% FeedCH4=   0.0010;   %varieren zwischen 0.001 und 0.1
+% uberschuss=1.05;
+% Tfeed=700;
+% Touter=1600;
+% pfrseries= 3;       %varieren zwischen 1 und 10
+
+%set parameters BEST FOR REAL
+
+
+% idealreal=0; %best for ideal
+% Pressure=101325;
+% FeedCH4=  0.0181;
+% uberschuss=1.05;
+% Tfeed=700;
+% Touter=1600;
+% pfrseries=  1;
+
+
+strin(1).p=101325;
+strin(1).T=700;
+strin(2).T=1600;
+strin(1).FCH4=0.0010;%absolute feed ch4 per single tube mol s-1    
+untin(1).ideal_real=0;%
+strin(1).ubsch=1.05;
+untin(1).nrow=5;
+
+
+    
+    
+    
+    
+    
         [cmp,unt,str]=reactoroptimizer(cmpin,untin,strin);
         
         
         
-        [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);
+        %[cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
+        %[cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
+        %[cmp,unt,str]=hcn_distillation(cmp,unt,str); 
         
-        [cmp,unt,str] = hcnabsorption2(cmp,unt,str);
+        %[unt,str]=OPEX_reactor(cmp,unt,str);
+        %[unt]=CAPEX_reactor(unt);
+        %[unt]=TOTEX_reactor(unt);
         
-        [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
-        
-        %Calc Function 2
-        %Calc Function 3
-        cmpout=cmp; %dummy
-        
-        untout=unt; %dummy
-        strout=str; %dummy
+        cmpout=cmp;
+        strout=str;
+        untout=unt;
         
      %assign for everyone
         assignin('base','cmpcalc',cmpout)   
@@ -140,8 +178,15 @@ end
 function [tables, plots]=evaluator(cmpin, untin,strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
+    
+        %EvaluateCost For Reaction Unit
+
+        
         %Call Plotter Function
         harry_plotter
+        
+        
+        
         %tables= call tex table maker
         %call some economic evaluator
         tables=NaN; %dummy

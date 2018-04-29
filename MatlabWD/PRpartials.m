@@ -137,8 +137,8 @@ Videal=R.*T/P;
 Vreal=Z.*Videal;
 
 Preal=R.*T/Vreal;
-
 out=Preal.*x(n);
+out=P.*x(n);
 end
 
 

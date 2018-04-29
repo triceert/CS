@@ -5,11 +5,11 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
 %% Provisorisch 
 %get extra variables
 
-    H1=unt(1).deltaHHCN;
-    H2=unt(1).deltaHNH; %does not load
-    a=unt(1).a;
+    H1=unt(1).deltaHHCN; %get reaction enthalpy 1
+    H2=unt(1).deltaHNH; %get raction enthalpy 2
+    a=unt(1).a;         %get specific surface
     Diameter=unt(1).rad*2;
-    heatedwith = 0; %heated with Natural Gas
+    heatedwith = 0; %heated with Natural Gas: 0 / heated with H2 stream: 1
 
   
   
@@ -37,13 +37,13 @@ function [dAdV extrout]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,id
     cpHCN=cphand(A(7),cmp,unt,6);
     cp = [cpN2; cpCH4; cpNH3; cpH2; cpHCN];
     U=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith); %get live ht coeff
-    [~,~,Re]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith);
+    [~,~,Re]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith); %get live reynolds
     [~,Q,~]=Uhand(cmp,unt,A(1),A(7),A(2:6),cp,Z,heatedwith);%get live vol flow 
     
     
    %other needed stuff from initial conditions
-   Q_in=unt(1).Q_in;
-   rho_mix_in=unt(1).rho_mix_in;
+   Q_in=unt(1).Q_in;%
+   rho_mix_in=unt(1).rho_mix_in;%
  
     
     
