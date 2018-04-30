@@ -1,11 +1,11 @@
-function optimizor(cmp,unt,str,idealreal,cocross)
+function optimizor(cmp,unt,str,idealreal)
 
 
  %% OPITMIZORRR
 
     %initialize
-    unt(1).cocross=cocross;
-    unt(1).ideal_real=idealreal;
+   g=unt(1).cocross
+   f=unt(1).ideal_real
 
     n=5; %optim grid size n*n
 

@@ -11,7 +11,7 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     Diameter=unt(1).rad*2;
     heatedwith = 0; %heated with Natural Gas: 0 / heated with H2 stream: 1
     
-  gg=idealreal
+  gg=idealreal;
   
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
@@ -55,7 +55,7 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     heatflow=str(4).G;
     
     %cocorss parameter
-    cocross=unt(1).cocross
+    cocross=unt(1).cocross;
     
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(9,1);

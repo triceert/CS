@@ -1,10 +1,12 @@
 function [cmp,unt,str]=reactorcalculator(cmp,unt,str,plotpar)
 %Function for Reactor Calculaion and Manual optimization if wanted
 %% GET INITIAL VALUES
+a=8
 
 
 %single inputs for meshgrid
-
+ggg=unt(1).cocross
+fff=unt(1).ideal_real
 
 %normal inputs defined bevore
 

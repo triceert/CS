@@ -95,12 +95,12 @@ end
 %Outputs:
 %      cmpout,untout    compunds and unit operations data to anywhere after
 %      calculation
-function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
+function [cmp, unt, str]=calculator(cmp,unt,str)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
     %calculate different stuff
-    
+
             
 %idealreal 0 ideal 1 real(Peng robinson)
 
@@ -132,28 +132,28 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 
 
 
+          % 0 cross 1 co
+unt(1).cocross=1
+unt(1).ideal_real=1
 
 
-idealreal=0;
-cocross=1;           % 0 cross 1 co
-strin(1).ideal_real=idealreal;
-strin(1).cocross=cocross;
+str(4).G=0.0010;      %flow heating medium per fucking tube(ignored if cross heated)
 
-strin(4).G=0.0010;      %flow heating medium per fucking tube(ignored if cross heated)
+str(1).p=101325;   %feed pressure
+str(1).T=700;       %feed temperature
+str(2).T=600;      %touter 
 
-strin(1).p=101325;   %feed pressure
-strin(1).T=700;       %feed temperature
-strin(2).T=600;      %touter 
+str(1).FCH4=0.0000000018; %absolute feed ch4 per single tube mol s-1   
+str(1).ubsch=1.05;  %überschuss NH3
 
-strin(1).FCH4=0.018; %absolute feed ch4 per single tube mol s-1   
-strin(1).ubsch=1.05;  %überschuss NH3
+unt(1).nrow=1;      %number reactr elements in row
 
-untin(1).nrow=1;      %number reactr elements in row
+
  
-[cmp,unt,str]=reactorcalculator(cmpin,untin,strin,1);%test
+[cmp,unt,str]=reactorcalculator(cmp,unt,str,1);%test
 %CALL Optimizor
 
-%optimizor(cmpin,untin,strin,idealreal,cocross);
+%optimizor(cmpin,untin,strin,idealreal);
                    
 
 
