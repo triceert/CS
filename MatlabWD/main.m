@@ -112,9 +112,9 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 %MODELLING PARAMETERS
 unt(1).cocross=0;           % 0 cross 1 co 
                                     %Heating Medium Flow rate, only usefull when co-current flow
-str(4).G=0.05;               %in flow heating medium per fucking tube(ignored if cross heated)
+str(4).G=0.0100;               %in flow heating medium per fucking tube(ignored if cross heated)
 unt(1).ideal_real=1;        %ideal gas 0, peng robinson 1
-unt(1).nrow=15;             %number reactr elements in row
+unt(1).nrow=12;             %number reactr elements in row
 
     
 
@@ -124,8 +124,8 @@ str(1).T=800;       %feed temperature
 str(2).T=1600;      %touter 
 
 %FEEDS
-str(1).FCH4=0.014; %absolute feed ch4 per single tube mol s-1   
-str(1).ubsch=1.05;  %überschuss NH3
+str(1).FCH4=0.01019; %absolute feed ch4 per single tube mol s-1   
+str(1).ubsch=1.0516;  %überschuss NH3
 
 
 

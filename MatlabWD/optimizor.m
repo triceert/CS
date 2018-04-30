@@ -28,7 +28,51 @@ function optimizor(cmp,unt,str)
     yNH3field=zeros(numel(n,n));
     yH2field=zeros(numel(n,n));
     pricefield=zeros(numel(n,n));
-
+    
+    
+    
+%     
+%     function price=optimfunc(x,cmp,unt,str)
+%     
+%         
+%           str(1).FCH4=x(1);
+%           str(1).ubsch=x(2);
+%           str(1).p=x(3);
+%           str(1).T=x(4);
+%           unt(1).nrow=x(5);       
+%           str(4).G=x(6);
+%          
+%           
+%        
+%                             [cmp,unt,str]=reactorcalculator(cmp,unt,str,0);   %plotparameter 0
+%                                         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
+%                                         [cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
+%                                         [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
+%                                         [unt,str]=OPEX_reactor(cmp,unt,str);
+%                                         [unt]=CAPEX_reactor(unt);
+%                                         [unt]=TOTEX_reactor(unt);
+% 
+%                                 price=pricecalculator(unt,cmp);
+%                                 
+%     end
+% 
+%      optimhandle=@(x)optimfunc(x,cmp,unt,str)
+%      options.Algorithm = 'levenberg-marquardt';
+%      
+%       lb = [-Inf,-Inf,-Inf,-Inf,-Inf,-Inf];
+%       ub = [Inf, Inf, Inf, Inf, Inf, Inf];
+%       lb=[];
+%       ub=[];
+%       x0 = [0.018,1.05,101325,700,1,0.01];
+%       x = lsqnonlin(optimhandle,x0,lb,ub,options)
+% 
+%         optimfeed=x(1)
+%         optiexcess=x(2)
+%         optipressure=x(3)
+%         optitemperature=x(4)
+%         optirow=x(5)
+%         optiflow=x(6)
+      
             %% FEED EXCESS PAIR
                         for i=1:n
 
