@@ -134,8 +134,8 @@ function [cmpout, untout, strout]=calculator(cmpin,untin,strin)
 
 
 
-idealreal=1;
-cocross=0;           % 0 cross 1 co
+idealreal=0;
+cocross=1;           % 0 cross 1 co
 strin(1).ideal_real=idealreal;
 strin(1).cocross=cocross;
 
@@ -145,13 +145,14 @@ strin(1).p=101325;   %feed pressure
 strin(1).T=700;       %feed temperature
 strin(2).T=600;      %touter 
 
-strin(1).FCH4=0.0010; %absolute feed ch4 per single tube mol s-1   
+strin(1).FCH4=0.018; %absolute feed ch4 per single tube mol s-1   
 strin(1).ubsch=1.05;  %überschuss NH3
 
 untin(1).nrow=1;      %number reactr elements in row
  
 [cmp,unt,str]=reactorcalculator(cmpin,untin,strin,1);%test
 %CALL Optimizor
+
 %optimizor(cmpin,untin,strin,idealreal,cocross);
                    
 

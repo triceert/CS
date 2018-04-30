@@ -14,7 +14,7 @@ function optimizor(cmp,unt,str,idealreal,cocross)
     nrow=linspace(1,20,n);                %NUMBER OF PFRs in row range
     hstream=linspace(1,1e-4,n);           %HEAT STREAM MOLAR FLOW
      %strin(4).G=0.1;   
-    pressure=linspace(1*101325,5*101325,n)         %Pressure
+    pressure=linspace(1*101325,5*101325,n);         %Pressure
     %strin(1).p=101325;
      
 

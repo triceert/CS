@@ -11,7 +11,7 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     Diameter=unt(1).rad*2;
     heatedwith = 0; %heated with Natural Gas: 0 / heated with H2 stream: 1
     
-  
+  gg=idealreal
   
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
@@ -38,7 +38,7 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     
     cpH2O=cphand(A(8),cmp,unt,1);              %get all live ps outside stream
     cpCO2=cphand(A(8),cmp,unt,9) ;
-    heatstreamcpmix=str(4).yH2O*cpH2O+str(4).yCO2*cpCO2    %mixture cp of (T) for heating stream
+    heatstreamcpmix=str(4).yH2O*cpH2O+str(4).yCO2*cpCO2;    %mixture cp of (T) for heating stream
     
     
     cprxn = [cpN2; cpCH4; cpNH3; cpH2; cpHCN];  %reaction cp
@@ -52,10 +52,10 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
    rho_mix_in=unt(1).rho_mix_in;%
  
     %molar flow of heating mixture
-    heatflow=str(4).G
+    heatflow=str(4).G;
     
     %cocorss parameter
-    cocross=unt(1).cocross;
+    cocross=unt(1).cocross
     
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(9,1);
@@ -81,7 +81,7 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     %#8 T heating medium
     switch cocross
         
-        case 1 %co
+        case 1  
         dAdV(8)=a *U* (A(7) - A(8))./(heatstreamcpmix*heatflow)
         case 0 %crosscurrent heating
         dAdV(8)=0;      
