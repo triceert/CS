@@ -128,8 +128,8 @@ energy_balance = @(T) E_gas_in + E_liquid_in - E_gas_out(T) - E_liquid_out(T) + 
 
 
 
-
-T = fsolve(energy_balance, 300);
+options = optimset('Display','off');
+T = fsolve(energy_balance, 300,options);
 T_celsius = T-273;
 %T=40+273;
 

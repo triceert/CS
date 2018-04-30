@@ -99,61 +99,41 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
-    %calculate different stuff
-
-            
-%idealreal 0 ideal 1 real(Peng robinson)
+   
 
 
-% idealreal=1; %best for real ohne t profile
-% Pressure=101325;
-% FeedCH4=   0.0010;   %varieren zwischen 0.001 und 0.1
-% uberschuss=1.05;
-% Tfeed=700;
-% Touter=1600;
-% pfrseries= 3;       %varieren zwischen 1 und 10
-
-%set parameters BEST FOR REAL ohne T profile
-
-
-% idealreal=0; %best for ideal
-% Pressure=101325;
-% FeedCH4=  0.01;
-% uberschuss=1.05;
-% Tfeed=700;
-% Touter=1600;
-% pfrseries=  1;
 
 
 %% VALUES FOR ONE CONSISTENT RUN
-
-
 %COCROSS AND IDEAL REAL SWITCH
 
 
 
-          % 0 cross 1 co
-unt(1).cocross=1
-unt(1).ideal_real=1
+%MODELLING PARAMETERS
+unt(1).cocross=1;           % 0 cross 1 co 
+                                    %Heating Medium Flow rate, only usefull when co-current flow
+        str(4).G=0.06;               %in flow heating medium per fucking tube(ignored if cross heated)
+unt(1).ideal_real=0;        %ideal gas 0, peng robinson 1
+unt(1).nrow=6;             %number reactr elements in row
 
+    
 
-str(4).G=0.0010;      %flow heating medium per fucking tube(ignored if cross heated)
-
+%THERMO
 str(1).p=101325;   %feed pressure
-str(1).T=700;       %feed temperature
-str(2).T=600;      %touter 
+str(1).T=800;       %feed temperature
+str(2).T=1600;      %touter 
 
-str(1).FCH4=0.0000000018; %absolute feed ch4 per single tube mol s-1   
+%FEEDS
+str(1).FCH4=0.018; %absolute feed ch4 per single tube mol s-1   
 str(1).ubsch=1.05;  %überschuss NH3
 
-unt(1).nrow=1;      %number reactr elements in row
 
 
  
-[cmp,unt,str]=reactorcalculator(cmp,unt,str,1);%test
+
 %CALL Optimizor
 
-%optimizor(cmpin,untin,strin,idealreal);
+%optimizor(cmp,unt,str);
                    
 
 
@@ -164,7 +144,7 @@ unt(1).nrow=1;      %number reactr elements in row
     
     
         
-        %[cmp,unt,str]=reactorcalculator(cmpin,untin,strin,1);       %plotparamter 1
+        [cmp,unt,str]=reactorcalculator(cmp,unt,str,1);       %plotparamter 1
         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
         [cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
         [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
@@ -172,7 +152,7 @@ unt(1).nrow=1;      %number reactr elements in row
         [unt,str]=OPEX_reactor(cmp,unt,str);
         [unt]=CAPEX_reactor(unt);
         [unt]=TOTEX_reactor(unt);
-        break_even_price=pricecalculator(unt,cmp)
+        unt(5).break_even_price=pricecalculator(unt,cmp);
         
 
         
@@ -203,20 +183,57 @@ end
 function [tables, plots]=evaluator(cmpin, untin,strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
+ cprintf('Blue','Main run model output:\n')     
     
-%         untout(2).htu = HTU;    %height theoretical units NH3 ADSORBER
-%         untout(2).ntu = NTU;    %number theoritac units
-%         untout(2).h = Z;        %height NH3 Absorber
-%         untout(2).V = V_column; %VOlume
-%         untout(2).capex = capex;
-%         untout(2).opex = opex_tot2;
-%         
-%         untout(3).h = h;       %height             %HCN ABSORBTION
-%         untout(3).capex = CAPEX_mil; %capex
-%         untout(3).opex = opex_tot;   %opex
-%         untout(3).ntu = NTU;            %theoretical number units   
-%         untout(3).htu = HTU;            %height tu
-%         untout(3).V = V_column;         %volume
+    
+
+    
+
+    
+ 
+
+    
+
+cprintf('Blue','Plant:\n')    
+
+    %MODEL RUN unt(1).co unt(1).ideal_real
+    fprintf('break even $/kg =%g',untin(5).break_even_price)
+    fprintf('$\n')
+    
+cprintf('Blue','Reactor:\n')     
+
+fprintf('Feed CH4: FCH4 [mol/s] = %g\n', (strin(1).G*strin(1).yCH4));
+fprintf('yield HCN/CH4: FCH4 [mol/s] = %g\n', (strin(5).G*strin(5).yHCN));
+fprintf('yield HCN/CH4: FCH4 [] = %g\n', untin(1).yield);
+fprintf('Reactor Length [m] = %g\n', untin(1).nrow*2);
+fprintf('Tubes needed = %g\n', untin(1).N_tubes);
+fprintf('Capex = %g\n', untin(1).capex);
+fprintf('Oapex = %g\n', untin(1).opex);
+
+
+    
+        
+     
+cprintf('Blue','NH3 Adsorber:\n') 
+fprintf('Number of theoretical units: NTU = %g\n', untin(2).ntu);
+fprintf('Height of theoretical units: HTU = %g\n', untin(2).htu);
+fprintf('Column Height [m]: H = %g\n', untin(2).h);
+
+fprintf('NH3 Column CAPEX [Mio. US$]: Capex = %g\n', untin(2).capex);
+fprintf('NH3 Column OPEX [Mio. US$]: Opex = %g\n', untin(2).opex);
+        
+
+cprintf('Blue','HCN Adsorber:\n')       
+fprintf('Number of theoretical units: NTU = %g\n', untin(3).ntu);
+fprintf('Height of theoretical units: HTU = %g\n',  untin(3).htu);
+fprintf('Column Height [m]: H = %g\n', untin(3).h);
+fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n',  untin(3).capex);
+fprintf('HCN Column OPEX [Mio. US$]: Opex = %g\n', untin(3).opex);
+
+        
+        
+        
+
 
         
         %Call Plotter Function

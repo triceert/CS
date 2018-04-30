@@ -1,12 +1,11 @@
 function [cmp,unt,str]=reactorcalculator(cmp,unt,str,plotpar)
 %Function for Reactor Calculaion and Manual optimization if wanted
 %% GET INITIAL VALUES
-a=8
 
 
-%single inputs for meshgrid
-ggg=unt(1).cocross
-fff=unt(1).ideal_real
+
+
+
 
 %normal inputs defined bevore
 
@@ -29,7 +28,7 @@ unt(1).V=l.*unt(1).Aq;%Volumen
 unt(1).a=unt(1).As./unt(1).V;   %specific surface (m2)/m3
 MW_in = extractfield(cmp(2:6),'MW')';
 R=unt(5).idgc;
-HCNneeded=12.86;
+HCNneeded=unt(1).HCNneeded;
 
 %calc additional  reactor data dependent from IC and assign
 %inlet Feed calculations 
@@ -91,7 +90,7 @@ options = odeset('NonNegative',1);
 
 %MAIN HANDLE CONTAINING ALL OTHER HANDLES FROM ABOVE
 MBEBhandle = @(t,A)MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal);
-disp('MBEB handles set')
+
 
 %solve
 [Vspan,A] = ode15s(MBEBhandle,Vspan,y0,options); %get solution
@@ -195,6 +194,7 @@ switch plotpar
     figure
     subplot(5,1,1)
     plot(Vspan,A(:,2:6))
+    legend('on')
     title('F')
     subplot(5,1,2)
     plot(Vspan,A(:,1))
@@ -214,7 +214,7 @@ switch plotpar
 
     case 0
         
-        disp('Reactor calculater completed normally.')
+       
 end
 
 

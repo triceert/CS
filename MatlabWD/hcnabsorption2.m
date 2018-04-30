@@ -123,7 +123,8 @@ t_liquid_in = T_liquid_in/1000;
             (x_HCN_out * hf_HCN_liquid_out(T_out))); 
  
 Ebalance = @(T_out) E_gas_in + E_liquid_in - E_gas_out(T_out) - E_liquid_out(T_out);
-Temp_out = fsolve (Ebalance, 300);
+options = optimset('Display','off'); %supress spam
+Temp_out = fsolve (Ebalance, 300,options);
 Temp_out_celsius = Temp_out - 273;
 strout(9).T = Temp_out;
 strout(8).T = Temp_out;
@@ -172,7 +173,7 @@ hf_HCN_out_non = @(t_out) (A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3
  E_out_non = @(t_out) E_gas_out_non(t_out) + E_liquid_out_non(t_out);
  
  Ebalance_non = @(t_out) (E_out_non(t_out) - E_in_non);
- temp_out_non = fsolve (@(t_out) Ebalance_non(t_out), 298);
+ temp_out_non = fsolve (@(t_out) Ebalance_non(t_out), 298,options);
  Temp_out_non = temp_out_non * 1000;
  flow_ratio = L_in/G_in;
  flow_ratio_out = L_out/G_out;

@@ -11,13 +11,13 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
     Diameter=unt(1).rad*2;
     heatedwith = 0; %heated with Natural Gas: 0 / heated with H2 stream: 1
     
-  gg=idealreal;
+  
   
 
 %F=[{'N2';'CH4';'NH3';'H2';'HCN'}]
 %% INIT    
 %Get PengR if idealreal set to 1 and set handle accordingly
-    switch idealreal       
+    switch unt(1).ideal_real       
         case  1
         PRCH4=parthand(A(1),A(7),A(2:6),cmp,unt,2);
         PRNH3=parthand(A(1),A(7),A(2:6),cmp,unt,3);
@@ -79,10 +79,10 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
         + A(6) * cpHCN);
        %dAdV(7)=0;
     %#8 T heating medium
-    switch cocross
+    switch unt(1).cocross
         
         case 1  
-        dAdV(8)=a *U* (A(7) - A(8))./(heatstreamcpmix*heatflow)
+        dAdV(8)=a *U* (A(7) - A(8))./(heatstreamcpmix*heatflow);
         case 0 %crosscurrent heating
         dAdV(8)=0;      
     end
