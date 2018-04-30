@@ -99,68 +99,50 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
-   
 
+%% INITIAL GUESS VALUES FOR ONE CONSISTENT RUN/OPTIMIZATION
 
-
-
-%% VALUES FOR ONE CONSISTENT RUN
 %COCROSS AND IDEAL REAL SWITCH
-
-
 
 %MODELLING PARAMETERS
 unt(1).cocross=0;           % 0 cross 1 co 
-                                    %Heating Medium Flow rate, only usefull when co-current flow
-str(4).G=0.0100;               %in flow heating medium per fucking tube(ignored if cross heated)
-unt(1).ideal_real=1;        %ideal gas 0, peng robinson 1
-unt(1).nrow=12;             %number reactr elements in row
+unt(1).ideal_real=0;        %ideal gas 0, peng robinson 1
 
-    
 
 %THERMO
-str(1).p=105325;   %feed pressure
-str(1).T=800;       %feed temperature
+str(1).p=103325;   %feed pressure
+str(1).T=699.999;       %feed temperature
 str(2).T=1600;      %touter 
 
 %FEEDS
-str(1).FCH4=0.01019; %absolute feed ch4 per single tube mol s-1   
-str(1).ubsch=1.0516;  %überschuss NH3
+str(1).FCH4=0.0776669; %absolute feed ch4 per single tube mol s-1   
+str(1).ubsch=1.05;  %überschuss NH3
+str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-current flow
+                                %in flow heating medium per fucking tube(ignored if cross heated)
+ %Reactor length
+ unt(1).nrow=6;             %number reactr elements in row
 
-
-
- 
-
-%CALL Optimizor
-
-%optimizor(cmp,unt,str);
-                   
-
-
-
+%CALl Optimizor (Böser Strom und Zeitfresser!)
+[cmp,unt,str]=optimizor(cmp,unt,str);
 
  %% MAKE ONE CONSISTENT RUN AND PLOT   
-    
-    
-    
-        
+
         [cmp,unt,str]=reactorcalculator(cmp,unt,str,1);       %plotparamter 1
         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
         [cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
-        [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
-        
+        [cmp,unt,str]=hcn_distillation(cmp,unt,str);       
         [unt,str]=OPEX_reactor(cmp,unt,str);
         [unt]=CAPEX_reactor(unt);
         [unt]=TOTEX_reactor(unt);
         unt(5).break_even_price=pricecalculator(unt,cmp);
         
-
         
+      %assign for everyone
         cmpout=cmp;
         strout=str;
         untout=unt;
         
-     %assign for everyone
+   
         assignin('base','cmpcalc',cmpout)   
         assignin('base','untcalc',untout) 
         assignin('base','strcalc',strout) 
@@ -180,7 +162,7 @@ end
 %Outputs:
 %      plots, table    plots and tables for export or whatever
 
-function [tables, plots]=evaluator(cmpin, untin,strin)
+function [tables, plots]=evaluator(cmpin, untin, strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
  cprintf('Blue','Main run model output:\n')     
@@ -202,9 +184,20 @@ cprintf('Blue','Plant:\n')
     
 cprintf('Blue','Reactor:\n')     
 
-fprintf('Feed CH4: FCH4 [mol/s] = %g\n', (strin(1).G*strin(1).yCH4));
-fprintf('yield HCN/CH4: FCH4 [mol/s] = %g\n', (strin(5).G*strin(5).yHCN));
-fprintf('yield HCN/CH4: FCH4 [] = %g\n', untin(1).yield);
+fprintf('Feed STream CH4 [mol/s] = %g\n', (strin(1).G*strin(1).yCH4));
+fprintf('Feed STream CH4 per tube: FCH4 [mol/s] = %g\n', (strin(1).FCH4));
+fprintf('OutStream HCN [mol/s] = %g\n', (strin(5).G*strin(5).yHCN));
+fprintf('yield HCN resp, CH4: FCH4 [] = %g\n', untin(1).yield);
+fprintf('Conversion CH4 [] = %g\n', untin(1).conv);
+fprintf('yCH4 outlet [] = %g\n', strin(5).yCH4);
+fprintf('yNH3 outlet [] = %g\n', strin(5).yNH3);
+fprintf('yHCN outlet [] = %g\n', strin(5).yHCN);
+fprintf('yH2 outlet [] = %g\n', strin(5).yH2);
+fprintf('yN2 outlet [] = %g\n', strin(5).yN2);
+fprintf('Temperature inlet [] = %g\n', strin(1).T);
+fprintf('pressure inlet= %g\n', strin(1).p);
+
+
 fprintf('Reactor Length [m] = %g\n', untin(1).nrow*2);
 fprintf('Tubes needed = %g\n', untin(1).N_tubes);
 fprintf('Capex = %g\n', untin(1).capex);

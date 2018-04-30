@@ -141,6 +141,8 @@ yield=A(end,6)/A(1,3);
 unt(1).yield=yield;
 
 
+
+
 %tubes calculation and assignment
 HCNout=A(end,6);
 NTubesaside=HCNneeded/HCNout; %NR TUBES
@@ -156,6 +158,9 @@ str(5).G=sum(A(end,2:6))*NTubesaside; %for tubes aside stream out
 %Heat needed
 Qneeded=A(end,9);
 unt(1).Q_tot=Qneeded.*NTubesaside;
+
+%conversion CH4
+unt(1).conv=(str(1).G*str(1).yCH4-str(5).G*str(5).yCH4)/(str(1).G*str(1).yCH4);
 
 
 %Velocity calculations assignment (FOR/FROM ONE TUBE)
