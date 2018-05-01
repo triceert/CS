@@ -18,10 +18,10 @@ cost_wastewater = 2;    %[US$/ton]
 
 concentration = x_H2SO4_in/x_H2O_in;            %wrong
 
-opex_H2O = cost_H2O * amount_water / 10^6;                      %[Mio. US$]
-opex_H2SO4 = cost_H2SO4 * amount_H2SO4 / 10^6;                  %[Mio. US$]
-opex_wastewater = cost_wastewater * amount_wastewater /10^6;    %[Mio. US$]
-opex_tot = opex_H2O + opex_H2SO4 + opex_wastewater;             %[Mio. US$]
+opex_H2O = cost_H2O * amount_water ;                     
+opex_H2SO4 = cost_H2SO4 * amount_H2SO4 ;                 
+opex_wastewater = cost_wastewater * amount_wastewater ;    
+opex_tot = opex_H2O + opex_H2SO4 + opex_wastewater;             
 
 end
 
