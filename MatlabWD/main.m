@@ -129,7 +129,7 @@ str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-curren
 
         [cmp,unt,str]=reactorcalculator(cmp,unt,str,1);       %plotparamter 1
         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
-        [cmp,unt,str] = hcnabsorption2(cmp,unt,str);       
+        [cmp,unt,str] = hcnideal(cmp,unt,str);       
         [cmp,unt,str]=hcn_distillation(cmp,unt,str);       
         [unt,str]=OPEX_reactor(cmp,unt,str);
         [unt]=CAPEX_reactor(unt);
