@@ -192,14 +192,14 @@ V_column = (dia/2)^2*pi*Z;
 ratio = Z/dia;
 
 [opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);
-opex_heatexchanger = A_exchanger^0.65 * 25000 /10^6;        %[Mio. US$]
+opex_heatexchanger = A_exchanger^0.65 * 25000;        
 opex_tot2 = opex_tot+opex_heatexchanger;
 opex_H2O=opex_H2O;
 opex_H2SO4 = opex_H2SO4;
 opex_wastewater = opex_wasterwater;
 opex_tot = opex_tot;
 
-capex = capex_calc(Z, dia)/10^6;
+capex = capex_calc(Z, dia);
 
 %VARS OUT
 
