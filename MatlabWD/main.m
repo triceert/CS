@@ -107,22 +107,19 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 %MODELLING PARAMETERS
 unt(1).cocross=0;           % 0 cross 1 co 
 unt(1).ideal_real=0;        %ideal gas 0, peng robinson 1
-
-
 %THERMO
 str(1).p=103325;   %feed pressure
 str(1).T=699.999;       %feed temperature
 str(2).T=1600;      %touter 
-
 %FEEDS
 str(1).FCH4=0.0776669; %absolute feed ch4 per single tube mol s-1   
 str(1).ubsch=1.05;  %überschuss NH3
 str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-current flow
                                 %in flow heating medium per fucking tube(ignored if cross heated)
  %Reactor length
- unt(1).nrow=6;             %number reactr elements in row
+ unt(1).nrow=1;             %number reactr elements in row
 
-%CALl Optimizor (Böser Strom und Zeitfresser!)
+%% CALL Optimizor (Böser Strom und Zeitfresser!)
 [cmp,unt,str]=optimizor(cmp,unt,str);
 
  %% MAKE ONE CONSISTENT RUN AND PLOT   
