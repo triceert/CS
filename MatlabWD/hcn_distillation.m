@@ -205,11 +205,15 @@ CAPEX_reboiler = 25000*(area_reboiler^0.65);
 %%% WHICH TEMPERATURE DIFFERENCE FOR REBOILER HEATED WITH STEAM? 
 
 
+
 %% OUTPUTS
 cmpout = cmpin; 
 untout = untin; 
 strout = strin; 
-%untout(4).h = height; 
+
+untout(4).capex=CAPEX_column_itself+CAPEX_cond+CAPEX_reboiler; %assign COST
+untout(4).opex=OPEX_cooling_water+OPEX_steam;
+untout(4).h = height; 
 %untout(4).rad = d_min_bottom/2; 
 %untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
 %untout(4).En = Q_cond + Q_reboiler; 

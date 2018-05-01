@@ -120,7 +120,8 @@ str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-curren
  unt(1).nrow=1;             %number reactr elements in row
 
 %% CALL Optimizor (Böser Strom und Zeitfresser!)
-[cmp,unt,str]=optimizor(cmp,unt,str);
+senspara=0;                     %0 sensitivity analysis off   1 on
+[cmp,unt,str]=optimizor(cmp,unt,str,senspara);
 
  %% MAKE ONE CONSISTENT RUN AND PLOT   
 
@@ -128,10 +129,7 @@ str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-curren
         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
         [cmp,unt,str] = hcnideal(cmp,unt,str);       
         [cmp,unt,str]=hcn_distillation(cmp,unt,str);       
-        [unt,str]=OPEX_reactor(cmp,unt,str);
-        [unt]=CAPEX_reactor(unt);
-        [unt]=TOTEX_reactor(unt);
-        unt(5).break_even_price=pricecalculator(unt,cmp);
+        [cmp,unt,str]=pricecalculator(cmp,unt,str);
         
         
       %assign for everyone
@@ -176,15 +174,17 @@ function [tables, plots]=evaluator(cmpin, untin, strin)
 cprintf('Blue','Plant:\n')    
 
     %MODEL RUN unt(1).co unt(1).ideal_real
-    fprintf('break even $/kg =%g',untin(5).break_even_price)
+    fprintf('break even $/kg =%g',untin(5).price)
     fprintf('$\n')
     
 cprintf('Blue','Reactor:\n')     
 
 fprintf('Feed STream CH4 [mol/s] = %g\n', (strin(1).G*strin(1).yCH4));
-fprintf('Feed STream CH4 per tube: FCH4 [mol/s] = %g\n', (strin(1).FCH4));
+fprintf('Feed STream CH4 per tube: [mol/s] = %g\n', (strin(1).FCH4));
 fprintf('OutStream HCN [mol/s] = %g\n', (strin(5).G*strin(5).yHCN));
+fprintf('InStream Heatmed [mol/s] = %g\n', (strin(4).G));
 fprintf('yield HCN resp, CH4: FCH4 [] = %g\n', untin(1).yield);
+fprintf('NH3 Excess ratio [] = %g\n', strin(1).ubsch);
 fprintf('Conversion CH4 [] = %g\n', untin(1).conv);
 fprintf('yCH4 outlet [] = %g\n', strin(5).yCH4);
 fprintf('yNH3 outlet [] = %g\n', strin(5).yNH3);
@@ -221,8 +221,8 @@ fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n',  untin(3).capex);
 fprintf('HCN Column OPEX [Mio. US$]: Opex = %g\n', untin(3).opex);
 
         
-        
-        
+cprintf('Blue','Distillation:\n')          
+ fprintf('Column Height [m]: H = %g\n', untin(4).h);
 
 
         

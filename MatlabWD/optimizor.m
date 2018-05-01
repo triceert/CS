@@ -1,4 +1,4 @@
-function [cmp,unt,str]=optimizor(cmp,unt,str)
+function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
 
 
  %% OPITMIZORRR
@@ -33,10 +33,8 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
                                 [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
                                 [cmp,unt,str] = hcnideal(cmp,unt,str);       
                                 [cmp,unt,str]=hcn_distillation(cmp,unt,str); 
-                                [unt,str]=OPEX_reactor(cmp,unt,str);
-                                [unt]=CAPEX_reactor(unt);
-                                [unt]=TOTEX_reactor(unt);
-                                 price=pricecalculator(unt,cmp);                             
+                                [cmp,unt,str]=pricecalculator(cmp,unt,str);                  
+                                 price=unt(5).price  ;                        
     end
 
 
@@ -68,9 +66,12 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
   
                 
  %% SENSITIVITY ANALYSIS STARTUP  
-    a=0.2; %low up ratio %
-    lb=x-x*a; %lower bound for sensitivity
-    ub=x+x*a;
+ 
+ switch senspara 
+     case 1
+    %a=0.2; %low up ratio %
+    %lb=x-x*a; %lower bound for sensitivity
+    %ub=x+x*a;
     strprov=str;
     untprov=unt;
     cmpprov=cmp; 
@@ -81,12 +82,12 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
     ubsch=linspace(lb(2),ub(2),n);       %EXCESS NH3 RANGE
     pressure=linspace(lb(3),ub(3),n);         %Pressure
     temperature=linspace(lb(4),ub(5),n);     %Temoerature
-        if persnrow<4
-            lb(5)=1;
-        else
-            lb(5)=persnrow-3;
-        end  
-        ub(5)=persnrow+3;
+       % if persnrow<4
+        %    lb(5)=1;
+        %else
+         %   lb(5)=persnrow-3;
+        %end  
+        %ub(5)=persnrow+3;
     nrow=linspace(lb(5),ub(5),n);                %NUMBER OF PFRs in row range
     hstrproveam=linspace(lb(6),ub(6),n);           %HEAT strprovEAM MOLAR FLOW
   
@@ -112,11 +113,9 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
                                         [cmpprov,untprov,strprov]=reactorcalculator(cmpprov,untprov,strprov,0);   %plotparameter 0
                                         [cmpprov,untprov,strprov]=NH3_absorber_ideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov] = hcnideal(cmpprov,untprov,strprov);       
-                                        [cmpprov,untprov,strprov]=hcn_distillation(cmpprov,untprov,strprov); 
-                                        [untprov,strprov]=OPEX_reactor(cmpprov,untprov,strprov);
-                                        [untprov]=CAPEX_reactor(untprov);
-                                        [untprov]=TOTEX_reactor(untprov);
-                                pricefield(i,j)=pricecalculator(untprov,cmpprov);       %assign into mesh
+                                        [cmpprov,untprov,strprov]=hcn_distillation(cmpprov,untprov,strprov);    
+                                        [cmpprov,untprov,strprov]=pricecalculator(cmpprov,untprov,strprov); 
+                                pricefield(i,j)=untprov(5).price;       %assign into mesh
                                 yieldfield(i,j)=real(untprov(1).yield);                                                                                                                    
                                 yNH3field(i,j)=real(strprov(5).yNH3);
                                 yH2field(i,j)=real(strprov(5).yH2);
@@ -185,10 +184,8 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
                                         [cmpprov,untprov,strprov]=NH3_absorber_ideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov] = hcnideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov]=hcn_distillation(cmpprov,untprov,strprov); 
-                                        [untprov,strprov]=OPEX_reactor(cmpprov,untprov,strprov);
-                                        [untprov]=CAPEX_reactor(untprov);
-                                        [untprov]=TOTEX_reactor(untprov);
-                                pricefield(i,j)=pricecalculator(untprov,cmpprov);       %assign into mesh
+                                        [cmpprov,untprov,strprov]=pricecalculator(cmpprov,untprov,strprov); 
+                                pricefield(i,j)=untprov(5).price;       %assign into mesh%assign into mesh
                                 yieldfield(i,j)=real(untprov(1).yield);                                                                                     
                                 conversionfield(i,j)=real(untprov(1).conv);
                                 yNH3field(i,j)=real(strprov(5).yNH3);
@@ -263,10 +260,8 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
                                         [cmpprov,untprov,strprov]=NH3_absorber_ideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov] = hcnideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov]=hcn_distillation(cmpprov,untprov,strprov); 
-                                        [untprov,strprov]=OPEX_reactor(cmpprov,untprov,strprov);
-                                        [untprov]=CAPEX_reactor(untprov);
-                                        [untprov]=TOTEX_reactor(untprov);
-                                pricefield(i,j)=pricecalculator(untprov,cmpprov);       %assign into mesh
+                                        [cmpprov,untprov,strprov]=pricecalculator(cmpprov,untprov,strprov); 
+                                pricefield(i,j)=untprov(5).price;       %assign into mesh      %assign into mesh
                                 yieldfield(i,j)=real(untprov(1).yield);                                                                                     
                                 conversionfield(i,j)=real(untprov(1).conv);
                                 yNH3field(i,j)=real(strprov(5).yNH3);
@@ -350,10 +345,8 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
                                         [cmpprov,untprov,strprov]=NH3_absorber_ideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov] = hcnideal(cmpprov,untprov,strprov);       
                                         [cmpprov,untprov,strprov]=hcn_distillation(cmpprov,untprov,strprov); 
-                                        [untprov,strprov]=OPEX_reactor(cmpprov,untprov,strprov);
-                                        [untprov]=CAPEX_reactor(untprov);
-                                        [untprov]=TOTEX_reactor(untprov);
-                                pricefield(i,j)=pricecalculator(untprov,cmpprov);       %assign into mesh
+                                        [cmpprov,untprov,strprov]=pricecalculator(cmpprov,untprov,strprov); 
+                                pricefield(i,j)=untprov(5).price;       %assign into mesh  %assign into mesh
                                 yieldfield(i,j)=real(untprov(1).yield);                                                                                     
                                 conversionfield(i,j)=real(untprov(1).conv);
                                 yNH3field(i,j)=real(strprov(5).yNH3);
@@ -458,6 +451,11 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
                                 
                                 
                  end
+              
                  
                   disp('Optimization Completed')
+     case 0
+         
+         disp('Sensitivity analysis off, Optimization Completed')
+ end
 end
