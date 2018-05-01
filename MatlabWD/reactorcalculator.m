@@ -197,27 +197,45 @@ switch plotpar
     
     case 1
     figure
-    title('Optimized Paramters Run Output')
+  
     subplot(5,1,1)
     plot(Vspan,A(:,2:6))
-    legend('on')
-    title('F')
+    legend('$N_{2}$','$CH_{4}$','$NH_{3}$','$H_{2}$','$HCN$')
+    xlabel('V/$m^{3}$')
+    ylabel('F/$mol\cdot s^{-1}$')
+    title('Optimized Paramters Reactor Profile')
+    axis tight
+    
     subplot(5,1,2)
     plot(Vspan,A(:,1))
-    title('P')
+    ytickformat('%.2f')
+    xlabel('V/$m^{3}$')
+    ylabel('$p$/$Pa$')
+    axis tight
+   
     subplot(5,1,3)
     plot(Vspan,A(:,7))
-    title('Trxn')
+    xlabel('V/$m^{3}$')
+    ylabel('$T$/$K$')
+    axis tight
+ 
     subplot(5,1,4)
+    
     plot(Vspan,A(:,8))
-    title('Tflu')
+    ylabel('$T_a$/$K$')
+    xlabel('V/$m^{3}$')
+    axis tight
 
     subplot(5,1,5)
-    plot(Vspan,velo)
-    title('Velprofile')
     
-    disp('Reactor calculator completed normally for one run, plots no done')
-
+    plot(Vspan,velo)
+    ylabel('v/$m\cdot s^{-1}$')
+    xlabel('V/$m^{3}$')
+    axis tight
+ 
+    print('-fillpage','ReactorProfile','-dpdf')
+    
+        disp('Reactor calculator completed normally for optimized run, PDF generated')
     case 0
         
        

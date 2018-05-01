@@ -4,7 +4,9 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
  %% OPITMIZORRR
 
     %initialize
-    disp('Optimization started, dependent on the performance of your \r\n computer this can take up to 5 minutes.\r\n It is a good time to grab a coffe now.')
+    disp('Optimization started, dependent on the performance of your')
+    disp('Computer, this can take up to 15 minutes (for real sucky machines).')
+    disp('However, it is a good time to grab a coffe now.')
 
     n=5; %optim grid size n*n..dont push it to far up
     
@@ -62,7 +64,8 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                 str(1).T=persTemp;
                 unt(1).nrow=persnrow;
                 str(4).G=persFlow;
-      disp('Fmincon successfully found optimal values.\n Continuing with sensitivity analysis.')
+      disp('Fmincon successfully found optimal values.' )
+      disp(' Continuing with sensitivity analysis.')
   
                 
  %% SENSITIVITY ANALYSIS STARTUP  
@@ -138,15 +141,15 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yieldfield,'ShowText','on')
-                        title('Yield  resp. to CH4')
+                        title('$Yield (resp. CH_{4})/[]$')
                         pbaspect([1 1 1])                    
-                        ylabel('Excess NH3')
+                        ylabel('$Excess NH_{3}/[]$')
                         
                         subplot(4,2,2)                     
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,pricefield,'ShowText','on')
-                        title('Break even Price $/kg')
+                        title('Break-even-Price/ $\$\cdot kg^{-1}$')
                         pbaspect([1 1 1])                        
 
        
@@ -156,22 +159,22 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yNH3field,'ShowText','on')
-                        title('yNH3')
+                        title('$yNH_{3}/[]$')
                         pbaspect([1 1 1])  
-                        ylabel('Excess NH3')
+                        ylabel('$Excess NH_{3}/[]$')
 
                         subplot(4,3,2)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yH2field,'ShowText','on')
-                        title('yH2')
+                        title('$yH_{2}/[]$')
                         pbaspect([1 1 1])
                         
                         subplot(4,3,3)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yHCNfield,'ShowText','on')
-                        title('yHCN')
+                        title('$yHCN/[]$')
                         pbaspect([1 1 1])
                        
 
@@ -211,7 +214,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         contour(FCH4,pressure,yieldfield,'ShowText','on')
                         
                         pbaspect([1 1 1])                    
-                        ylabel('Pressure')
+                        ylabel('$P/Pa$')
                         
                         subplot(4,2,4)                     
                         hold on 
@@ -227,7 +230,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persPressure,'red','x')
                         contour(FCH4,pressure,yNH3field,'ShowText','on')
-                        ylabel('Pressure')
+                        ylabel('$P/Pa$')
                         pbaspect([1 1 1])                     
 
                         subplot(4,3,5)
@@ -288,7 +291,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         contour(FCH4,hstrproveam,yieldfield,'ShowText','on')
                     
                         pbaspect([1 1 1])                    
-                        ylabel('Flow heating medium p. tube.')
+                        ylabel('$F_{flu}/mol\cdot s^{-1}$')
                         
                         subplot(4,2,6)                     
                         hold on 
@@ -302,7 +305,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         figure(2)
                         subplot(4,3,7)
                         hold on 
-                        ylabel('Flow heating medium p. tube.')
+                        ylabel('$F_{flu}/mol\cdot s^{-1}$')
                         scatter(persFCH4,persFlow,'red','x')
                         contour(FCH4,hstrproveam,yNH3field,'ShowText','on')
            
@@ -371,15 +374,15 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persnrow,'red','x')
                         contour(FCH4,nrow,yieldfield,'ShowText','on')
-                        xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])                    
-                        ylabel('n segements in row')
+                        ylabel('$Segments/[]$')
                         
                         subplot(4,2,6)                     
                         hold on 
                         scatter(persFCH4,persnrow ,'red','x')
                         contour(FCH4,nrow,pricefield,'ShowText','on')
-                          xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])                        
 
                         
@@ -388,22 +391,22 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4, persnrow,'red','x')
                         contour(FCH4,nrow,yNH3field,'ShowText','on')
-                         xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])    
-                          ylabel('n segements in row')
+                          ylabel('$Segments/[]$')
 
                         subplot(4,3,8)
                         hold on 
                         scatter(persFCH4, persnrow,'red','x')
                         contour(FCH4,nrow,yH2field,'ShowText','on')
-                          xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])
                         
                         subplot(4,3,9)
                         hold on 
                         scatter(persFCH4, persnrow,'red','x')
                         contour(FCH4,nrow,yHCNfield,'ShowText','on')
-                          xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])
                      
                         
@@ -413,15 +416,15 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persnrow,'red','x')
                         contour(FCH4,nrow,yieldfield,'ShowText','on')
-                        xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])                    
-                        ylabel('n segements in row')
+                        ylabel('Segments/[]')
                         
                         subplot(4,2,8)                     
                         hold on 
                         scatter(persFCH4,persnrow ,'red','x')
                         contour(FCH4,nrow,pricefield,'ShowText','on')
-                          xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])                        
 
 
@@ -431,30 +434,32 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4, persnrow,'red','x')
                         contour(FCH4,nrow,yNH3field,'ShowText','on')
-                         xlabel('Feed CH4 p.t.')
-                         ylabel('n segements in row')
+                       xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
+                       ylabel('Segments/[]')
                         pbaspect([1 1 1])                     
 
                         subplot(4,3,11)
                         hold on 
                         scatter(persFCH4, persnrow,'red','x')
                         contour(FCH4,nrow,yH2field,'ShowText','on')
-                          xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])
                         
                         subplot(4,3,12)
                         hold on 
                         scatter(persFCH4, persnrow,'red','x')
                         contour(FCH4,nrow,yHCNfield,'ShowText','on')
-                          xlabel('Feed CH4 p.t.')
+                        xlabel('$F_{CH_{4}}/mol\cdot s^{-1}$')
                         pbaspect([1 1 1])
                          
                                 
                                 
                  end
-              
-                 
-                  disp('Optimization Completed')
+                 figure(1)   
+                 print('-fillpage','Sensi_price_yield','-dpdf')
+                 figure(2)
+                 print('-fillpage','Sensi_molar_fracs','-dpdf')
+                  disp('Optimization Completed, pdf exported')
      case 0
          
          disp('Sensitivity analysis off, Optimization Completed')

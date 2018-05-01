@@ -24,6 +24,10 @@ function main(varargin) %give options for what to execute how
     close all
     clc
     cprintf('_Blue','Execution started.\n');%say what we did here 
+    %latex 
+    set(groot, 'defaultAxesTickLabelInterpreter','latex'); 
+    set(groot, 'defaultLegendInterpreter','latex');
+    set(groot,'defaultTextInterpreter','latex');
     
 %EVALUATE CALL MODE AND DO IT ACCORDINGLY
     switch nargin    
@@ -105,7 +109,7 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 %COCROSS AND IDEAL REAL SWITCH
 
 %MODELLING PARAMETERS
-unt(1).cocross=1;           % 0 cross 1 co 
+unt(1).cocross=0;           % 0 cross 1 co 
 unt(1).ideal_real=1;        %ideal gas 0, peng robinson 1
 %THERMO
 str(1).p=103325;   %feed pressure
@@ -120,7 +124,7 @@ str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-curren
  unt(1).nrow=1;             %number reactr elements in row
 
 %% CALL Optimizor (Böser Strom und Zeitfresser!)
-senspara=1;                     %0 sensitivity analysis off   1 on
+senspara=0;                     %0 sensitivity analysis off   1 on
 [cmp,unt,str]=optimizor(cmp,unt,str,senspara);
 
  %% MAKE ONE CONSISTENT RUN AND PLOT   
