@@ -68,9 +68,9 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
   
                 
  %% SENSITIVITY ANALYSIS STARTUP  
-    %a=0.2; %low up ratio %
-    %lb=x-x*a; %lower bound for sensitivity
-    %ub=x+x*a;
+    a=0.2; %low up ratio %
+    lb=x-x*a; %lower bound for sensitivity
+    ub=x+x*a;
     strprov=str;
     untprov=unt;
     cmpprov=cmp; 
@@ -81,12 +81,12 @@ function [cmp,unt,str]=optimizor(cmp,unt,str)
     ubsch=linspace(lb(2),ub(2),n);       %EXCESS NH3 RANGE
     pressure=linspace(lb(3),ub(3),n);         %Pressure
     temperature=linspace(lb(4),ub(5),n);     %Temoerature
-        %if persnrow<4
-            %lb(5)=1;
-        %else
-            %lb(5)=persnrow-3;
-        %end  
-        %ub(5)=persnrow+3;
+        if persnrow<4
+            lb(5)=1;
+        else
+            lb(5)=persnrow-3;
+        end  
+        ub(5)=persnrow+3;
     nrow=linspace(lb(5),ub(5),n);                %NUMBER OF PFRs in row range
     hstrproveam=linspace(lb(6),ub(6),n);           %HEAT strprovEAM MOLAR FLOW
   
