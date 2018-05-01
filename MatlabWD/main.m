@@ -106,7 +106,7 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 
 %MODELLING PARAMETERS
 unt(1).cocross=0;           % 0 cross 1 co 
-unt(1).ideal_real=0;        %ideal gas 0, peng robinson 1
+unt(1).ideal_real=1;        %ideal gas 0, peng robinson 1
 %THERMO
 str(1).p=103325;   %feed pressure
 str(1).T=699.999;       %feed temperature
@@ -120,7 +120,7 @@ str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-curren
  unt(1).nrow=1;             %number reactr elements in row
 
 %% CALL Optimizor (Böser Strom und Zeitfresser!)
-senspara=0;                     %0 sensitivity analysis off   1 on
+senspara=1;                     %0 sensitivity analysis off   1 on
 [cmp,unt,str]=optimizor(cmp,unt,str,senspara);
 
  %% MAKE ONE CONSISTENT RUN AND PLOT   

@@ -197,6 +197,7 @@ switch plotpar
     
     case 1
     figure
+    title('Optimized Paramters Run Output')
     subplot(5,1,1)
     plot(Vspan,A(:,2:6))
     legend('on')

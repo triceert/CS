@@ -6,7 +6,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
     %initialize
     disp('Optimization started, dependent on the performance of your \r\n computer this can take up to 5 minutes.\r\n It is a good time to grab a coffe now.')
 
-    n=4; %optim grid size n*n..dont push it to far up
+    n=5; %optim grid size n*n..dont push it to far up
     
     %get persistent/guess variables
     persFCH4=str(1).FCH4;
@@ -43,7 +43,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
      optimhandle=@(x)optimfunc(x,cmp,unt,str);
      options=optimset('Display','off');
       x0 = [persFCH4,persRatio,persPressure,persTemp,persnrow,persFlow];
-      lb = [1e-4,0.9,85000,650,1,1e-4];
+      lb = [1e-4,1,85000,650,1,1e-4];
       ub = [1e-1,1.1,500000,750,15,1];
       disp('Fmincon startup complete.')
       x = fmincon(optimhandle,x0,[],[],[],[],lb,ub,[],options); %solve
@@ -69,9 +69,9 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
  
  switch senspara 
      case 1
-    %a=0.2; %low up ratio %
-    %lb=x-x*a; %lower bound for sensitivity
-    %ub=x+x*a;
+    a=0.2; %low up ratio %
+    lb=x-x*a; %lower bound for sensitivity
+    ub=x+x*a;
     strprov=str;
     untprov=unt;
     cmpprov=cmp; 
@@ -81,13 +81,13 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
     FCH4 = linspace(lb(1),ub(1),n);    %FEEDRANGE
     ubsch=linspace(lb(2),ub(2),n);       %EXCESS NH3 RANGE
     pressure=linspace(lb(3),ub(3),n);         %Pressure
-    temperature=linspace(lb(4),ub(5),n);     %Temoerature
-       % if persnrow<4
-        %    lb(5)=1;
-        %else
-         %   lb(5)=persnrow-3;
-        %end  
-        %ub(5)=persnrow+3;
+    temperature=linspace(lb(4),ub(5),n);     %Temoerature  %taken out since not stable
+        if persnrow<4
+            lb(5)=1;
+        else
+            lb(5)=persnrow-3;
+        end  
+        ub(5)=persnrow+3;
     nrow=linspace(lb(5),ub(5),n);                %NUMBER OF PFRs in row range
     hstrproveam=linspace(lb(6),ub(6),n);           %HEAT strprovEAM MOLAR FLOW
   
@@ -133,6 +133,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                     
 %plots
                     figure(1)
+                    title('Normalized Sensitivyties')
                         subplot(4,2,1)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
