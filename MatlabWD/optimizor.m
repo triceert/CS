@@ -282,7 +282,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                     
 %plots
                     figure(1)
-                        subplot(4,2,7)
+                        subplot(4,2,5)
                         hold on 
                         scatter(persFCH4,persFlow,'red','x')
                         contour(FCH4,hstrproveam,yieldfield,'ShowText','on')
@@ -290,7 +290,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         pbaspect([1 1 1])                    
                         ylabel('Flow heating medium p. tube.')
                         
-                        subplot(4,2,8)                     
+                        subplot(4,2,6)                     
                         hold on 
                         scatter(persFCH4,persFlow,'red','x')
                         contour(FCH4,hstrproveam,pricefield,'ShowText','on')
@@ -408,7 +408,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                      
                         
              case 1
-                                                figure(1)
+                        figure(1)
                         subplot(4,2,7)
                         hold on 
                         scatter(persFCH4,persnrow,'red','x')

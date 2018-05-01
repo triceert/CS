@@ -105,7 +105,7 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 %COCROSS AND IDEAL REAL SWITCH
 
 %MODELLING PARAMETERS
-unt(1).cocross=0;           % 0 cross 1 co 
+unt(1).cocross=1;           % 0 cross 1 co 
 unt(1).ideal_real=1;        %ideal gas 0, peng robinson 1
 %THERMO
 str(1).p=103325;   %feed pressure
