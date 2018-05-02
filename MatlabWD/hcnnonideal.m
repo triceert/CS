@@ -139,11 +139,9 @@ E_liquid_in_non = L_in * ((x_H2O_in * hf_H2O_liquid_in_non) + (x_HCN_in * hf_HCN
 E_gas_out_non = @(t_out) G_out * ((y_HCN_out * hf_HCN_out_non(t_out)) + (y_H2_out * hf_H2_out_non(t_out)) + (y_N2_out * hf_N2_out_non(t_out)) + (y_NH3_out * hf_NH3_out_non(t_out)) + (y_CH4_out * hf_CH4_out_non(t_out)));
 E_liquid_out_non = @(t_out) L_out * ((x_H2O_out * hf_H2O_out_non(t_out)) + (x_HCN_out * hf_HCN_out_non(t_out))); 
  
-E_in_non = E_gas_in_non + E_liquid_in_non;
-E_out_non = @(t_out) E_gas_out_non(t_out) + E_liquid_out_non(t_out);
- 
 Ebalance = @(t_out) E_gas_in_non + E_liquid_in_non - E_gas_out_non(t_out) - E_liquid_out_non(t_out);
-temp_out = fsolve (Ebalance, 0.3);     % Outlet temperature [K]
+optis=optimset('Display','off');
+temp_out = fsolve (Ebalance, 0.3, optis);     % Outlet temperature [K]
 Temp_out = temp_out * 1000;
 Temp_out_celsius = Temp_out - 273;     % Outlet temperature [°C]
 strout(9).T = Temp_out;
@@ -233,17 +231,17 @@ min_ratio = ((y_HCN_in - y_HCN_out)/((y_HCN_in/m)-x_HCN_in));
 L_min = G_in * min_ratio;
 L_true = L_min * 1.5;         % Real liquid stream , factor 1.5 randomly picked            
 
-fprintf('Number of theoretical units: NTU = %g\n', NTU);
-fprintf('Height of theoretical units: HTU = %g\n', HTU);
-fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
-fprintf('Outlet temperature [°C]: T = %g\n', Temp_out_celsius);
-fprintf('Column Height [m]: H = %g\n', h);
-fprintf('Column Diameter [m]: D = %g\n', dia);
-fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n', CAPEX_mil);
-fprintf('HCN Column OPEX [Mio. US$]: Opex = %g\n', opex_tot);
+%fprintf('Number of theoretical units: NTU = %g\n', NTU);
+%fprintf('Height of theoretical units: HTU = %g\n', HTU);
+%fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
+%fprintf('Outlet temperature [°C]: T = %g\n', Temp_out_celsius);
+%fprintf('Column Height [m]: H = %g\n', h);
+%fprintf('Column Diameter [m]: D = %g\n', dia);
+%fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n', CAPEX_mil);
+%fprintf('HCN Column OPEX [Mio. US$]: Opex = %g\n', opex_tot);
 
 untout(3).h = h;
-untout(3).capex = CAPEX_mil;
+untout(3).capex = CAPEX_hcnabs;
 untout(3).opex = opex_tot;
 untout(3).ntu = NTU;
 untout(3).htu = HTU;
