@@ -33,14 +33,14 @@ G_out= -sum(G_in_i(1)+G_in_i(3:end))/(10^(-4)-1);          % Total output molar 
 strout(8).G = G_out;                                       % Passes the output molar flow to the Excel-file
 
 y_HCN_out = 1e-4;                                          % Outlet molar fractions of the diff species
-y_NH3_out = 1e-4;   
+y_NH3_out = G_in_i(1)/G_out;  
 y_CH4_out = G_in_i(3)/G_out; 
 y_H2_out  = G_in_i(4)/G_out;
 y_N2_out  = G_in_i(5)/G_out;
 y_out = [y_HCN_out, y_NH3_out, y_CH4_out, y_H2_out, y_N2_out];
 
-strout(8).yHC = y_HCN_out;
-strout(8).yNHN3 = y_NH3_out;
+strout(8).yHCN = y_HCN_out;
+strout(8).yNH3 = y_NH3_out;
 strout(8).yCH4 = y_CH4_out;
 strout(8).yH2 = y_H2_out;
 strout(8).yN2 = y_N2_out;
