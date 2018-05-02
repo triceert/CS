@@ -1,7 +1,7 @@
 function [cmp,unt,str]=pricecalculator(cmp,unt,str)
 
         [unt,str]=OPEX_reactor(cmp,unt,str);
-        [unt]=CAPEX_reactor(unt);
+        [unt]=CAPEX_reactor(cmp,unt,str);
         [unt]=TOTEX_reactor(unt);
 
 

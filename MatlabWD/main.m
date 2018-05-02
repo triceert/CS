@@ -110,7 +110,7 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 
 %MODELLING PARAMETERS
 unt(1).cocross=0;           % 0 cross 1 co 
-unt(1).ideal_real=1;        %ideal gas 0, peng robinson 1
+unt(1).ideal_real=0;        %ideal gas 0, peng robinson 1
 %THERMO
 str(1).p=103325;   %feed pressure
 str(1).T=699.999;       %feed temperature
@@ -131,7 +131,7 @@ senspara=0;                     %0 sensitivity analysis off   1 on
 
         [cmp,unt,str]=reactorcalculator(cmp,unt,str,1);       %plotparamter 1
         [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
-        [cmp,unt,str] = hcnideal(cmp,unt,str);       
+        [cmp,unt,str] = hcnabsorber(cmp,unt,str);         
         [cmp,unt,str]=hcn_distillation(cmp,unt,str);       
         [cmp,unt,str]=pricecalculator(cmp,unt,str);
         

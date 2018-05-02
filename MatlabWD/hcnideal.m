@@ -1,6 +1,6 @@
 %  HCN ABSORPTION IDEAL CALCULATION
 
-function [cmpout, untout, strout] = hcnabsorption2(cmpin, untin, strin)
+function [cmpout, untout, strout] = hcnideal(cmpin, untin, strin)
 cmpout=cmpin;
 untout=untin;
 strout=strin;
@@ -143,7 +143,7 @@ E_liquid_out = @(T_out) L_out * ((x_H2O_out * hf_H20_liquid_out(T_out)) + ...
 Ebalance = @(T_out) E_gas_in + E_liquid_in - E_gas_out(T_out) - E_liquid_out(T_out);
 optis=optimset('Display','off');
 Temp_out = fsolve (Ebalance, 300, optis);     % Outlet temperature [K]
-Temp_out_celsius = Temp_out - 273;     % Outlet temperature [°C]
+Temp_out_celsius = Temp_out - 273;     % Outlet temperature [ï¿½C]
 strout(9).T = Temp_out;
 strout(8).T = Temp_out;
 
@@ -222,7 +222,7 @@ L_true = L_min * 1.5;         % Real liquid stream , factor 1.5 randomly picked
 %fprintf('Number of theoretical units: NTU = %g\n', NTU);
 %fprintf('Height of theoretical units: HTU = %g\n', HTU);
 %fprintf('Flow rate ratio: L/G = %g\n', flow_ratio);
-%fprintf('Outlet temperature [°C]: T = %g\n', Temp_out_celsius);
+%fprintf('Outlet temperature [ï¿½C]: T = %g\n', Temp_out_celsius);
 %fprintf('Column Height [m]: H = %g\n', h);
 %fprintf('Column Diameter [m]: D = %g\n', dia );
 %fprintf('HCN Column CAPEX [Mio. US$]: Capex = %g\n', CAPEX_mil);
@@ -236,7 +236,6 @@ untout(3).htu = HTU;
 untout(3).V = V_column;
 
 strout(9).p = p;   % pressure in Pa 
-
 end
 
 
