@@ -46,7 +46,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
      options=optimset('Display','off');
       x0 = [persFCH4,persRatio,persPressure,persTemp,persnrow,persFlow];
       lb = [1e-4,1,85000,650,1,1e-4];
-      ub = [1e-1,1.1,500000,750,15,1];
+      ub = [1e-1,1.1,500000,750,15,1e-1];
       disp('Fmincon startup complete.')
       x = fmincon(optimhandle,x0,[],[],[],[],lb,ub,[],options); %solve
       disp('20% of optimization completed')

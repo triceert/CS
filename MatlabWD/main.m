@@ -13,7 +13,20 @@
 %Outputs:
 %      NIL
 
+%%%%%%%%%
+
+
+%%
+
 function main(varargin) %give options for what to execute how
+
+%% RUN MODE (PROVISORISCH)
+ir=0;               %IDEAL REAL 0 ideal/1 real plant modelling
+cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
+sens=0;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
+
+
+
 %INIT
     %vars
     excelstring='Data.xlsx'; %Name of underlng master excel file
@@ -33,7 +46,7 @@ function main(varargin) %give options for what to execute how
     switch nargin    
         case 0    %if no argument, just do everything   
             [cmp,unt,str]=loader(excelstring);
-            [cmp,unt,str]=calculator(cmp,unt,str);
+            [cmp,unt,str]=calculator(cmp,unt,str,ir,cc,sens);
             [~,~]=evaluator(cmp,unt,str);
         case 1    %if one argument, check what argument
             comp1=strcmp(varargin{1},'load');
@@ -46,18 +59,18 @@ function main(varargin) %give options for what to execute how
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 str = evalin('base', 'str');
-                [~,~,~]=calculator(cmp,unt,str);
+                [~,~,~]=calculator(cmp,unt,str,ir,cc,sens);
             elseif  comp3==1    %argument eval, check if calc data here and eval
                 cmpcalc = evalin('base', 'cmpcalc');
                 untcalc = evalin('base', 'untcalc');
                 strcalc = evalin('base', 'strcalc');
-                [~,~]=evaluator(cmpcalc,untcalc,strcalc);
+                evaluator(cmpcalc,untcalc,strcalc);
             elseif comp4==1        %argument calceval, check if data here and calc and eval
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 str = evalin('base', 'str');
                 [cmpcalc,untcalc,strcalc]=calculator(cmp,unt,str);
-                [~,~,~]=evaluator(cmpcalc,untcalc,strcalc);
+                evaluator(cmpcalc,untcalc,strcalc);
             else
                 error(...
                     'No valid function argument in mainexec. For default call without argument.')
@@ -99,7 +112,7 @@ end
 %Outputs:
 %      cmpout,untout    compunds and unit operations data to anywhere after
 %      calculation
-function [cmp, unt, str]=calculator(cmp,unt,str)
+function [cmp, unt, str]=calculator(cmp,unt,str,ir,cc,sens)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
@@ -109,22 +122,22 @@ function [cmp, unt, str]=calculator(cmp,unt,str)
 %COCROSS AND IDEAL REAL SWITCH
 
 %MODELLING PARAMETERS
-unt(1).cocross=0;           % 0 cross 1 co 
-unt(1).ideal_real=0;        %ideal gas 0, peng robinson 1
+unt(1).cocross=cc;           % 0 cross 1 co 
+unt(1).ideal_real=ir;        %ideal gas 0, peng robinson 1
 %THERMO
 str(1).p=103325;   %feed pressure
-str(1).T=699.999;       %feed temperature
+str(1).T=700;       %feed temperature
 str(2).T=1600;      %touter 
 %FEEDS
-str(1).FCH4=0.0776669; %absolute feed ch4 per single tube mol s-1   
+str(1).FCH4=0.01; %absolute feed ch4 per single tube mol s-1   
 str(1).ubsch=1.05;  %überschuss NH3
-str(4).G=0.09;            %Heating Medium Flow rate, only usefull when co-current flow
+str(4).G=0.01;            %Heating Medium Flow rate, only usefull when co-current flow
                                 %in flow heating medium per fucking tube(ignored if cross heated)
  %Reactor length
- unt(1).nrow=1;             %number reactr elements in row
+unt(1).nrow=1;             %number reactr elements in row
 
 %% CALL Optimizor (Böser Strom und Zeitfresser!)
-senspara=0;                     %0 sensitivity analysis off   1 on
+senspara=sens;                     %0 sensitivity analysis off   1 on
 [cmp,unt,str]=optimizor(cmp,unt,str,senspara);
 
  %% MAKE ONE CONSISTENT RUN AND PLOT   
@@ -161,7 +174,7 @@ end
 %Outputs:
 %      plots, table    plots and tables for export or whatever
 
-function [tables, plots]=evaluator(cmpin, untin, strin)
+function evaluator(cmpin, untin, strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
  cprintf('Blue','Main run model output:\n')     
@@ -229,20 +242,33 @@ cprintf('Blue','Distillation:\n')
  fprintf('Column Height [m]: H = %g\n', untin(4).h);
 
 
-        
-        %Call Plotter Function
-        harry_plotter
-        
-        
-        
-        %tables= call tex table maker
-        %call some economic evaluator
-        tables=NaN; %dummy
-        plots=NaN;  %dummy
-        assignin('base','plots',plots)   
-        assignin('base','textable',tables) 
+ %assign for outputs UNITS
+ unttable=untin;
+ fields={'As','rad','Xopt','Aq','deltaHHCN','Reout','ideal_real','deltaHNH','cocross','idgc','GHV','En','totex','price_processwater','price_coolingwater','price_natural_gas','nrow','N_tubes',...
+     'N_tubes_aside','HCNneeded','a','Q_in','htu','rho_mix_in','Q_tot','conv','toex','tspan','lspan','epsilon','price_tube','price_vapor','deltaWall'};
+ unttable = rmfield(unttable,fields);
+ unttable(5).cocross=untin(1).cocross;
+ unttable(5).idealreal=untin(1).ideal_real;
+ unttable(1).h=untin(1).nrow*2; %reassign new reactor length
+ unttable(7)=[];
+ 
+UNT_Table=struct2table(unttable);
 
-    cprintf('_comment','Plots and table generation successfull\n');
+
+%assign Streams
+strtable=strin;
+fields={'FCH4','ubsch','xCH4','xNH3','xH2','T','yAS','yH2SO4','xN2'};
+strtable = rmfield(strtable,fields);
+strtable(13)=[];
+STR_Table=struct2table(strtable);
+ 
+writetable(UNT_Table,'Run.xls','Sheet',1)
+writetable(STR_Table,'Run.xls','Sheet',2)
+        
+
+    cprintf('_comment','Plots and table generation successfull \n');
+    cprintf('_comment','Plots saved as PDFs \n');
+    cprintf('_comment','Run Excel sheet generated \n');
 end
 
 
