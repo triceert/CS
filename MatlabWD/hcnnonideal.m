@@ -108,29 +108,29 @@ H = [135.14, -45.89, 0.0, -74.87, 0.0, -735.12, -285.82];
 
 % Enthalpies for the incoming gas stream [J/mol]
 
-hf_HCN_in_non = (A(1)*t_gas_in) + (B(1)*((t_gas_in)^2)/2) + (C(1)*((t_gas_in)^3)/3) + (D(1)*((t_gas_in)^4)/4) - (E(1)/t_gas_in) +F(1) - H(1);                      
-hf_NH3_in_non = (A(2)*t_gas_in) + (B(2)*((t_gas_in)^2)/2) + (C(2)*((t_gas_in)^3)/3) + (D(2)*((t_gas_in)^4)/4) - (E(2)/t_gas_in) +F(2) - H(2);
-hf_H2_in_non = (A(3)*t_gas_in) + (B(3)*((t_gas_in)^2)/2) + (C(3)*((t_gas_in)^3)/3) + (D(3)*((t_gas_in)^4)/4) - (E(3)/t_gas_in) +F(3) - H(3); 
-hf_CH4_in_non = (A(4)*t_gas_in) + (B(4)*((t_gas_in)^2)/2) + (C(4)*((t_gas_in)^3)/3) + (D(4)*((t_gas_in)^4)/4) - (E(4)/t_gas_in) +F(4) - H(4); 
-hf_N2_in_non = (A(5)*t_gas_in) + (B(5)*((t_gas_in)^2)/2) + (C(5)*((t_gas_in)^3)/3) + (D(5)*((t_gas_in)^4)/4) - (E(5)/t_gas_in) +F(5) - H(5); 
+hf_HCN_in_non = h0f_HCN + (1000*((A(1)*t_gas_in) + (B(1)*((t_gas_in)^2)/2) + (C(1)*((t_gas_in)^3)/3) + (D(1)*((t_gas_in)^4)/4) - (E(1)/t_gas_in) +F(1) - H(1)));                      
+hf_NH3_in_non = h0f_NH3 + (1000*((A(2)*t_gas_in) + (B(2)*((t_gas_in)^2)/2) + (C(2)*((t_gas_in)^3)/3) + (D(2)*((t_gas_in)^4)/4) - (E(2)/t_gas_in) +F(2) - H(2)));
+hf_H2_in_non = h0f_H2 +(1000*((A(3)*t_gas_in) + (B(3)*((t_gas_in)^2)/2) + (C(3)*((t_gas_in)^3)/3) + (D(3)*((t_gas_in)^4)/4) - (E(3)/t_gas_in) +F(3) - H(3))); 
+hf_CH4_in_non = h0f_CH4 + (1000*((A(4)*t_gas_in) + (B(4)*((t_gas_in)^2)/2) + (C(4)*((t_gas_in)^3)/3) + (D(4)*((t_gas_in)^4)/4) - (E(4)/t_gas_in) +F(4) - H(4))); 
+hf_N2_in_non = h0f_N2 +(1000*((A(5)*t_gas_in) + (B(5)*((t_gas_in)^2)/2) + (C(5)*((t_gas_in)^3)/3) + (D(5)*((t_gas_in)^4)/4) - (E(5)/t_gas_in) +F(5) - H(5))); 
 
 % Enthalpies for the incoming liquid stream [J/mol]
 
-hf_H2O_liquid_in_non = (A(7)*t_liquid_in) + (B(7)*((t_liquid_in)^2)/2) + (C(7)*((t_liquid_in)^3)/3) + (D(7)*((t_liquid_in)^4)/4) - (E(7)/t_liquid_in) +F(7) - H(7);
-hf_HCN_liquid_in_non = (A(1)*t_liquid_in) + (B(1)*((t_liquid_in)^2)/2) + (C(1)*((t_liquid_in)^3)/3) + (D(1)*((t_liquid_in)^4)/4) - (E(1)/t_liquid_in) +F(1) - H(1);
+hf_H2O_liquid_in_non = h0f_H2O + (1000*((A(7)*t_liquid_in) + (B(7)*((t_liquid_in)^2)/2) + (C(7)*((t_liquid_in)^3)/3) + (D(7)*((t_liquid_in)^4)/4) - (E(7)/t_liquid_in) +F(7) - H(7)));
+hf_HCN_liquid_in_non = h0f_HCN + (1000*((A(1)*t_liquid_in) + (B(1)*((t_liquid_in)^2)/2) + (C(1)*((t_liquid_in)^3)/3) + (D(1)*((t_liquid_in)^4)/4) - (E(1)/t_liquid_in) +F(1) - H(1)));
 
 % Enthalpies for the outcoming gas stream [J/mol]
 
-hf_HCN_out_non = @(t_out) (A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3)/3) + (D(1)*((t_out)^4)/4) - (E(1)/t_out) +F(1) - H(1);  
-hf_NH3_out_non = @(t_out) (A(2)*t_out) + (B(2)*((t_out)^2)/2) + (C(2)*((t_out)^3)/3) + (D(2)*((t_out)^4)/4) - (E(2)/t_out) +F(2) - H(2); 
-hf_H2_out_non = @(t_out) (A(3)*t_out) + (B(3)*((t_out)^2)/2) + (C(3)*((t_out)^3)/3) + (D(3)*((t_out)^4)/4) - (E(3)/t_out) +F(3) - H(3);  
-hf_CH4_out_non = @(t_out) (A(4)*t_out) + (B(4)*((t_out)^2)/2) + (C(4)*((t_out)^3)/3) + (D(4)*((t_out)^4)/4) - (E(4)/t_out) +F(4) - H(4);  
-hf_N2_out_non = @(t_out) (A(5)*t_out) + (B(5)*((t_out)^2)/2) + (C(5)*((t_out)^3)/3) + (D(5)*((t_out)^4)/4) - (E(5)/t_out) +F(5) - H(5);  
+hf_HCN_out_non = @(t_out) h0f_HCN + (1000*((A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3)/3) + (D(1)*((t_out)^4)/4) - (E(1)/t_out) +F(1) - H(1)));  
+hf_NH3_out_non = @(t_out) h0f_NH3 + (1000*((A(2)*t_out) + (B(2)*((t_out)^2)/2) + (C(2)*((t_out)^3)/3) + (D(2)*((t_out)^4)/4) - (E(2)/t_out) +F(2) - H(2))); 
+hf_H2_out_non = @(t_out) h0f_H2 + (1000*((A(3)*t_out) + (B(3)*((t_out)^2)/2) + (C(3)*((t_out)^3)/3) + (D(3)*((t_out)^4)/4) - (E(3)/t_out) +F(3) - H(3)));  
+hf_CH4_out_non = @(t_out) h0f_CH4 + (1000*((A(4)*t_out) + (B(4)*((t_out)^2)/2) + (C(4)*((t_out)^3)/3) + (D(4)*((t_out)^4)/4) - (E(4)/t_out) +F(4) - H(4)));  
+hf_N2_out_non = @(t_out) h0f_N2 + (1000*((A(5)*t_out) + (B(5)*((t_out)^2)/2) + (C(5)*((t_out)^3)/3) + (D(5)*((t_out)^4)/4) - (E(5)/t_out) +F(5) - H(5)));  
 
 % Enthalpies for the outcoming liquid stream [J/mol]
 
-hf_H2O_out_non = @(t_out) (A(7)*t_out) + (B(7)*((t_out)^2)/2) + (C(7)*((t_out)^3)/3) + (D(7)*((t_out)^4)/4) - (E(7)/t_out) +F(7) - H(7);  
-hf_HCN_out_non = @(t_out) (A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3)/3) + (D(1)*((t_out)^4)/4) - (E(1)/t_out) +F(1) - H(1); 
+hf_H2O_out_non = @(t_out) h0f_H2O + (1000*((A(7)*t_out) + (B(7)*((t_out)^2)/2) + (C(7)*((t_out)^3)/3) + (D(7)*((t_out)^4)/4) - (E(7)/t_out) +F(7) - H(7)));  
+hf_HCN_out_non = @(t_out) h0f_HCN + (1000*((A(1)*t_out) + (B(1)*((t_out)^2)/2) + (C(1)*((t_out)^3)/3) + (D(1)*((t_out)^4)/4) - (E(1)/t_out) +F(1) - H(1))); 
 
 % Energy balance with the assumption
 
