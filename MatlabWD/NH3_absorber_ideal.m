@@ -192,14 +192,16 @@ V_column = (dia/2)^2*pi*Z;
 ratio = Z/dia;
 
 [opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);
-opex_heatexchanger = A_exchanger^0.65 * 25000;        
-opex_tot2 = opex_tot+opex_heatexchanger;
+capex_heatexchanger = A_exchanger^0.65 * 25000;        
+opex_tot2 = opex_tot;
+%assigning values to get rid of warnings
 opex_H2O=opex_H2O;
 opex_H2SO4 = opex_H2SO4;
 opex_wastewater = opex_wasterwater;
-opex_tot = opex_tot;
+
 
 capex = capex_calc(Z, dia);
+capex_tot = capex_heatexchanger + capex;
 
 %VARS OUT
 
@@ -208,7 +210,7 @@ untout(2).htu = HTU;    %height theoretical units NH3 ADSORBER
 untout(2).ntu = NTU;    %number theoritac units
 untout(2).h = Z;        %height NH3 Absorber
 untout(2).V = V_column; %VOlume
-untout(2).capex = capex;
+untout(2).capex = capex_tot;
 untout(2).opex = opex_tot2;
 
 % fprintf('Number of theoretical units: NTU = %g\n', NTU);
