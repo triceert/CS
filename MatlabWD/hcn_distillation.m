@@ -18,7 +18,7 @@ pressure = 1e5;                                                        % operati
 MW_H2O = cmpin(1).MW;                                                  % molecular weight H2O [kg/mol]
 MW_HCN = cmpin(6).MW;                                                  % molecular weight HCN [kg/mol]
 
-if unt(1).ideal_real == 0
+if untin(1).ideal_real == 0
     thermo_model = 'ideal';                                            % thermodynamic model, can use 'nrtl' or 'ideal'
 else
     thermo_model = 'nrtl';                                             % thermodynamic model, can use 'nrtl' or 'ideal'
