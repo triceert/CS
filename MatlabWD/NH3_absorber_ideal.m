@@ -78,7 +78,7 @@ deltaT2 = T1_gas - T_H2O_in;
              
 LMTD = (deltaT1 - deltaT2)/(log(deltaT1/deltaT2));
              
-A_exchanger = Q_mixture / (700*LMTD);
+A_exchanger = abs(Q_mixture) / (700*LMTD);      %Q was negative, therefore a negative area was produced
                  
 
 
