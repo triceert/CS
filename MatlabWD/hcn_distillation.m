@@ -1,4 +1,4 @@
-function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin, thermo_model)
+function [cmpout, untout, strout] = hcn_distillation(cmpin, untin, strin)
 % Calculation of HCN distillation using the Fenske-Underwood-Gilliland
 % method
 % since we are at bubble point (Aufgabenstellung: "f�hren Sie den Feed im Siedezustand zu"), there's only L coming
