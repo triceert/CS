@@ -47,7 +47,7 @@ sens=0;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min p
         case 0    %if no argument, just do everything   
             [cmp,unt,str]=loader(excelstring);
             [cmp,unt,str]=calculator(cmp,unt,str,ir,cc,sens);
-            [~,~]=evaluator(cmp,unt,str);
+            evaluator(cmp,unt,str);
         case 1    %if one argument, check what argument
             comp1=strcmp(varargin{1},'load');
             comp2=strcmp(varargin{1},'calc');
