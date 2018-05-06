@@ -143,7 +143,7 @@ senspara=sens;                     %0 sensitivity analysis off   1 on
  %% MAKE ONE CONSISTENT RUN AND PLOT   
 
         [cmp,unt,str]=reactorcalculator(cmp,unt,str,1);       %plotparamter 1
-        [cmp,unt,str]=NH3_absorber_ideal(cmp,unt,str);       
+        [cmp,unt,str]=nh3absorber(cmp,unt,str);       
         [cmp,unt,str] = hcnabsorber(cmp,unt,str);         
         [cmp,unt,str]=hcn_distillation(cmp,unt,str);       
         [cmp,unt,str]=pricecalculator(cmp,unt,str);
