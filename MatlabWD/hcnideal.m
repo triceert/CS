@@ -164,6 +164,7 @@ M_CH4 = 16;
 
 p = 101325;      % Pressure inside the column [Pa]
 P_bar = 1.013;   % Pressure [Bar]
+p_atm = 1;       % Pressure [atm]
 velocity = 2;    % Gas velocity in [m/s]
 dia = diameter_calc2 (velocity,G_in, y_H2_in, y_N2_in, y_HCN_in, y_CH4_in, y_NH3_in);    % Diameter in m
 area = pi*((dia/2)^2);       % Cross sectional area of the column [m^2] 
@@ -187,7 +188,7 @@ rho_sum = rho_calc(Temp_out, y_HCN_in, y_H2_in, y_NH3_in, y_CH4_in, y_N2_in)/100
 
 sum_V_H2 = 7.07;      % from literature
 sum_V_HCN = 24.17  ;
-D = 10^(-3)*Temp_out^1.75*(1/M_H2 + 1/M_HCN)^0.5/(((sum_V_H2^(1/3))+ (sum_V_HCN^(1/3)))^2)*10^(-4);    % Diffusion coefficient   
+D = 10^(-3)*Temp_out^1.75*(1/M_H2 + 1/M_HCN)^0.5/((((sum_V_H2^(1/3))+ (sum_V_HCN^(1/3)))^2)*p_atm)*10^(-4);    % Diffusion coefficient   
 Sc = mu_sum/(rho_sum*D);   % Schmidt number
 KG = 5.23*ap*D/(R*Temp_out) * (G_m/(ap*mu_sum))^0.7 * Sc^(1/3) * (ap*dp)^(-2)*p;
 HG = G_in/(area * KG * tot_surf);
@@ -200,8 +201,8 @@ alpha = (y_HCN_in-y_HCN_out)/(y_HCN_in -m*x_HCN_in);
 NTU= A./(A-1).*log((1-alpha./A)/(1-alpha));       % Number of theoretical units
 h = HTU * NTU;                                    % Height of the absorber [m]
 ratio = h/dia;                                     % Should be ideally between 5 and 15
-V_column = (dia/2)^2 * h * pi;                    % Volume of the column [m^3]
-
+V_column = (dia/2)^2 * h * pi/0.74;                    % Volume of the column [m^3]
+dia_true = 2 * (V_column/(h * pi))^0.5;           % True diameter with considering the availalbe area
 %%
 % CAPEX calculation
 
