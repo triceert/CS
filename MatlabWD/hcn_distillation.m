@@ -30,8 +30,8 @@ A_HCN = cmpin(6).anta100; B_HCN = cmpin(6).antb100; C_HCN = cmpin(6).antc100;
 T_boiling_H2O = cmpin(1).bp; 
 T_boiling_HCN = cmpin(6).bp; 
 
-P_sat_H2O = @(temperature) antoine_equation(A_H2O, B_H2O, C_H2O, temperature);
-P_sat_HCN = @(temperature) antoine_equation(A_HCN, B_HCN, C_HCN, temperature);
+P_sat_H2O = @(temperature) antoine_equation_new(cmpin, temperature, 1); 
+P_sat_HCN = @(temperature) antoine_equation(cmpin, temperature, 6);
          
 z.HCN = (strin(9).xHCN*feed_L + strin(9).yHCN *feed_V)/(feed_L+feed_V);  
 z.H2O = (strin(9).xH2O*feed_L + strin(9).yH2O *feed_V)/(feed_L+feed_V); 
