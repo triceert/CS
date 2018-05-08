@@ -198,7 +198,7 @@ henry_HCN = HenrysConstant(Temp_out,cmpin,6) ;    % Henry coefficient of HCN in 
 m = henry_HCN/p;                                  % Equilibrium constant
 A = L_in/(G_in * m);
 alpha = (y_HCN_in-y_HCN_out)/(y_HCN_in -m*x_HCN_in);
-NTU= A./(A-1).*log((1-alpha./A)/(1-alpha));       % Number of theoretical units
+NTU= A./(A-1).*log((1-alpha./A)/(1-alpha));       % Number of theoretical units from SPt
 h = HTU * NTU;                                    % Height of the absorber [m]
 ratio = h/dia;                                     % Should be ideally between 5 and 15
 V_column = (dia/2)^2 * h * pi/0.74;                    % Volume of the column [m^3]
@@ -206,7 +206,7 @@ dia_true = 2 * (V_column/(h * pi))^0.5;           % True diameter with consideri
 %%
 % CAPEX calculation
 
-CAPEX_hcnabs = capex_calc(h, dia);
+CAPEX_hcnabs = capex_calc(h, dia_true);
 CAPEX_mil = CAPEX_hcnabs/1000000;
 
 % OPEX calculation
