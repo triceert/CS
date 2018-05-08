@@ -2,8 +2,8 @@ function [alpha] = relative_volatility(x1, T, thermo_model)
 % x1 = x_LK = x_HCN; 
 A_H2O = 7.96681; B_H2O = 1668.21; C_H2O = 228.0; % (values for T > 60 °C), from Excel file  
 A_HCN = 7.5282; B_HCN = 1329.5; C_HCN = 260.4;      % from Excel file
-P_sat_H2O = @(temperature) antoine_equation(A_H2O, B_H2O, C_H2O, temperature);
-P_sat_HCN = @(temperature) antoine_equation(A_HCN, B_HCN, C_HCN, temperature);
+P_sat_H2O = @(temperature) antoine_equation_new(cmpin, temperature, 1); 
+P_sat_HCN = @(temperature) antoine_equation_new(cmpin, temperature, 6);
 
 
 
