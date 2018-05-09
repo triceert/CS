@@ -1,6 +1,6 @@
 function mu_g = mu_calc2(t)
 
-%Assumptions made: Binary gas phase consisting of 24% hcn and 76% hydrogen
+%Assumptions made: Binary gas phase consisting of 20% hcn and 80% hydrogen
 %                  linear correlation of mu und temperature
 
 T = [293, 303, 313, 323, 333, 343, 353];
