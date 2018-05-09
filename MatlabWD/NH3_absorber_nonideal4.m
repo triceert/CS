@@ -56,7 +56,7 @@ strout(6).xH2SO4 = x_H2SO4_out;
 strout(6).xAS = x_ammoniumsulfate_out;
 
 %molar volumes
- V_m_h2so4 = 98.08/1.84;                        
+ V_m_h2so4 = 98.08/1.84;            %molecular weights divided by the densities                   
  V_m_h2o = 18.01/0.9982;
  
  %Volume of liquid inlet components
