@@ -24,8 +24,8 @@ else
     thermo_model = 'nrtl';                                             % thermodynamic model, can use 'nrtl' or 'ideal'
 end
 
-A_H2O = cmpin(1).anta100; B_H2O = cmpin(1).antb100; C_H2O = cmpin(1).antc100; 
-A_HCN = cmpin(6).anta100; B_HCN = cmpin(6).antb100; C_HCN = cmpin(6).antc100; 
+%A_H2O = cmpin(1).anta100; B_H2O = cmpin(1).antb100; C_H2O = cmpin(1).antc100; 
+%A_HCN = cmpin(6).anta100; B_HCN = cmpin(6).antb100; C_HCN = cmpin(6).antc100; 
 
 T_boiling_H2O = cmpin(1).bp; 
 T_boiling_HCN = cmpin(6).bp; 

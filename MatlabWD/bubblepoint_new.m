@@ -28,7 +28,7 @@ function [bT] = bubbleT_solver(bubbleT, gamma,x,cmp)
     gamma_vector = gamma(bubbleT);  
     gamma_HCN = gamma_vector(1); 
     gamma_H2O = gamma_vector(2); 
-    P_sat = @(bubbleT) antoine_equation_new(cmp,bubbleT,n);
+    P_sat = @(cmp, bubbleT, n) antoine_equation_new(cmp,bubbleT,n);
     bT = x(1).*P_sat(cmp,bubbleT,1).*gamma_H2O+x(2).*P_sat(cmp,bubbleT,6).*gamma_HCN-P; % species1 = HCN, species2 = H2O when it comes to gamma; 
 end
 
