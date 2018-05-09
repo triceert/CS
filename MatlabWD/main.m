@@ -226,8 +226,8 @@ fprintf('Number of theoretical units: NTU = %g\n', untin(2).ntu);
 fprintf('Height of theoretical units: HTU = %g\n', untin(2).htu);
 fprintf('Column Height [m]: H = %g\n', untin(2).h);
 
-fprintf('NH3 Column CAPEX [Mio. US$]: Capex = %g\n', untin(2).capex);
-fprintf('NH3 Column OPEX [Mio. US$]: Opex = %g\n', untin(2).opex);
+fprintf('NH3 Column CAPEX : Capex = %g\n', untin(2).capex);
+fprintf('NH3 Column OPEX : Opex = %g\n', untin(2).opex);
         
 
 cprintf('Blue','HCN Adsorber:\n')       
