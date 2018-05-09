@@ -1,4 +1,4 @@
-function [bubbleT] = bubblepoint(x, P, cmp, unt, thermo_model)
+function [bubbleT] = bubblepoint_new(x, P, cmp, unt, thermo_model)
 % calculates the bubble point for a binary mixture of H2O and HCN
 % INPUT: x = vector of mole fractions; x(1) = H2O, x(2) = HCN; 
 % P: pressure [Pa]

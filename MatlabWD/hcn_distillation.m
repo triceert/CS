@@ -54,7 +54,7 @@ x_HK_B = 1-x_LK_B;
 %--> use feed temperature once available 
 %T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
 T_feed_before_HX = strin(9).T; 
-T_feed = bubblepoint([z.H2O, z.HCN], pressure, cmpin, untin, thermo_model); 
+T_feed = bubblepoint_new([z.H2O, z.HCN], pressure, cmpin, untin, thermo_model); 
 [HT_L_before_HX] = enthalpy_temperature_liquid(T_feed_before_HX,cmpin,untin); 
 [HT_L_after_HX] = enthalpy_temperature_liquid(T_feed,cmpin,untin);
 Q_HX_before_distillation_column = z.H2O*HT_L_after_HX(1)+z.HCN*HT_L_after_HX(6)-z.H2O*HT_L_before_HX(1)-z.HCN*HT_L_before_HX(6); 
@@ -113,7 +113,7 @@ while N_S_real ~= N_S_real_new
                                   % from: "Separation Process Principles", J.
                                   % D. Seader, E. J. Henley, p. 375
     pressure_top = pressure-pressure_drop; 
-    new_temperature_at_top = bubblepoint([x_HK_D, x_LK_D], pressure_top, cmpin, untin, thermo_model);
+    new_temperature_at_top = bubblepoint_new([x_HK_D, x_LK_D], pressure_top, cmpin, untin, thermo_model);
     new_alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(new_temperature_at_top, x_LK_D) * alpha(T_feed, z.HCN))^(1/3);
     N_S_min = log(x_LK_D/x_HK_D*x_HK_B/x_LK_B)/log(new_alpha_mean)-1; 
     %new_theta_sol = fsolve (@(theta) (new_alpha_mean*z.HCN)/(new_alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0, options);
@@ -290,7 +290,7 @@ scatter(plot_y_HCN, plot_T-273);
 
 x1=0:0.01:1; 
 for i=1:101
-    y1(i) = bubblepoint([x1(i), 1-x1(i)], 1e5, cmpin, untin, thermo_model)-273; 
+    y1(i) = bubblepoint_new([x1(i), 1-x1(i)], 1e5, cmpin, untin, thermo_model)-273; 
 end
 plot(1-x1, y1);
 legend('Bubble point experimental', 'Dew point experimental', 'Bubble point model');
