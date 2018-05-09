@@ -227,6 +227,7 @@ fprintf('Height of theoretical units: HTU = %g\n', untin(2).htu);
 fprintf('Column Height [m]: H = %g\n', untin(2).h);
 fprintf('Column diameter [m]: D = %g\n', untin(2).dia);
 fprintf('Flow rate ratios: L/G = %g\n', untin(2).ratio);
+fprintf('Volumetric fraction of h2so4: phi = %g\n', untin(2).frac_h2so4);
 fprintf('NH3 Column CAPEX : Capex = %g\n', untin(2).capex);
 fprintf('NH3 Column OPEX : Opex = %g\n', untin(2).opex);
 fprintf('NH3 Column Temperature: T = %g\n', strin(7).T);
