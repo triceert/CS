@@ -236,8 +236,12 @@ cprintf('Blue','HCN Adsorber:\n')
 fprintf('Number of theoretical units: NTU = %g\n', untin(3).ntu);
 fprintf('Height of theoretical units: HTU = %g\n',  untin(3).htu);
 fprintf('Column Height [m]: H = %g\n', untin(3).h);
+fprintf('Column diameter [m]: D = %g\n', untin(3).dia);
+fprintf('Flow rate ratios: L/G = %g\n', untin(3).ratio);
 fprintf('HCN Column CAPEX : Capex = %g\n',  untin(3).capex);
 fprintf('HCN Column OPEX : Opex = %g\n', untin(3).opex);
+fprintf('HCN Column Outlet tempeature [K] : Temp = %g\n', strin(9).T);
+fprintf('HCN Column Outlet fraction of HCN : x_HCN = %g\n', strin(9).xHCN);
 
         
 cprintf('Blue','Distillation:\n')          
