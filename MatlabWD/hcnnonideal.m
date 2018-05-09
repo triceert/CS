@@ -150,6 +150,8 @@ strout(8).T = Temp_out;
 flow_ratio = L_in/G_in;         
 flow_ratio_out = L_out/G_out;
 
+untout(3).ratio = flow_ratio;
+
 %%
  % Calculation of the height of the HCN absorber column (non-ideal)
  
@@ -198,16 +200,16 @@ HG = G_in/(area * KG * tot_surf);
 
 phi = 2.6;        % Empirical parameter for water for the calculation of the diffusioncoefficient
 mol_vol_HCN = (M_HCN/cmpin(6).rho)* 1000;                     % Molar volume of HCN in cm^3/mol
-mu_H2O = 547* 10^(-6);        % Dynamic viscosity of water at 50 ï¿½C
+mu_H2O = 547* 10^(-6);        % Dynamic viscosity of water at 50°C source: engineering toolbox
 D_HCN = ((7.4 * 10^(-8)) * Temp_out * ((M_H2O * phi)^0.5))/(mu_H2O * (mol_vol_HCN^0.6)) * 10^(-4);      % Diffusion coefficient
 Sc2 = mu_H2O/(cmpin(1).rho *D_HCN);     % Schmidtzahl 
 L_m = L_in * M_H2O/1000;          % Mass flux in kg/s
-k_L = ((cmpin(1).rho/(mu_H2O*g))^(-1/3)) * 0.0051 * ((L_m/(aw*mu_H2O))^(2/3)) * (Sc2^(-1/2)) * ((ap * dp)^0.4); % Mass transport coefficient in the liquid phase
+k_L = ((cmpin(1).rho/(mu_H2O*g))^(-1/3)) * 0.0051 * ((L_m/(aw*mu_H2O))^(2/3)) * (Sc2^(-1/2)) * ((ap * dp)^0.4) * p; % Mass transport coefficient in the liquid phase
 %K_L = k_L *rho_sum/(M_H2O/1000);     % Overall mass transfer coefficient
 % Simplification, for the density and the molar mass of the fluid, the
 % values were taken from water, as it is the mostly present species
-K_L = k_L * cmpin(1).rho/(M_H2O);  % Overall mass transfer coefficient correct
-H_L = L_in/(area * K_L * tot_surf);     % H_L Value
+%K_L = k_L * cmpin(1).rho/(M_H2O);  % Overall mass transfer coefficient correct
+H_L = L_in/(area * k_L * tot_surf);     % H_L Value
 henry_HCN = HenrysConstant(Temp_out,cmpin,6) ;    % Henry coefficient of HCN in [Pa]
 m = henry_HCN/p;   % Equilibrium constant
 HTU = HG + ((m/L_in/G_in)*H_L);    % Height of theoretical unit [m] from SPT script
@@ -218,6 +220,8 @@ h = HTU * NTU;                                    % Height of the absorber [m]
 ratio = h/dia;                                    % Should be ideally between 5 and 15
 V_column = (dia/2)^2 * h * pi/0.74;               % Volume of the column [m^3]
 dia_true = 2 * (V_column/(h * pi))^0.5;           % True diameter with considering the availalbe area
+
+untout(3).dia = dia_true; 
 %%
 % CAPEX calculation
 
