@@ -91,6 +91,11 @@ LMTD = (deltaT1 - deltaT2)/(log(deltaT1/deltaT2));
 
 %Area of heat exchanger, needed for Capex of heat exchanger
 A_exchanger = abs(Q_mixture) / (700*LMTD);      %Q was negative, therefore a negative area was produced
+
+%Mass flow of cooling water
+mean_T = (T_H2O_in + T_H2O_out)/2;
+cp_coolingwater = heat_capacity(mean_T, cmpin, untin, 1);
+m_flow_water = Q_mixture * 18.01 /(cp_coolingwater * (T_gas_reactor - T_H2O_out))/1000/1000;        %in tons
                  
 
 
@@ -124,7 +129,8 @@ hf_h2o_out = @(T) cmpin(1).deltaHf + cmpin(1).cp*(T-293);
 hf_ammoniumsulfate = @(T) cmpin(8).deltaHf + cmpin(8).cp*(T-293);
 
 %reaction enthalpy for the absorption of ammonia
-h_rxn = 275020;                 %[J/mol]
+%h_rxn = 275020;                 %[J/mol]
+h_rxn = cmpin(8).deltaHf - (cmpin(7).deltaHf + 2*cmpin(4).deltaHf);
 
 %Energies of the streams calculated with the enthalpies
 E_gas_in = G.*(y_HCN_in.*(hf_hcn) + y_NH3_in.*(hf_nh3) + y_H2_in.*(hf_h2) + y_CH4_in.*(hf_ch4) + y_N2_in.*(hf_n2));
@@ -197,8 +203,11 @@ ratio = Z/dia_true;
 
 
 %Calculation of Opex
-[opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);      
-opex_tot2 = opex_tot;
+[opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);     
+time = 8000*60*60;
+Opex_cooling_water = m_flow_water*time*0.10;              %[US$]
+
+opex_tot2 = opex_tot + Opex_cooling_water;
     %assigning values to get rid of warnings
      opex_H2O=opex_H2O;
      opex_H2SO4 = opex_H2SO4;

@@ -98,6 +98,11 @@ LMTD = (deltaT1 - deltaT2)/(log(deltaT1/deltaT2));
 %Area of heat exchanger needed for Capex
 A_exchanger = abs(Q_mixture) / (700*LMTD);
 
+%Mass flow of cooling water
+mean_T = (T_H2O_in + T_H2O_out)/2;
+cp_coolingwater = heat_capacity(mean_T, cmpin, untin, 1);
+m_flow_water = Q_mixture * 18.01 /(cp_coolingwater * (T_gas_reactor - T_H2O_out))/1000/1000;        %in tons
+
 
 %% Assumption: Physisorption neglected since chemisorption is mostly more effective, furthermore chemisorption is instantaneous and irreversible
 
@@ -217,7 +222,9 @@ ratio = Z/dia_true;
 
 %Calculation for Opex
 [opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);
-opex_tot2 = opex_tot;
+time = 8000*60*60;
+Opex_cooling_water = m_flow_water*time*0.10;              %[US$]
+opex_tot2 = opex_tot + Opex_cooling_water;
     %assigning values to get rid of warnings
      opex_H2O=opex_H2O;
      opex_H2SO4 = opex_H2SO4;
@@ -237,6 +244,7 @@ untout(2).h = Z;        %height NH3 Absorber
 untout(2).V = V_column; %VOlume
 untout(2).capex = capex_tot;
 untout(2).opex = opex_tot2;
+
 
 % fprintf('Number of theoretical units: NTU = %g\n', NTU);
 % fprintf('Height of theoretical units: HTU = %g\n', HTU);
