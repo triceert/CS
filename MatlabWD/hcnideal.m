@@ -150,6 +150,8 @@ strout(8).T = Temp_out;
 flow_ratio = L_in/G_in;         
 flow_ratio_out = L_out/G_out;
 
+untout(3).ratio = flow_ratio;
+
  %%
  % Calculation of the height of the HCN absorber column (ideal)
  
@@ -203,6 +205,8 @@ h = HTU * NTU;                                    % Height of the absorber [m]
 ratio = h/dia;                                     % Should be ideally between 5 and 15
 V_column = (dia/2)^2 * h * pi/0.74;                    % Volume of the column [m^3]
 dia_true = 2 * (V_column/(h * pi))^0.5;           % True diameter with considering the availalbe area
+
+untout(3).dia = dia_true;
 %%
 % CAPEX calculation
 
