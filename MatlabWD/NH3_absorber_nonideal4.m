@@ -101,7 +101,7 @@ A_exchanger = abs(Q_mixture) / (700*LMTD);
 %Mass flow of cooling water
 mean_T = (T_H2O_in + T_H2O_out)/2;
 cp_coolingwater = heat_capacity(mean_T, cmpin, untin, 1);
-m_flow_water = Q_mixture * 18.01 /(cp_coolingwater * (T_gas_reactor - T_H2O_out))/1000/1000;        %in tons
+m_flow_water = Q_mixture * 18.01 /(cp_coolingwater * abs((T_H2O_in - T_H2O_out)))/1000/1000;        %in tons
 
 
 %% Assumption: Physisorption neglected since chemisorption is mostly more effective, furthermore chemisorption is instantaneous and irreversible
@@ -150,7 +150,7 @@ hf_h2so4_out_non = @(t_out) cmpin(7).deltaHf + (((A(6)*t_out) + (B(6)*((t_out)^2
 hf_ammoniumsulfate_non = @(t_out) cmpin(8).deltaHf + cmpin(8).cp*(t_out-293/1000);
 
 %reaction enthalpy for the absorption of ammonia
-h_rxn = 275020;                 %[J/mol]
+h_rxn = cmpin(8).deltaHf - (cmpin(7).deltaHf + 2*cmpin(4).deltaHf);                 %[J/mol]
 
 %Energies of the streams and of the reaction with the enthalpies
 E_gas_in_non = G.*(y_HCN_in.*(hf_hcn_non) + y_NH3_in.*(hf_nh3_non) + y_H2_in.*(hf_h2_non) + y_CH4_in.*(hf_ch4_non) + y_N2_in.*(hf_n2_non));
@@ -219,6 +219,9 @@ dia_true = (V_column /(pi*Z))^0.5 *2;       %diameter with the consideration of 
 
 flow_ratio = L/G;
 ratio = Z/dia_true;
+
+untout(2).dia = dia_true;
+untout(2).ratio = flow_ratio;
 
 %Calculation for Opex
 [opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);
