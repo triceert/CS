@@ -95,7 +95,7 @@ A_exchanger = abs(Q_mixture) / (700*LMTD);      %Q was negative, therefore a neg
 %Mass flow of cooling water
 mean_T = (T_H2O_in + T_H2O_out)/2;
 cp_coolingwater = heat_capacity(mean_T, cmpin, untin, 1);
-m_flow_water = Q_mixture * 18.01 /(cp_coolingwater * (T_gas_reactor - T_H2O_out))/1000/1000;        %in tons
+m_flow_water = Q_mixture * 18.01 /(cp_coolingwater * abs((T_H2O_in - T_H2O_out)))/1000/1000;        %in tons
                  
 
 
@@ -140,7 +140,7 @@ E_liquid_out = @(T) L.*(x_H2SO4_out*hf_h2so4_out(T) + x_H2O_out*hf_h2o_out(T)+ x
 E_rxn = G*h_rxn*(y_NH3_in - y_NH3_out)/2;
 
 %Calculation of outlet temperature with energy balance
-energy_balance = @(T) E_gas_in + E_liquid_in - E_gas_out(T) - E_liquid_out(T) + E_rxn;
+energy_balance = @(T) E_gas_in + E_liquid_in - E_gas_out(T) - E_liquid_out(T)+ E_rxn;
 
 options = optimset('Display','off');
 T = fsolve(energy_balance, 300,options);
@@ -197,10 +197,13 @@ free_vol = 0.74;                            %free volume share in the column
 V_column = (dia/2)^2*pi*Z / free_vol;
 dia_true = (V_column /(pi*Z))^0.5 *2;       %diameter with the consideration of free volume share in column
 
+untout(2).dia = dia_true;
+
 %Calculating ratios, ratio of height to diameter should be between 5 and 15
 flow_ratio = L/G;
 ratio = Z/dia_true;
 
+untout(2).ratio = flow_ratio;
 
 %Calculation of Opex
 [opex_H2O, opex_H2SO4, opex_wasterwater, opex_tot] = opex_calc(G, L,  x_H2O_in, x_H2SO4_in, x_H2O_out, x_H2SO4_out, x_ammoniumsulfate_out);     
