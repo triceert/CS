@@ -7,7 +7,7 @@ strout=strin;
 
 %Molar flows of gas and liquid inlet streams
 G = strin(5).G;
-L = 200;
+L = 50;
 strout(7).G = G;
 strout(7).L = L;
 
@@ -58,7 +58,9 @@ strout(6).xAS = x_ammoniumsulfate_out;
  V_h2o = x_H2O_in * L * V_m_h2o;
  
 %Volume percentage of sulfuric acid in the inlet liquid stream
- conc_H2SO4 = V_h2so4 / (V_h2so4 + V_h2o) *100;         
+ conc_H2SO4 = V_h2so4 / (V_h2so4 + V_h2o) *100;    
+ 
+ untout(2).frac_h2so4 = conc_H2SO4;
 
 
 %% Calculation for Heat Exchanger

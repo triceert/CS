@@ -66,7 +66,8 @@ strout(6).xAS = x_ammoniumsulfate_out;
  %concentration of sulfuric acid in volume percent
  conc_H2SO4 = V_h2so4/(V_h2so4 + V_h2o)*100;            
 
-
+ untout(2).frac_h2so4 = conc_H2SO4;
+ 
 %% Calculation for Heat Exchanger
 
 T_gas_reactor= 1600;
