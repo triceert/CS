@@ -6,29 +6,13 @@ function [P_sat] = antoine_equation_new(cmp,T,n)
 %        n = compound index
 % OUTPUT: P_sat = saturation pressure [Pa]
 
-boo1 = (T > 373);
+A = extractfield(cmp(n),'anta')';
+B = extractfield(cmp(n),'antb')';
+C = extractfield(cmp(n),'antc')';
 
-switch boo1
-    case 0 %(T <= 100Cels)
-        A = extractfield(cmp(n),'antaRT')';
-        B = extractfield(cmp(n),'antbRT')';
-        C = extractfield(cmp(n),'antcRT')';
-    case 1 %(T > 100Cels)
-        A = extractfield(cmp(n),'anta100')';
-        B = extractfield(cmp(n),'antb100')';
-        C = extractfield(cmp(n),'antc100')';
-end
-
-boo2 = (n == 7); %Different source for sulfuric acid
-
-switch boo2
-    case 0 %(n <= 6)
-        T = T -273.15; % Formula in Celsius, but all T always handled in K, so need to convert
-        P_sat_unconverted = 10.^(A-B./(T+C)); %in psi (pounds per square inch)
-        P_sat = P_sat_unconverted * 6894.76; %%% double check this
-    case 1 %(n = 7)
-       P_sat = exp(A-B./(T+C)); 
-end
+t = T - 273.15; % Formula in Celsius, but all T always handled in K, so need to convert
+P_sat_unconverted = 10.^(A-B./(t+C)); %in mmHg (pounds per square inch)
+P_sat = P_sat_unconverted * 133.322; %%% convert to Pa
 
 end
 
