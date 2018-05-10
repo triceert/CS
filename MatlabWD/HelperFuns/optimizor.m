@@ -5,7 +5,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
 
     %initialize
     disp('Optimization started, dependent on the performance of your')
-    disp('Computer, this can take up to 15 minutes (for real sucky machines).')
+    disp('Computer, this can take up to 15 minutes (for real old machines).')
     disp('However, it is a good time to grab a coffe now.')
 
     n=5; %optim grid size n*n..dont push it to far up

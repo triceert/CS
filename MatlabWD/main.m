@@ -1,24 +1,52 @@
 
 %% MAIN FUNCTION CALLER
 %Function Description: A function that calls and calculates everything
+
+
+
+%%
+
+function main(varargin) %give options for what to execute how
 %Arguments:
 %      Takes various number of arguments;
-%       NO ARGUMENT: default execution, loads calculates and evaluates
+%       NO ARGUMENT: default execution, loads calculates and evaluates the
+%       nonideal case with crosscurrent heating
 %       everything
+
 %      ONE ARGUMENT:
 %           'load'      just load data
 %           'calc'      just calculate, only works if data loaded
 %           'eval'      just evaluate, only works if calculations made
 %           'calceval'  calc and evaluate, only works if data loaded
+
+
+
+ %      FOUR ARGUMMENTS
+ %      if four arguments are given, main takes
+ %          first argument   0 -> ideal gas and ideal liquid distillation 
+  %                           1  -> real gas calculation (PR) with NRTL
+  %                           column
+ %          second argument  0 -> pressure drop in reactor and column
+ %                              neglected
+ %                           1 -> pressure drop included in calculations
+ %
+ %           third argument  0 -> crosscurrent heating 
+ %                           1-> cocurrent heating  
+ %
+ %          fourth argument  0-> sensitivity analysis off, 1 ->on
 %Outputs:
 %      NIL
 
 %%%%%%%%%
 
 
-%%
+%% DEAFAULT RUN MODE 
+ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
+pr=1;               %pressure drop (0 without, 1 with)
+cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
+sens=0;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
-function main(varargin) %give options for what to execute how
+
 
 %% get all subfolders and containing functions
 mfilename='main.m';
@@ -28,11 +56,6 @@ folder = fileparts(which(mfilename));
 addpath(genpath(folder));
 
 
-%% RUN MODE (PROVISORISCH)
-ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
-pr=1;               %pressure drop (0 without, 1 with)
-cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
-sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
 
 
@@ -83,7 +106,17 @@ sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min p
             else
                 error(...
                     'No valid function argument in mainexec. For default call without argument.')
-            end         
+            end  
+        case 4
+            ir=varargin{1};
+            pr=varargin{2};
+            cc=varargin{3};
+            sens=varargin{4};
+            
+            [cmp,unt,str]=loader(excelstring);
+            [cmp,unt,str]=calculator(cmp,unt,str,ir,cc,sens,pr);
+            evaluator(cmp,unt,str);
+            
         otherwise
             error('No valid number of function arguments in mainexec. For default call without argument.')
     end        
@@ -189,7 +222,7 @@ end
 %Outputs:
 %      plots, table    plots and tables for export or whatever
 
-function evaluator(cmpin, untin, strin)
+function evaluator(~, untin, strin)
     cprintf('blue','Begin to plot and generate export files\n');
     
  cprintf('Blue','Main run model output:\n')     
