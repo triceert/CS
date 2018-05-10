@@ -250,7 +250,7 @@ fprintf('HCN Absorber CAPEX : Capex = %g\n',  untin(3).capex);
 fprintf('HCN Absorber OPEX : Opex = %g\n', untin(3).opex);
 fprintf('HCN Absorber Outlet tempeature [K] : Temp = %g\n', strin(9).T);
 fprintf('HCN Absorber Outlet fraction of HCN : x_HCN = %g\n', strin(9).xHCN);
-
+fprintf('Inlet molar flow of liquid stream : L_in = %g\n', strin(10).L);
         
 cprintf('Blue','Distillation:\n')
 fprintf('Number of stages []: H = %g\n', untin(4).N_S);
