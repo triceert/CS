@@ -78,7 +78,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
  
  switch senspara 
      case 1
-    a=0.2; %low up ratio %
+    a=0.05; %low up ratio %
 
     lb=x-x*a; %lower bound for sensitivity
     ub=x+x*a;

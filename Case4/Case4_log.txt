@@ -1,0 +1,81 @@
+Execution started.
+Structmaker terminated successfully
+Structmaker terminated successfully
+Structmaker terminated successfully
+Dataopener terminated successfully
+Calculations started
+Optimization started, dependent on the performance of your
+Computer, this can take up to 15 minutes (for real sucky machines).
+However, it is a good time to grab a coffe now.
+Fmincon startup complete.
+20% of optimization completed
+Fmincon successfully found optimal values.
+ Continuing with sensitivity analysis.
+30% of optimization completed
+80% of optimization completed
+Optimization Completed, pdf exported
+Reactor calculator completed normally for optimized run, PDF generated
+Stuff was calculated successfully. ...Pure calculation time was
+272.767 seconds.
+Begin to plot and generate export files
+Main run model output:
+Plant:
+break even $/kg =1.97712$
+Reactor:
+Feed STream CH4 [mol/s] = 21.9126
+Feed STream CH4 per tube: [mol/s] = 0.00808746
+OutStream HCN [mol/s] = 12.86
+InStream Heatmed [mol/s] = 0.0999998
+yield HCN resp, CH4: FCH4 [] = 0.586876
+NH3 Excess ratio [] = 1.08
+Conversion CH4 [] = 0.586876
+yCH4 outlet [] = 0.121018
+yNH3 outlet [] = 0.0975824
+yHCN outlet [] = 0.171915
+yH2 outlet [] = 0.58605
+yN2 outlet [] = 0.0234348
+Temperature inlet [] = 749.999
+pressure inlet= 103325
+Reactor Length [m] = 30
+Tubes needed = 40641.9
+Capex = 2.03251e+07
+Oapex = 1.48308e+07
+NH3 Adsorber:
+Number of theoretical units: NTU = 6.88328
+Height of theoretical units: HTU = 0.604289
+Column Height [m]: H = 4.15949
+Column diameter [m]: D = 0.933004
+Flow rate ratios: L/G = 1.33682
+Volumetric fraction of h2so4: phi = 11.9192
+NH3 Column CAPEX : Capex = 816328
+NH3 Column OPEX : Opex = 1.45819e+06
+NH3 Column Temperature: T = 304.684
+HCN Adsorber:
+Number of theoretical units: NTU = 31.2205
+Height of theoretical units: HTU = 0.388385
+Column Height [m]: H = 12.1256
+Column diameter [m]: D = 1.26941
+Flow rate ratios: L/G = 7.69371
+HCN Absorber CAPEX : Capex = 274631
+HCN Absorber OPEX : Opex = 44752.2
+HCN Absorber Outlet tempeature [K] : Temp = 293.595
+HCN Absorber Outlet fraction of HCN : x_HCN = 0.02416
+Inlet molar flow of liquid stream : L_in = 517.126
+Distillation:
+Number of stages []: H = 14
+Column Height [m]: H = 10.08
+Column Diameter [m]: d = 1.9456
+Condenser heat duty [W]: Q_C = 2.31801e+06
+Reboiler heat duty [W]: Q_C = 2.5992e+06
+HX bef. dist. heat duty [W]: Q_C = 5380.37
+Condenser area [m2]: A_C = 11.4678
+Reboiler area [m2]: A_R = 63.1273
+HX bef. dist. area [m2]: A_HX_bef_dist = 0.0555544
+optimized rate [mol/s]: optimzed flow rate = 517.126
+Dist Capex/$ = 1.53621e+06
+Dist Opex/$/y = 683035
+Plots and table generation successfull 
+Plots saved as PDFs 
+Run Excel sheet generated 
+Main execution terminated normally in a total of273.213 seconds.
+>> 
