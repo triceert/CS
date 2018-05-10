@@ -108,6 +108,7 @@ Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X)));
 N_S_real = (Y+N_S_min)/(1-Y);
 
 N_S_real_new = 0; % initializing so that we do at least one iteration
+
 while N_S_real ~= N_S_real_new
     pressure_drop = 700*N_S_real; % 0.7 kPa/tray pressure drop over bubble cap column
                                   % from: "Separation Process Principles", J.
@@ -122,9 +123,9 @@ while N_S_real ~= N_S_real_new
     RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
     X = (RR_real-RR_min)/(RR_real+1); 
     Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X)));
-    N_S_real = N_S_real_new;                % saving for next iteration
-    %N_S_real_new = ceil((Y+N_S_min)/(1-Y)) % rounding up to nearest integer
-    N_S_real_new = (Y+N_S_min)/(1-Y);
+    N_S_real = N_S_real_new;                % saving for next iteration   
+    N_S_real_new = round((Y+N_S_min)/(1-Y),1);% rounding up to nearest integer
+    
     clear new_theta_sol;  
 end
 % when this while-loop terminates, N_S_real = N_S_real_new --> no need to replace it

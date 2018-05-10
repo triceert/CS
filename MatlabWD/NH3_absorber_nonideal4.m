@@ -15,7 +15,7 @@ strout(7).L = L;
 y_HCN_in = strin(5).yHCN;
 y_NH3_in = strin(5).yNH3;
 y_H2_in = strin(5).yH2;
-y_CH4_in = strin(5).yEgas;
+y_CH4_in = strin(5).yCH4;
 y_N2_in = strin(5).yN2;
 
 %y_HCN_in = 0.205;
