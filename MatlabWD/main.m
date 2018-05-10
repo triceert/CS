@@ -22,7 +22,7 @@ function main(varargin) %give options for what to execute how
 
 %% RUN MODE (PROVISORISCH)
 ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
-cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
+cc=1;               %crosscurrent 0 cocurrent 1  heating of reactor   
 sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
 
@@ -145,7 +145,9 @@ senspara=sens;                     %0 sensitivity analysis off   1 on
         [cmp,unt,str]=reactorcalculator(cmp,unt,str,1);       %plotparamter 1
         [cmp,unt,str]=nh3absorber(cmp,unt,str);       
         [cmp,unt,str] = hcnabsorber(cmp,unt,str);         
-        [cmp,unt,str]=hcn_distillation(cmp,unt,str);       
+        [cmp,unt,str]=hcn_distillation(cmp,unt,str);
+        [cmp,unt,str] = hcnabsorber(cmp,unt,str); 
+        [cmp,unt,str]=hcn_distillation(cmp,unt,str);
         [cmp,unt,str]=pricecalculator(cmp,unt,str);
         
         
