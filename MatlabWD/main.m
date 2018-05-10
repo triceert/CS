@@ -241,14 +241,22 @@ fprintf('Height of theoretical units: HTU = %g\n',  untin(3).htu);
 fprintf('Column Height [m]: H = %g\n', untin(3).h);
 fprintf('Column diameter [m]: D = %g\n', untin(3).dia);
 fprintf('Flow rate ratios: L/G = %g\n', untin(3).ratio);
-fprintf('HCN Column CAPEX : Capex = %g\n',  untin(3).capex);
-fprintf('HCN Column OPEX : Opex = %g\n', untin(3).opex);
-fprintf('HCN Column Outlet tempeature [K] : Temp = %g\n', strin(9).T);
-fprintf('HCN Column Outlet fraction of HCN : x_HCN = %g\n', strin(9).xHCN);
+fprintf('HCN Absorber CAPEX : Capex = %g\n',  untin(3).capex);
+fprintf('HCN Absorber OPEX : Opex = %g\n', untin(3).opex);
+fprintf('HCN Absorber Outlet tempeature [K] : Temp = %g\n', strin(9).T);
+fprintf('HCN Absorber Outlet fraction of HCN : x_HCN = %g\n', strin(9).xHCN);
 
         
-cprintf('Blue','Distillation:\n')          
- fprintf('Column Height [m]: H = %g\n', untin(4).h);
+cprintf('Blue','Distillation:\n')
+fprintf('Number of stages []: H = %g\n', untin(4).N_S);
+fprintf('Column Height [m]: H = %g\n', untin(4).h);
+fprintf('Column Diameter [m]: d = %g\n', 2*untin(4).rad);
+fprintf('Condenser heat duty [W]: Q_C = %g\n', untin(4).Q_cond);
+fprintf('Reboiler heat duty [W]: Q_C = %g\n', untin(4).Q_reb);
+fprintf('HX bef. dist. heat duty [W]: Q_C = %g\n', untin(4).Q_HX_before_dist);
+fprintf('Condenser area [m2]: A_C = %g\n', untin(4).A_cond);
+fprintf('Reboiler area [m2]: A_R = %g\n', untin(4).A_reb);
+fprintf('HX bef. dist. area [m2]: A_HX_bef_dist = %g\n', untin(4).A_HX_before_dist);
 
 
  %assign for outputs UNITS

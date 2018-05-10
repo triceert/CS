@@ -222,10 +222,18 @@ cmpout = cmpin;
 untout = untin; 
 strout = strin; 
 
+untout(4).N_S = N_S_real; 
 untout(4).h = height; 
 untout(4).rad = d_min_bottom/2; 
 untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
-untout(4).En = Q_cond + Q_reboiler; 
+untout(4).En = Q_cond + Q_reboiler+Q_HX_before_distillation_column; 
+untout(4).Q_cond = Q_cond; 
+untout(4).Q_reb = Q_reboiler; 
+untout(4).A_cond = area_cond; 
+untout(4).A_reb = area_reboiler; 
+untout(4).A_HX_before_dist = area_HX_before_distillation_column; 
+
+untout(4).Q_HX_before_dist = Q_HX_before_distillation_column;
 untout(4).capex = CAPEX_column_itself+CAPEX_cond+CAPEX_reboiler+CAPEX_HX_before_distillation_column; 
 untout(4).opex = OPEX_steam + OPEX_cooling_water+OPEX_HX_before_distillation_column; 
 strout(11).L = D; 
