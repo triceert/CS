@@ -116,26 +116,30 @@ N_S_real = (Y+N_S_min)/(1-Y);
 N_S_real_new = 0; % initializing so that we do at least one iteration
 do_pressure_drop_calculations = untin(1).pre_drop; % include pressure drop calculation?
 if do_pressure_drop_calculations
-    while N_S_real ~= N_S_real_new
-        pressure_drop = 700*N_S_real; % 0.7 kPa/tray pressure drop over bubble cap column
-                                      % from: "Separation Process Principles", J.
-                                      % D. Seader, E. J. Henley, p. 375
-        pressure_top = pressure-pressure_drop; 
-        new_temperature_at_top = bubblepoint_new([x_HK_D, x_LK_D], pressure_top, cmpin, untin, thermo_model);
-        new_alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(new_temperature_at_top, x_LK_D) * alpha(T_feed, z.HCN))^(1/3);
-        N_S_min = log(x_LK_D/x_HK_D*x_HK_B/x_LK_B)/log(new_alpha_mean)-1; 
-        %new_theta_sol = fsolve (@(theta) (new_alpha_mean*z.HCN)/(new_alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0, options);
-        new_theta_sol = new_alpha_mean*(z.HCN+z.H2O)/(new_alpha_mean*z.HCN+z.H2O);
-        RR_min = (new_alpha_mean*x_LK_D)/(new_alpha_mean-new_theta_sol)+(1*x_HK_D)/(1-new_theta_sol)-1; 
-        RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
-        X = (RR_real-RR_min)/(RR_real+1); 
-        Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X)));
-        N_S_real = N_S_real_new;                % saving for next iteration   
-        N_S_real_new = round((Y+N_S_min)/(1-Y),1);% rounding up to nearest integer
-
-        clear new_theta_sol;  
-    end
+    pressure_drop_per_stage = 700;
+else
+    pressure_drop_per_stage = 0;
 end
+while N_S_real ~= N_S_real_new
+    pressure_drop = pressure_drop_per_stage*N_S_real; % 0.7 kPa/tray pressure drop over bubble cap column
+                                  % from: "Separation Process Principles", J.
+                                  % D. Seader, E. J. Henley, p. 375
+    pressure_top = pressure-pressure_drop; 
+    new_temperature_at_top = bubblepoint_new([x_HK_D, x_LK_D], pressure_top, cmpin, untin, thermo_model);
+    new_alpha_mean = (alpha(T_boiling_H2O, x_LK_B) * alpha(new_temperature_at_top, x_LK_D) * alpha(T_feed, z.HCN))^(1/3);
+    N_S_min = log(x_LK_D/x_HK_D*x_HK_B/x_LK_B)/log(new_alpha_mean)-1; 
+    %new_theta_sol = fsolve (@(theta) (new_alpha_mean*z.HCN)/(new_alpha_mean-theta)+(1*z.H2O)/(1-theta), theta0, options);
+    new_theta_sol = new_alpha_mean*(z.HCN+z.H2O)/(new_alpha_mean*z.HCN+z.H2O);
+    RR_min = (new_alpha_mean*x_LK_D)/(new_alpha_mean-new_theta_sol)+(1*x_HK_D)/(1-new_theta_sol)-1; 
+    RR_real = RR_min * 1.5; % heuristic, from Stavros' introduction
+    X = (RR_real-RR_min)/(RR_real+1); 
+    Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X)));
+    N_S_real = N_S_real_new;                % saving for next iteration   
+    N_S_real_new = round((Y+N_S_min)/(1-Y),1);% rounding up to nearest integer
+
+    clear new_theta_sol;  
+end
+
 % when this while-loop terminates, N_S_real = N_S_real_new --> no need to replace it
 efficiency = 0.75;                                      % Stavros said a plate efficiency between 0.7 and 0.8 is reasonable
 N_S_real = ceil(N_S_real/efficiency);                   % accounting for plate efficiency <1 and rounding up to nearest integer

@@ -21,8 +21,8 @@
 function main(varargin) %give options for what to execute how
 
 %% RUN MODE (PROVISORISCH)
-ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
-pr=1;               %pressure drop (0 without, 1 with)
+ir=0;               %IDEAL REAL 0 ideal/1 real plant modelling
+pr=0;               %pressure drop (0 without, 1 with)
 cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
 sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
@@ -262,7 +262,7 @@ fprintf('HX bef. dist. heat duty [W]: Q_C = %g\n', untin(4).Q_HX_before_dist);
 fprintf('Condenser area [m2]: A_C = %g\n', untin(4).A_cond);
 fprintf('Reboiler area [m2]: A_R = %g\n', untin(4).A_reb);
 fprintf('HX bef. dist. area [m2]: A_HX_bef_dist = %g\n', untin(4).A_HX_before_dist);
-fprintf('optimized rate [mol/s]: optimzed flow rate = %g\n', str(10).L);
+fprintf('optimized rate [mol/s]: optimzed flow rate = %g\n', strin(10).L);
 
  %assign for outputs UNITS
  unttable=untin;
