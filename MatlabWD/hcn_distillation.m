@@ -79,7 +79,7 @@ if strcmp(thermo_model, 'ideal')
     alpha = @(temperature, x_LK) P_sat_HCN(temperature)/P_sat_H2O(temperature); % relative volatility
 end
 if strcmp(thermo_model, 'nrtl') || strcmp(thermo_model, 'vanlaar')
-    alpha = @(temperature, x_LK) relative_volatility(x_LK, temperature, thermo_model); % relative volatility
+    alpha = @(temperature, x_LK) relative_volatility(x_LK, temperature, cmpin, thermo_model); % relative volatility
 end
 % --> one sees that alpha doesn't change dramatically
 % calculation of geometric mean of alpha: 

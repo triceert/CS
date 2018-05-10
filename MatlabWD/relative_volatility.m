@@ -1,4 +1,4 @@
-function [alpha] = relative_volatility(x1, T, thermo_model)
+function [alpha] = relative_volatility(x1, T, cmpin, thermo_model)
 % x1 = x_LK = x_HCN; 
 A_H2O = 7.96681; B_H2O = 1668.21; C_H2O = 228.0; % (values for T > 60 °C), from Excel file  
 A_HCN = 7.5282; B_HCN = 1329.5; C_HCN = 260.4;      % from Excel file
