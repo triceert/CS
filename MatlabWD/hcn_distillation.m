@@ -24,8 +24,14 @@ else
     thermo_model = 'nrtl';                                             % thermodynamic model, can use 'nrtl' or 'ideal'
 end
 
-%A_H2O = cmpin(1).anta100; B_H2O = cmpin(1).antb100; C_H2O = cmpin(1).antc100; 
-%A_HCN = cmpin(6).anta100; B_HCN = cmpin(6).antb100; C_HCN = cmpin(6).antc100; 
+if strcmp(thermo_mode, 'ideal')
+    feed_L = strin(9).L;                                                   % molar liquid flowrate in feed                                             
+    feed_V = strin(9).G;                                                   % molar gas flowrate in feed [mol/hr] (= 0 since only liquid)
+else
+    feed_L = strin(9).Lreal;                                               % molar liquid flowrate in feed                                             
+    feed_V = strin(9).G;     % doesn't need to be changed since = 0    % molar gas flowrate in feed [mol/hr] (= 0 since only liquid)
+end 
+
 
 T_boiling_H2O = cmpin(1).bp; 
 T_boiling_HCN = cmpin(6).bp; 
@@ -239,7 +245,11 @@ strout(11).yAS=0;      % since Stream 11 is all liquid
 strout(11).yH2=0;      % since Stream 11 is all liquid
 strout(11).yN2=0;      % since Stream 11 is all liquid
 strout(11).yH2SO4=0;   % since Stream 11 is all liquid
-strout(10).L = B; 
+if strcmp(thermo_model, 'ideal')
+    strout(10).L = B; 
+else
+    strout(10).Lreal = B; 
+end
 strout(10).G = 0;      % outlet stream 10 is all liquid
 strout(10).p = pressure; 
 strout(10).T = T_boiling_H2O; 
