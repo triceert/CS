@@ -47,7 +47,7 @@ strout(8).yN2 = y_N2_out;
 
 % Inlet Liquid flow
 
-L_in = 518.1;                                % Input liquid total molar stream from distillation, calculated as 1.5*L(min) [mol/s]
+L_in = strin(10).L;       % Input liquid total molar stream from distillation, calculated as 1.5*L(min) [mol/s]
 L_out= L_in+(G_in_i(2)-(G_out*10^(-4)));     % Output total liquid molar stream in [mol/s]
 strout(9).L = L_out;   
 
