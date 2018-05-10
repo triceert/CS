@@ -24,7 +24,7 @@ else
     thermo_model = 'nrtl';                                             % thermodynamic model, can use 'nrtl' or 'ideal'
 end
 
-if strcmp(thermo_mode, 'ideal')
+if strcmp(thermo_model, 'ideal')
     feed_L = strin(9).L;                                                   % molar liquid flowrate in feed                                             
     feed_V = strin(9).G;                                                   % molar gas flowrate in feed [mol/hr] (= 0 since only liquid)
 else
