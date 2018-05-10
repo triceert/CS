@@ -60,7 +60,14 @@ function [dAdV]=MBEBpfr(t,A,kinhand,parthand,cphand,Uhand,cmp,unt,str,idealreal)
 %% DEFINE THE PROBLEM  ODEs  
     dAdV=zeros(9,1);
     %# 1 Pressure
-    dAdV(1)=-pi*(Diameter/2).^2*32*(64/Re.*(rho_mix_in.*Q_in)*Q)./(Diameter^5*pi^2);  
+    switch unt(1).pre_drop
+        case 1
+        dAdV(1)=-pi*(Diameter/2).^2*32*(64/Re.*(rho_mix_in.*Q_in)*Q)./(Diameter^5*pi^2);  
+        case 0           
+        dAdV(1)=0;
+        otherwise
+            disp('P drop parameter not valid')
+    end
     
     %#2 Nitrogen
     dAdV(2)=r2;  

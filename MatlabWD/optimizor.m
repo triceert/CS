@@ -17,6 +17,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
     persTemp=str(1).T;
     persnrow=unt(1).nrow;   
     persFlow=str(4).G;
+    persFrate=str(10).L;     %500%
 
 
     
@@ -30,6 +31,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
           str(1).T=x(4);
           unt(1).nrow=x(5);       
           str(4).G=x(6);
+          str(10).L=x(7);
           %calculate everything
                                 [cmp,unt,str]=reactorcalculator(cmp,unt,str,0);   %plotparameter 0
                                 [cmp,unt,str]=nh3absorber(cmp,unt,str);       
@@ -46,9 +48,9 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
      %fmincon initialize
      optimhandle=@(x)optimfunc(x,cmp,unt,str);
      options=optimset('Display','off');
-      x0 = [persFCH4,persRatio,persPressure,persTemp,persnrow,persFlow];
-      lb = [1e-4,1,85000,650,1,1e-4];
-      ub = [1e-1,1.1,500000,750,15,1e-1];
+      x0 = [persFCH4,persRatio,persPressure,persTemp,persnrow,persFlow,persFrate];
+      lb = [1e-4,1,85000,650,1,1e-4,400];
+      ub = [1e-1,1.1,500000,750,15,1e-1,600];
       disp('Fmincon startup complete.')
       x = fmincon(optimhandle,x0,[],[],[],[],lb,ub,[],options); %solve
       disp('20% of optimization completed')
@@ -59,6 +61,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
             persnrow=x(5);
             persnrow=round(persnrow); %can only be discrete
             persFlow=x(6);
+            persFrate=x(7);
             
                 str(1).FCH4=persFCH4;
                 str(1).ubsch=persRatio;
@@ -66,6 +69,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                 str(1).T=persTemp;
                 unt(1).nrow=persnrow;
                 str(4).G=persFlow;
+                str(10).L=persFrate;
       disp('Fmincon successfully found optimal values.' )
       disp(' Continuing with sensitivity analysis.')
   

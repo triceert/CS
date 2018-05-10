@@ -22,7 +22,8 @@ function main(varargin) %give options for what to execute how
 
 %% RUN MODE (PROVISORISCH)
 ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
-cc=1;               %crosscurrent 0 cocurrent 1  heating of reactor   
+pr=1;               %pressure drop (0 without, 1 with)
+cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
 sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
 
@@ -46,7 +47,7 @@ sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min p
     switch nargin    
         case 0    %if no argument, just do everything   
             [cmp,unt,str]=loader(excelstring);
-            [cmp,unt,str]=calculator(cmp,unt,str,ir,cc,sens);
+            [cmp,unt,str]=calculator(cmp,unt,str,ir,cc,sens,pr);
             evaluator(cmp,unt,str);
         case 1    %if one argument, check what argument
             comp1=strcmp(varargin{1},'load');
@@ -59,7 +60,7 @@ sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min p
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 str = evalin('base', 'str');
-                [~,~,~]=calculator(cmp,unt,str,ir,cc,sens);
+                [~,~,~]=calculator(cmp,unt,str,ir,cc,sens,pr);
             elseif  comp3==1    %argument eval, check if calc data here and eval
                 cmpcalc = evalin('base', 'cmpcalc');
                 untcalc = evalin('base', 'untcalc');
@@ -69,7 +70,7 @@ sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min p
                 cmp = evalin('base', 'cmp');
                 unt = evalin('base', 'unt');
                 str = evalin('base', 'str');
-                [cmpcalc,untcalc,strcalc]=calculator(cmp,unt,str);
+                [cmpcalc,untcalc,strcalc]=calculator(cmp,unt,str,ir,cc,sens,pr);
                 evaluator(cmpcalc,untcalc,strcalc);
             else
                 error(...
@@ -112,7 +113,7 @@ end
 %Outputs:
 %      cmpout,untout    compunds and unit operations data to anywhere after
 %      calculation
-function [cmp, unt, str]=calculator(cmp,unt,str,ir,cc,sens)
+function [cmp, unt, str]=calculator(cmp,unt,str,ir,cc,sens,pr)
     time2=tic;
     cprintf('blue','Calculations started\n');
     
@@ -124,6 +125,7 @@ function [cmp, unt, str]=calculator(cmp,unt,str,ir,cc,sens)
 %MODELLING PARAMETERS
 unt(1).cocross=cc;           % 0 cross 1 co 
 unt(1).ideal_real=ir;        %ideal gas 0, peng robinson 1
+unt(1).pre_drop=pr;
 %THERMO
 str(1).p=103325;   %feed pressure
 str(1).T=700.08;       %feed temperature
@@ -135,6 +137,9 @@ str(4).G=0.01;            %Heating Medium Flow rate, only usefull when co-curren
                                 %in flow heating medium per fucking tube(ignored if cross heated)
  %Reactor length
 unt(1).nrow=1;             %number reactr elements in row
+
+%flow ratio
+str(10).L=520; %liquid flow rate stream 10 
 
 %% CALL Optimizor (Böser Strom und Zeitfresser!)
 senspara=sens;                     %0 sensitivity analysis off   1 on
@@ -257,7 +262,7 @@ fprintf('HX bef. dist. heat duty [W]: Q_C = %g\n', untin(4).Q_HX_before_dist);
 fprintf('Condenser area [m2]: A_C = %g\n', untin(4).A_cond);
 fprintf('Reboiler area [m2]: A_R = %g\n', untin(4).A_reb);
 fprintf('HX bef. dist. area [m2]: A_HX_bef_dist = %g\n', untin(4).A_HX_before_dist);
-
+fprintf('optimized rate [mol/s]: optimzed flow rate = %g\n', str(10).L);
 
  %assign for outputs UNITS
  unttable=untin;
