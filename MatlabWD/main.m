@@ -23,7 +23,7 @@ function main(varargin) %give options for what to execute how
 %% RUN MODE (PROVISORISCH)
 ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
 pr=1;               %pressure drop (0 without, 1 with)
-cc=1;               %crosscurrent 0 cocurrent 1  heating of reactor   
+cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
 sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
 
