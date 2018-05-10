@@ -20,6 +20,14 @@
 
 function main(varargin) %give options for what to execute how
 
+%% get all subfolders and containing functions
+mfilename='main.m';
+% Determine where your m-file's folder is.
+folder = fileparts(which(mfilename)); 
+% Add that folder plus all subfolders to the path.
+addpath(genpath(folder));
+
+
 %% RUN MODE (PROVISORISCH)
 ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
 pr=1;               %pressure drop (0 without, 1 with)
