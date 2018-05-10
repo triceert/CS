@@ -10,7 +10,7 @@ strout=strin;
 % Gas flow inlet
 
 G_in = strin(7).G;             % Inlet gas molar stream [mol/s]  
- 
+yHCNadsstream7= strin(7).yHCN;
 y_HCN_in = strin(7).yHCN;      % Molar fractions in the gas stream
 y_H2_in = strin(7).yH2;
 y_CH4_in = strin(7).yCH4;

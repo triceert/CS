@@ -120,6 +120,7 @@ if do_pressure_drop_calculations
 else
     pressure_drop_per_stage = 0;
 end
+
 while N_S_real ~= N_S_real_new
     pressure_drop = pressure_drop_per_stage*N_S_real; % 0.7 kPa/tray pressure drop over bubble cap column
                                   % from: "Separation Process Principles", J.

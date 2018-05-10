@@ -50,7 +50,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
      options=optimset('Display','off');
       x0 = [persFCH4,persRatio,persPressure,persTemp,persnrow,persFlow,persFrate];
       lb = [1e-4,1,85000,650,1,1e-4,400];
-      ub = [1e-1,1.1,500000,750,15,1e-1,600];
+      ub = [1e-1,1.08,500000,750,15,1e-1,600];
       disp('Fmincon startup complete.')
       x = fmincon(optimhandle,x0,[],[],[],[],lb,ub,[],options); %solve
       disp('20% of optimization completed')
@@ -59,7 +59,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
             persPressure=x(3);
             persTemp=x(4);
             persnrow=x(5);
-            persnrow=round(persnrow); %can only be discrete
+            persnrow=ceil(persnrow); %can only be discrete
             persFlow=x(6);
             persFrate=x(7);
             
@@ -79,6 +79,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
  switch senspara 
      case 1
     a=0.2; %low up ratio %
+
     lb=x-x*a; %lower bound for sensitivity
     ub=x+x*a;
     strprov=str;
@@ -90,13 +91,13 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
     FCH4 = linspace(lb(1),ub(1),n);    %FEEDRANGE
     ubsch=linspace(lb(2),ub(2),n);       %EXCESS NH3 RANGE
     pressure=linspace(lb(3),ub(3),n);         %Pressure
-    temperature=linspace(lb(4),ub(5),n);     %Temoerature  %taken out since not stable
-        if persnrow<4
-            lb(5)=1;
-        else
-            lb(5)=persnrow-3;
-        end  
-        ub(5)=persnrow+3;
+    %temperature=linspace(lb(4),ub(5),n);     %Temoerature  %taken out since not stable
+         if persnrow<4
+             lb(5)=1;
+         else
+            lb(5)=persnrow-2;
+         end  
+        ub(5)=persnrow+2;
     nrow=linspace(lb(5),ub(5),n);                %NUMBER OF PFRs in row range
     hstrproveam=linspace(lb(6),ub(6),n);           %HEAT strprovEAM MOLAR FLOW
   
@@ -149,9 +150,9 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yieldfield,'ShowText','on')
-                        title('$Yield (resp. CH_{4})/[]$')
+                        title('$Yield (resp. CH_{4})/[-]$')
                         pbaspect([1 1 1])                    
-                        ylabel('$Excess NH_{3}/[]$')
+                        ylabel('$Excess NH_{3}/[-]$')
                         
                         subplot(4,2,2)                     
                         hold on 
@@ -167,7 +168,7 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yNH3field,'ShowText','on')
-                        title('$yNH_{3}/[]$')
+                        title('$yNH_{3}/[-]$')
                         pbaspect([1 1 1])  
                         ylabel('$Excess NH_{3}/[]$')
 
@@ -175,14 +176,14 @@ function [cmp,unt,str]=optimizor(cmp,unt,str,senspara)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yH2field,'ShowText','on')
-                        title('$yH_{2}/[]$')
+                        title('$yH_{2}/[-]$')
                         pbaspect([1 1 1])
                         
                         subplot(4,3,3)
                         hold on 
                         scatter(persFCH4,persRatio,'red','x')
                         contour(FCH4,ubsch,yHCNfield,'ShowText','on')
-                        title('$yHCN/[]$')
+                        title('$yHCN/[-]$')
                         pbaspect([1 1 1])
                        
 
