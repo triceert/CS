@@ -161,9 +161,9 @@ E_liquid_out_non = @(t_out) L.*(x_H2SO4_out*hf_h2so4_out_non(t_out) + x_H2O_out*
 E_rxn = G*h_rxn*(y_NH3_in - y_NH3_out)/2;
 
 energy_balance_non = @(t_out) (E_gas_in_non + E_liquid_in_non - E_gas_out_non(t_out) - E_liquid_out_non(t_out) + E_rxn);
-
+options = optimset('Display','off');
 %t_non = lsqnonlin(energy_balance_non, 50);
-t_non = fsolve(energy_balance_non, 0.3);
+t_non = fsolve(energy_balance_non, 0.3,options);
 T_non = t_non*1000;                  %[K]
 
 strout(6).T = T_non;

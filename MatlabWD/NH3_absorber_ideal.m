@@ -12,7 +12,7 @@ strout(7).G = G;
 strout(7).L = L;
 
 %molar fractions inlet gas stream
-y_HCN_in = strin(5).yHCN;
+y_HCN_in = strin(5).yHCN
 y_NH3_in = strin(5).yNH3;
 y_H2_in = strin(5).yH2;
 y_CH4_in = strin(5).yCH4;

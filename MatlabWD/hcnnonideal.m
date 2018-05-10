@@ -200,7 +200,7 @@ HG = G_in/(area * KG * tot_surf);
 
 phi = 2.6;        % Empirical parameter for water for the calculation of the diffusioncoefficient
 mol_vol_HCN = (M_HCN/cmpin(6).rho)* 1000;                     % Molar volume of HCN in cm^3/mol
-mu_H2O = 547* 10^(-6);        % Dynamic viscosity of water at 50°C source: engineering toolbox
+mu_H2O = 547* 10^(-6);        % Dynamic viscosity of water at 50ï¿½C source: engineering toolbox
 D_HCN = ((7.4 * 10^(-8)) * Temp_out * ((M_H2O * phi)^0.5))/(mu_H2O * (mol_vol_HCN^0.6)) * 10^(-4);      % Diffusion coefficient
 Sc2 = mu_H2O/(cmpin(1).rho *D_HCN);     % Schmidtzahl 
 L_m = L_in * M_H2O/1000;          % Mass flux in kg/s

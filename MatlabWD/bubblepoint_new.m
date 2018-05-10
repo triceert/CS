@@ -3,6 +3,7 @@ function [bubbleT] = bubblepoint_new(x, P, cmp, unt, thermo_model)
 % INPUT: x = vector of mole fractions; x(1) = H2O, x(2) = HCN; 
 % P: pressure [Pa]
 % cmp & unt: structs from Excel-file 
+aa=P;
 
 
 %x1 = x(1); 
@@ -18,13 +19,12 @@ elseif strcmp(thermo_model, 'vanlaar')
 elseif strcmp(thermo_model, 'ideal')
     gamma = @(bubbleT) [1 1];   % ideal model, need to pass bubbleT to have same syntax as in other cases     
 end
-bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT, gamma,x,cmp), bubbleT_0, options); 
 
 
+bubbleT = fsolve(@(bubbleT) bubbleT_solver(bubbleT, gamma,x,cmp,P), bubbleT_0, options); 
 
 
-
-function [bT] = bubbleT_solver(bubbleT, gamma,x,cmp)
+function [bT] = bubbleT_solver(bubbleT, gamma,x,cmp,P)
     gamma_vector = gamma(bubbleT);  
     gamma_HCN = gamma_vector(1); 
     gamma_H2O = gamma_vector(2); 
