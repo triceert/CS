@@ -263,6 +263,8 @@ fprintf('Condenser area [m2]: A_C = %g\n', untin(4).A_cond);
 fprintf('Reboiler area [m2]: A_R = %g\n', untin(4).A_reb);
 fprintf('HX bef. dist. area [m2]: A_HX_bef_dist = %g\n', untin(4).A_HX_before_dist);
 fprintf('optimized rate [mol/s]: optimzed flow rate = %g\n', strin(10).L);
+fprintf('Dist Capex/$ = %g\n', untin(4).capex);
+fprintf('Dist Opex/$/y = %g\n', untin(4).opex);
 
  %assign for outputs UNITS
  unttable=untin;
