@@ -50,9 +50,6 @@ x_HK_B = 1-x_LK_B;
 
 
 %% Calculation of feed conditions & HX before distillation column 
-%T_feed = 373.15*0.8+299*0.2; % just a shitty weighted average, no thermodynamics here 
-%--> use feed temperature once available 
-%T_boiling_mixture_assumption = 365.5; %%% need to do bubble point calculation
 T_feed_before_HX = strin(9).T; 
 T_feed = bubblepoint_new([z.H2O, z.HCN], pressure, cmpin, untin, thermo_model); 
 [HT_L_before_HX] = enthalpy_temperature_liquid(T_feed_before_HX,cmpin,untin); 
@@ -74,7 +71,7 @@ CAPEX_HX_before_distillation_column = 25000*(area_HX_before_distillation_column^
 %pressure = @(temperature) z.HCN*P_sat_HCN(temperature) + z.H2O*P_sat_H2O(temperature);
 pressure = strin(9).p; % Pa
 
-% WOULD NEED TO START AGAIN HERE FOR PRESSURE DROP CALCULATIONS
+% NEED TO START AGAIN HERE FOR PRESSURE DROP CALCULATIONS
 if strcmp(thermo_model, 'ideal') 
     alpha = @(temperature, x_LK) P_sat_HCN(temperature)/P_sat_H2O(temperature); % relative volatility
 end
@@ -192,9 +189,6 @@ specific_enthalpy_of_evaporation_of_steam_at_6_bar = 2257e3; % [J/kg],
                                            % from https://www.engineeringtoolbox.com/saturated-steam-properties-d_101.html
 steam_flow_condenser = Q_reboiler/(specific_enthalpy_of_evaporation_of_steam_at_6_bar); % [kg/s] steam mass flow rate
 
-%%% McCabe Thiele
-%x_plot = 0:0.01:1; 
-%y_diagonal = x_plot; 
 
 
 %%% Cost calculation
@@ -217,8 +211,6 @@ cmpout = cmpin;
 untout = untin; 
 strout = strin; 
 
-untout(4).capex=CAPEX_column_itself+CAPEX_cond+CAPEX_reboiler; %assign COST
-untout(4).opex=OPEX_cooling_water+OPEX_steam;
 untout(4).h = height; 
 untout(4).rad = d_min_bottom/2; 
 untout(4).V = (pi*(untout(4).rad)^2)*untout(4).h; 
