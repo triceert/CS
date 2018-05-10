@@ -47,9 +47,9 @@ strout(8).yN2 = y_N2_out;
 
 % Inlet Liquid flow
 
-L_in = 575.6;                                % Input liquid total molar stream from distillation, calculated as 1.5*L(min) [mol/s]
+L_in = strin(10).Lreal;                                % Input liquid total molar stream from distillation, calculated as 1.5*L(min) [mol/s]
 L_out= L_in+(G_in_i(2)-(G_out*10^(-4)));     % Output total liquid molar stream in [mol/s]
-strout(9).L = L_out;   
+strout(9).Lreal = L_out;   
 
 % Made assumption: There is HCN in the liquid inlet molar stream 
 
@@ -141,7 +141,7 @@ E_liquid_out_non = @(t_out) L_out * ((x_H2O_out * hf_H2O_out_non(t_out)) + (x_HC
  
 Ebalance = @(t_out) E_gas_in_non + E_liquid_in_non - E_gas_out_non(t_out) - E_liquid_out_non(t_out);
 optis=optimset('Display','off');
-temp_out = fsolve (Ebalance, 0.3, optis);     % Outlet temperature [K]
+temp_out = fsolve (Ebalance, 0.20, optis);     % Outlet temperature [K]
 Temp_out = temp_out * 1000;
 Temp_out_celsius = Temp_out - 273;     % Outlet temperature [�C]
 strout(9).T = Temp_out;
