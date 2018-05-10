@@ -1,4 +1,4 @@
-function diameter = diameter_calc(velocity,G, y_H2_in, y_N2_in, y_HCN_in, y_CH4_in, y_NH3_in);
+function diameter = diameter_calc2(velocity,G, y_H2_in, y_N2_in, y_HCN_in, y_CH4_in, y_NH3_in);
 
 M_H2 = 2;      % Molar masses of the compounds in [g/mol]
 M_N2 = 28;
