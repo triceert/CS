@@ -23,7 +23,7 @@ function main(varargin) %give options for what to execute how
 %% RUN MODE (PROVISORISCH)
 ir=1;               %IDEAL REAL 0 ideal/1 real plant modelling
 cc=0;               %crosscurrent 0 cocurrent 1  heating of reactor   
-sens=0;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
+sens=1;             %sensitivity analysis on or off (0/1) TIME CONSUMING (5min plus)
 
 
 
@@ -126,11 +126,11 @@ unt(1).cocross=cc;           % 0 cross 1 co
 unt(1).ideal_real=ir;        %ideal gas 0, peng robinson 1
 %THERMO
 str(1).p=103325;   %feed pressure
-str(1).T=700;       %feed temperature
+str(1).T=700.08;       %feed temperature
 str(2).T=1600;      %touter 
 %FEEDS
-str(1).FCH4=0.01; %absolute feed ch4 per single tube mol s-1   
-str(1).ubsch=1.05;  %überschuss NH3
+str(1).FCH4=0.0123873; %absolute feed ch4 per single tube mol s-1   
+str(1).ubsch=1.09935;  %überschuss NH3
 str(4).G=0.01;            %Heating Medium Flow rate, only usefull when co-current flow
                                 %in flow heating medium per fucking tube(ignored if cross heated)
  %Reactor length
