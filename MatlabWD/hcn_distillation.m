@@ -111,7 +111,8 @@ Y = 1-exp(((1+54.4*X)/(11+117.2*X))*((X-1)/sqrt(X)));
 N_S_real = (Y+N_S_min)/(1-Y);
 
 N_S_real_new = 0; % initializing so that we do at least one iteration
-
+do_pressure_drop_calculations = 1; % do we want to do this?
+if do_pressure_drop_calculations
 while N_S_real ~= N_S_real_new
     pressure_drop = 700*N_S_real; % 0.7 kPa/tray pressure drop over bubble cap column
                                   % from: "Separation Process Principles", J.
@@ -130,6 +131,7 @@ while N_S_real ~= N_S_real_new
     N_S_real_new = round((Y+N_S_min)/(1-Y),1);% rounding up to nearest integer
     
     clear new_theta_sol;  
+end
 end
 % when this while-loop terminates, N_S_real = N_S_real_new --> no need to replace it
 efficiency = 0.75;                                      % Stavros said a plate efficiency between 0.7 and 0.8 is reasonable
